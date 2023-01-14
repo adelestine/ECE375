@@ -30,6 +30,7 @@ int main(void)
 	PORTB = 0b01100000; // turn on LEDs connected to 5-6th bits
 	DDRD = 0b00110000; // set 5th and 4th pins on D as inputs
 	PORTD = 0b11110000; //enable pull up resistors for port D pins 7-4
+	const int FORWARD = 0b10010000, HALT = 0b11110000, BACKWARD = 0b00000000, RIGHT = 0b10000000, LEFT = 0b00010000; // Led final integer values
 
 	while (1) // loop forever
 	{
