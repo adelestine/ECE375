@@ -43,8 +43,7 @@ int main(void)
 		{
 			BotActionL(); // call BotAction
 		}
-		// Your code goes here
-		//more code here
+		PORTB = FORWARD; //resume foward movement
 	}
 }
 
