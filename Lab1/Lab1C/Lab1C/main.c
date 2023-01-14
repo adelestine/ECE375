@@ -56,3 +56,7 @@ void BotActionL(){
 void BotActionR(){
 	
 }
+
+void goBackwards(){
+
+}
