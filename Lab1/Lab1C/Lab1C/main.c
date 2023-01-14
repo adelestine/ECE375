@@ -38,7 +38,7 @@ int main(void)
 		{
 			BotActionR(); // call BotAction
 		}
-		if (mpr == 0b00010000) // check if the left whisker is hit
+		else if (mpr == 0b00010000) // check if the left whisker is hit
 		{
 			BotActionL(); // call BotAction
 		}
@@ -49,15 +49,21 @@ int main(void)
 
 
 void BotActionL(){
-	
+	PORTB = RIGHT; //left motor forwards, right motor backwards = turn right
+	_delay_ms(1000); //wait 1 second
+	goBackwards2Sec(); //self explanatory
+	return;
 }
 
 void BotActionR(){
-	
+	PORTB = LEFT; //right motor forwards, left motor backwards = turn left
+	_delay_ms(1000); //wait 1 second
+	goBackwards2Sec(); //self explanatory :)
+	return;
 }
 
 void goBackwards2Sec(){
-	PORTB = 0b0000000; //turn both motors to reverse
+	PORTB = BACKWARD; //turn both motors to reverse
 	_delay_ms(2000); //delay for 2 seconds
 	return;
 }
