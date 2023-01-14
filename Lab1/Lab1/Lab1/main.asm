@@ -161,7 +161,7 @@ HitRight:
 		; Move Backwards for a second
 		ldi		mpr, MovBck	; Load Move Backward command
 		out		PORTB, mpr	; Send command to port
-		ldi		waitcnt, (WTime<<1)	; Wait for 1 second MODIFIED, Shifted bit back by 1, making the wait time double what it was
+		ldi		waitcnt, (WTime<<1)	; Wait for 1 second MODIFIED, Shifted bit back by 1, making the wait time double what it was Coolio
 		rcall	Wait			; Call wait function
 
 		; Turn left for a second
