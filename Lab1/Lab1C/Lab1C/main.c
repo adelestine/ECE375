@@ -36,11 +36,11 @@ int main(void)
 		uint8_t mpr = PIND & 0b00110000; // read and extract only 4-5 th bit
 		if (mpr == 0b00100000) // check if the right whisker is hit
 		{
-			BotActionL(); // call BotAction
-		}
-		if (mpr == 0b00010000) // check if the right whisker is hit
-		{
 			BotActionR(); // call BotAction
+		}
+		if (mpr == 0b00010000) // check if the left whisker is hit
+		{
+			BotActionL(); // call BotAction
 		}
 		// Your code goes here
 		//more code here
