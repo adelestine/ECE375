@@ -33,8 +33,8 @@ void goBackwards2Sec();
 int main(void)
 {
 	DDRB = 0b11110000; // set 7-4th bits as outputs
-	PORTB = 0b01100000; // turn on LEDs connected to 5-6th bits
-	DDRD = 0b00110000; // set 5th and 4th pins on D as inputs
+	//PORTB = 0b01100000; // turn on LEDs connected to 5-6th bits
+	DDRD = 0b00000000; // set 5th and 4th pins on D as inputs
 	PORTD = 0b11110000; //enable pull up resistors for port D pins 7-4
 	
 
@@ -42,11 +42,11 @@ int main(void)
 	{
 		uint8_t mpr = PIND & 0b00110000; // read and extract only 4-5 th bit
 		mpr = ~mpr; //flip bits since PINDD is active low
-		if (mpr == 0b00100000) // check if the right whisker is hit
+		if (mpr & 0b00100000) // check if the right whisker is hit
 		{
 			BotActionR(); // call BotAction
 		}
-		else if (mpr == 0b00010000) // check if the left whisker is hit
+		else if (mpr & 0b00010000) // check if the left whisker is hit
 		{
 			BotActionL(); // call BotAction
 		}
