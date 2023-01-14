@@ -48,10 +48,14 @@ int main(void)
 }
 
 
-int BotActionL(){
+void BotActionL(){
 	
 }
 
-int BotActionR(){
+void BotActionR(){
 	
+}
+
+void goBackwards(){
+
 }
