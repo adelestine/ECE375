@@ -26,6 +26,10 @@ Port D, Pin 4 -> Input -> Right Whisker
 
 const int FORWARD = 0b10010000, HALT = 0b11110000, BACKWARD = 0b00000000, RIGHT = 0b10000000, LEFT = 0b00010000; // Led final integer values
 
+void BotActionL();
+void BotActionR();
+void goBackwards2Sec();
+
 int main(void)
 {
 	DDRB = 0b11110000; // set 7-4th bits as outputs
