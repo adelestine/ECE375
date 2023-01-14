@@ -26,9 +26,16 @@ Port D, Pin 4 -> Input -> Right Whisker
 
 int main(void)
 {
+	DDRB = 0b11110000 // set 7-4th bits as outputs
+	PORTB = 0b01100000 // turn on LEDs connected to 5-6th bits
 
 	while (1) // loop forever
 	{
+		uint8_t mpr = PIND & 0b00110000; // read and extract only 4-5 th bit
+		If (mpr == 0b00100000) // check if the right whisker is hit
+		{
+			BotAction(); // call BotAction
+		}
 		// Your code goes here
 		//more code here
 	}
