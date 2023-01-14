@@ -45,7 +45,7 @@ int main(void)
 		{
 			BotActionL(); // call BotAction
 		}
-		PORTB = FORWARD; //resume foward movement
+		PORTB = FORWARD; //resume forward movement
 		_delay_ms(50); //delay for 50ms to help prevent switch bouncing
 	}
 }
