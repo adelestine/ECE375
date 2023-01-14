@@ -41,6 +41,7 @@ int main(void)
 	while (1) // loop forever
 	{
 		uint8_t mpr = PIND & 0b00110000; // read and extract only 4-5 th bit
+		mpr = ~mpr; //flip bits since PINDD is active low
 		if (mpr == 0b00100000) // check if the right whisker is hit
 		{
 			BotActionR(); // call BotAction
