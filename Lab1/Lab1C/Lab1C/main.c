@@ -2,7 +2,7 @@
  * Lab1C.c
  *
  * Created: 1/14/2023 12:51:47 PM
- * Author : Astrid
+ * Author : Astrid Delestine and Lucas Plaisted
  */ 
 
 /*
