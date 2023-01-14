@@ -34,6 +34,7 @@ int main(void)
 	while (1) // loop forever
 	{
 		uint8_t mpr = PIND & 0b00110000; // read and extract only 4-5 th bit
+		PORTB = 0b10010000;
 		if (mpr == 0b00100000) // check if the right whisker is hit
 		{
 			BotActionR(); // call BotAction
@@ -48,10 +49,10 @@ int main(void)
 }
 
 
-int BotActionL(){
+void BotActionL(){
 	
 }
 
-int BotActionR(){
+void BotActionR(){
 	
 }
