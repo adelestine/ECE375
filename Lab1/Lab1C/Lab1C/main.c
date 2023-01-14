@@ -26,8 +26,10 @@ Port D, Pin 4 -> Input -> Right Whisker
 
 int main(void)
 {
-	DDRB = 0b11110000 // set 7-4th bits as outputs
-	PORTB = 0b01100000 // turn on LEDs connected to 5-6th bits
+	DDRB = 0b11110000; // set 7-4th bits as outputs
+	PORTB = 0b01100000; // turn on LEDs connected to 5-6th bits
+	DDRD = 0b00110000; // set 5th and 4th pins on D as inputs
+	PORTD = 0b11110000; //enable pull up resistors for port D pins 7-4
 
 	while (1) // loop forever
 	{
