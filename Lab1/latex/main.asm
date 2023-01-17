@@ -25,8 +25,7 @@
 ;*
 ;***********************************************************
 ;*
-;*	 Author: David Zier, Mohammed Sinky, and Dongjun Lee 
-;*                      	(modification August 10, 2022)
+;*	 Author: David Zier, Mohammed Sinky, and Dongjun Lee (modification August 10, 2022)
 ;*	   Date: August 10, 2022
 ;*	Company: TekBots(TM), Oregon State University - EECS
 ;*	Version: 3.0
@@ -36,7 +35,7 @@
 ;*----------------------------------------------------------
 ;*	-	3/29/02	Zier		Initial Creation of Version 1.0
 ;*	-	1/08/09 Sinky		Version 2.0 modifictions
-;*  -   8/10/22 Dongjun	The chip transition from Atmega128 to Atmega32U4
+;*  -   8/10/22 Dongjun		The chip transition from Atmega128 to Atmega32U4
 ;***********************************************************
 
 .include "m32U4def.inc"				; Include definition file
@@ -135,13 +134,11 @@ INIT:
 MAIN:
 		in		mpr, PIND		; Get whisker input from Port D
 		andi	mpr, (1<<WskrR|1<<WskrL)
-		cpi		mpr, (1<<WskrL)	; Check for Right Whisker input 
-								;(Recall Active Low)
+		cpi		mpr, (1<<WskrL)	; Check for Right Whisker input (Recall Active Low)
 		brne	NEXT			; Continue with next check
 		rcall	HitRight		; Call the subroutine HitRight
 		rjmp	MAIN			; Continue with program
-NEXT:	cpi		mpr, (1<<WskrR)	; Check for Left Whisker input
-								;(Recall Active Low)
+NEXT:	cpi		mpr, (1<<WskrR)	; Check for Left Whisker input (Recall Active)
 		brne	MAIN			; No Whisker input, continue program
 		rcall	HitLeft			; Call subroutine HitLeft
 		rjmp	MAIN			; Continue through main
@@ -164,8 +161,7 @@ HitRight:
 		; Move Backwards for a second
 		ldi		mpr, MovBck	; Load Move Backward command
 		out		PORTB, mpr	; Send command to port
-		ldi		waitcnt, (WTime<<1)	; Shifted bit back by 1, 
-									; making the wait time two seconds
+		ldi		waitcnt, (WTime<<1)	; Wait for 1 second MODIFIED, Shifted bit back by 1, making the wait time double what it was Coolio
 		rcall	Wait			; Call wait function
 
 		; Turn left for a second

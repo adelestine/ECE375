@@ -1,0 +1,142 @@
+% template created by: Russell Haering. arr. Joseph Crop
+\documentclass[12pt,letterpaper]{article}
+\usepackage{anysize}
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{graphicx}
+\usepackage{multirow}
+\usepackage{listings}
+
+
+
+\marginsize{2cm}{2cm}{1cm}{1cm}
+
+\begin{document}
+
+\begin{titlepage}
+    \vspace*{4cm}
+    \begin{flushright}
+    {\huge
+        ECE 375 Lab 1\\[1cm]
+    }
+    {\large
+        Introduction to AVR Development Tools
+    }
+    \end{flushright}
+    \begin{flushleft}
+    Lab session: 015
+    
+    Time: 12:00-13:50
+    \end{flushleft}
+    \begin{flushright}
+    Author: Astrid Delestine
+
+    Programming partner: Lucas Plastid 
+
+    \vfill
+    \rule{5in}{.5mm}\\
+    TA Signature
+    \end{flushright}
+
+\end{titlepage}
+
+\section{Introduction}
+This is the first Lab in the ECE 375 series and it covers the setup and compilation of an AVR Assembly Program. The student will learn how how to use the sample Basic Bump Bot assembly file and send the binaries to the AVR Microcontroller board. For the second part of the lab the student will be expected to download and compile the included C sample program and from it learn how to configure the I/O ports of the ATmega32U4 Microcontroller. The student will then write their own C program and upload it to the Microcontroller to verify that it runs as expected. The provided programs have been attached in the source code section of this report.
+
+\section{Design}
+As for part 1 of this lab assignment, no design needs to be done as the program is supplied. For part 2 of this lab assignment the C program was created to mimic the operaitons of the bump bot assembly file. Firstly the student must understand how the Bump Bot code must operate and they gain this information from the slides provided as they must program the right LED's to illuminate. For our program we decided that we wanted everything to be as readable as possible, thus we created constants for each of the LED directional cues. 
+%TODO ADD BLOCK DIAGRAM FOR WHAT IS EXPECTED
+
+\section{Assembely Overview}
+As for the Assmbeley program an overveiw can be seen below
+
+
+\subsection{Internal Register Definitions and Constants}
+Text goes here
+
+\subsection{Initialization Routine}
+Text goes here
+
+\subsection{Main Routine}
+Text goes here
+
+\subsection{Subroutines}
+	\subsubsection{Hit Right}
+	This is just an example.
+	
+	\subsubsection{Hit Left}
+	Replace with your owns.
+
+\section{C Program Overview}
+Each of the methods determined to operate the bump bot can be seen in the code section at the end of this report, their discriptions are here.
+
+\subsection{Internal Register Definitions and Constants}
+Text goes here
+
+\subsection{Initialization Routine}
+Text goes here
+
+\subsection{Main Routine}
+Text goes here
+
+\subsection{Subroutines}
+	\subsubsection{Hit Right}
+	This is just an example.
+	
+	\subsubsection{Hit Left}
+	Replace with your owns.
+
+
+
+\section{Testing}
+Text and Figures go here.
+\begin{table}[h]
+	\begin{tabular}{|l|l|l|ll}
+		\cline{1-3}
+		Case & Expected & Actual meet expected &  &  \\ \cline{1-3}
+		&          &                      &  &  \\ \cline{1-3}
+		&          &                      &  &  \\ \cline{1-3}
+		&          &                      &  &  \\ \cline{1-3}
+	\end{tabular}
+\end{table}
+
+\section{Additional Questions}
+\begin{enumerate}
+    \item
+    The text of the question
+
+    The text of the answer
+
+    \item
+    The text of the question
+    \begin{enumerate}
+        \item
+        Text of the first part of the answer
+
+        \item
+        Text of the second part of the answer
+    \end{enumerate}
+
+\end{enumerate}
+
+\section{Difficulties}
+Text goes here
+
+\section{Conclusion}
+Text goes here
+
+\section{Source Code}
+
+
+\lstinputlisting
+[
+caption=Assembely Bump Bot Script,
+language=C++,
+numbers =left,
+tabsize = 4
+]{../Lab1/Lab1/main.asm}
+
+
+\end{document}
