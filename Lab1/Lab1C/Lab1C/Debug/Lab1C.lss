@@ -134,7 +134,7 @@ void goBackwards2Sec(){
 void BotActionL(){
 	goBackwards2Sec(); //self explanatory
   f0:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
-	PORTB = RIGHT; //left motor forwards, right motor backwards = turn right
+	PORTB = LEFT; //left motor forwards, right motor backwards = turn right
   f4:	80 e8       	ldi	r24, 0x80	; 128
   f6:	85 b9       	out	0x05, r24	; 5
   f8:	2f ef       	ldi	r18, 0xFF	; 255
@@ -156,7 +156,7 @@ void BotActionL(){
 void BotActionR(){
 	goBackwards2Sec(); //self explanatory :)
  10c:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
-	PORTB = LEFT; //right motor forwards, left motor backwards = turn left
+	PORTB = RIGHT; //right motor forwards, left motor backwards = turn left
  110:	80 e1       	ldi	r24, 0x10	; 16
  112:	85 b9       	out	0x05, r24	; 5
  114:	2f ef       	ldi	r18, 0xFF	; 255
@@ -193,16 +193,16 @@ int main(void)
  132:	80 73       	andi	r24, 0x30	; 48
 		mpr = ~mpr; //flip bits since PINDD is active low
  134:	80 95       	com	r24
-		if (mpr & 0b00100000) // check if the right whisker is hit
- 136:	85 ff       	sbrs	r24, 5
+		if (mpr & 0b00010000) // check if the right whisker is hit
+ 136:	84 ff       	sbrs	r24, 4
  138:	03 c0       	rjmp	.+6      	; 0x140 <main+0x18>
 		{
 			BotActionR(); // call BotAction
  13a:	0e 94 86 00 	call	0x10c	; 0x10c <BotActionR>
  13e:	03 c0       	rjmp	.+6      	; 0x146 <main+0x1e>
 		}
-		else if (mpr & 0b00010000) // check if the left whisker is hit
- 140:	84 fd       	sbrc	r24, 4
+		else if (mpr & 0b00100000) // check if the left whisker is hit
+ 140:	85 fd       	sbrc	r24, 5
 		{
 			BotActionL(); // call BotAction
  142:	0e 94 78 00 	call	0xf0	; 0xf0 <BotActionL>
