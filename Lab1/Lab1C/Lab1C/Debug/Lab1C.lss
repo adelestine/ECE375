@@ -17,15 +17,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_abbrev 00000a9e  00000000  00000000  00000eff  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   00000351  00000000  00000000  0000199d  2**0
+  7 .debug_line   0000034b  00000000  00000000  0000199d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000054  00000000  00000000  00001cf0  2**2
+  8 .debug_frame  00000054  00000000  00000000  00001ce8  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000538  00000000  00000000  00001d44  2**0
+  9 .debug_str    00000541  00000000  00000000  00001d3c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000000f6  00000000  00000000  0000227c  2**0
+ 10 .debug_loc    000000f6  00000000  00000000  0000227d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000028  00000000  00000000  00002372  2**0
+ 11 .debug_ranges 00000028  00000000  00000000  00002373  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -102,7 +102,7 @@ Disassembly of section .text:
   d6:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
 
 000000da <goBackwards2Sec>:
-	goBackwards2Sec(); //self explanatory :)
+	_delay_ms(1000); //wait 1 second
 	return;
 }
 
@@ -132,43 +132,42 @@ void goBackwards2Sec(){
 
 
 void BotActionL(){
-	PORTB = RIGHT; //left motor forwards, right motor backwards = turn right
-  f0:	80 e8       	ldi	r24, 0x80	; 128
-  f2:	85 b9       	out	0x05, r24	; 5
-  f4:	2f ef       	ldi	r18, 0xFF	; 255
-  f6:	83 ed       	ldi	r24, 0xD3	; 211
-  f8:	90 e3       	ldi	r25, 0x30	; 48
-  fa:	21 50       	subi	r18, 0x01	; 1
-  fc:	80 40       	sbci	r24, 0x00	; 0
-  fe:	90 40       	sbci	r25, 0x00	; 0
- 100:	e1 f7       	brne	.-8      	; 0xfa <BotActionL+0xa>
- 102:	00 c0       	rjmp	.+0      	; 0x104 <BotActionL+0x14>
- 104:	00 00       	nop
-	_delay_ms(1000); //wait 1 second
 	goBackwards2Sec(); //self explanatory
- 106:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
+  f0:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
+	PORTB = RIGHT; //left motor forwards, right motor backwards = turn right
+  f4:	80 e8       	ldi	r24, 0x80	; 128
+  f6:	85 b9       	out	0x05, r24	; 5
+  f8:	2f ef       	ldi	r18, 0xFF	; 255
+  fa:	83 ed       	ldi	r24, 0xD3	; 211
+  fc:	90 e3       	ldi	r25, 0x30	; 48
+  fe:	21 50       	subi	r18, 0x01	; 1
+ 100:	80 40       	sbci	r24, 0x00	; 0
+ 102:	90 40       	sbci	r25, 0x00	; 0
+ 104:	e1 f7       	brne	.-8      	; 0xfe <BotActionL+0xe>
+ 106:	00 c0       	rjmp	.+0      	; 0x108 <BotActionL+0x18>
+ 108:	00 00       	nop
  10a:	08 95       	ret
 
 0000010c <BotActionR>:
+	_delay_ms(1000); //wait 1 second
 	return;
 }
 
 void BotActionR(){
-	PORTB = LEFT; //right motor forwards, left motor backwards = turn left
- 10c:	80 e1       	ldi	r24, 0x10	; 16
- 10e:	85 b9       	out	0x05, r24	; 5
- 110:	2f ef       	ldi	r18, 0xFF	; 255
- 112:	83 ed       	ldi	r24, 0xD3	; 211
- 114:	90 e3       	ldi	r25, 0x30	; 48
- 116:	21 50       	subi	r18, 0x01	; 1
- 118:	80 40       	sbci	r24, 0x00	; 0
- 11a:	90 40       	sbci	r25, 0x00	; 0
- 11c:	e1 f7       	brne	.-8      	; 0x116 <BotActionR+0xa>
- 11e:	00 c0       	rjmp	.+0      	; 0x120 <BotActionR+0x14>
- 120:	00 00       	nop
-	_delay_ms(1000); //wait 1 second
 	goBackwards2Sec(); //self explanatory :)
- 122:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
+ 10c:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
+	PORTB = LEFT; //right motor forwards, left motor backwards = turn left
+ 110:	80 e1       	ldi	r24, 0x10	; 16
+ 112:	85 b9       	out	0x05, r24	; 5
+ 114:	2f ef       	ldi	r18, 0xFF	; 255
+ 116:	83 ed       	ldi	r24, 0xD3	; 211
+ 118:	90 e3       	ldi	r25, 0x30	; 48
+ 11a:	21 50       	subi	r18, 0x01	; 1
+ 11c:	80 40       	sbci	r24, 0x00	; 0
+ 11e:	90 40       	sbci	r25, 0x00	; 0
+ 120:	e1 f7       	brne	.-8      	; 0x11a <BotActionR+0xe>
+ 122:	00 c0       	rjmp	.+0      	; 0x124 <BotActionR+0x18>
+ 124:	00 00       	nop
  126:	08 95       	ret
 
 00000128 <main>:

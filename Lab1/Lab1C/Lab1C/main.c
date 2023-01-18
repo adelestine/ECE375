@@ -57,16 +57,16 @@ int main(void)
 
 
 void BotActionL(){
-	PORTB = RIGHT; //left motor forwards, right motor backwards = turn right
-	_delay_ms(1000); //wait 1 second
 	goBackwards2Sec(); //self explanatory
+	PORTB = LEFT; //left motor forwards, right motor backwards = turn right
+	_delay_ms(1000); //wait 1 second
 	return;
 }
 
 void BotActionR(){
-	PORTB = LEFT; //right motor forwards, left motor backwards = turn left
-	_delay_ms(1000); //wait 1 second
 	goBackwards2Sec(); //self explanatory :)
+	PORTB = RIGHT; //right motor forwards, left motor backwards = turn left
+	_delay_ms(1000); //wait 1 second
 	return;
 }
 
