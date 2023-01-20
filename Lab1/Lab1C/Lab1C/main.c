@@ -24,7 +24,13 @@ Port D, Pin 4 -> Input -> Right Whisker
 #include <util/delay.h>
 #include <stdio.h>
 
-const int FORWARD = 0b10010000, HALT = 0b11110000, BACKWARD = 0b00000000, RIGHT = 0b00010000, LEFT = 0b10000000; // Led final integer values
+// Led final integer values
+
+const int FORWARD = 0b10010000, 
+HALT = 0b11110000, 
+BACKWARD = 0b00000000,
+ RIGHT = 0b00010000, 
+ LEFT = 0b10000000; 
 
 void BotActionL();
 void BotActionR();
@@ -40,7 +46,8 @@ int main(void)
 
 	while (1) // loop forever
 	{
-		uint8_t mpr = PIND & 0b00110000; // read and extract only 4-5 th bit
+		// read and extract only 4-5 th bit
+		uint8_t mpr = PIND & 0b00110000; 
 		mpr = ~mpr; //flip bits since PINDD is active low
 		if (mpr & 0b00010000) // check if the right whisker is hit
 		{
@@ -58,14 +65,16 @@ int main(void)
 
 void BotActionL(){
 	goBackwards2Sec(); //self explanatory
-	PORTB = LEFT; //left motor forwards, right motor backwards = turn right
+	//left motor forwards, right motor backwards = turn right
+	PORTB = LEFT; 
 	_delay_ms(1000); //wait 1 second
 	return;
 }
 
 void BotActionR(){
 	goBackwards2Sec(); //self explanatory :)
-	PORTB = RIGHT; //right motor forwards, left motor backwards = turn left
+	//right motor forwards, left motor backwards = turn left
+	PORTB = RIGHT; 
 	_delay_ms(1000); //wait 1 second
 	return;
 }

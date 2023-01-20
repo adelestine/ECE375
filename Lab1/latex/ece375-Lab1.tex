@@ -8,10 +8,12 @@
 \usepackage{graphicx}
 \usepackage{multirow}
 \usepackage{listings}
-
+\usepackage{xcolor}
 
 
 \marginsize{2cm}{2cm}{1cm}{1cm}
+
+\lstset{ framexleftmargin=9mm, frame=shadowbox,tabsize = 4}
 
 \begin{document}
 
@@ -49,39 +51,39 @@ This is the first Lab in the ECE 375 series and it covers the setup and compilat
 As for part 1 of this lab assignment, no design needs to be done as the program is supplied. For part 2 of this lab assignment the C program was created to mimic the operaitons of the bump bot assembly file. Firstly the student must understand how the Bump Bot code must operate and they gain this information from the slides provided as they must program the right LED's to illuminate. For our program we decided that we wanted everything to be as readable as possible, thus we created constants for each of the LED directional cues. 
 %TODO ADD BLOCK DIAGRAM FOR WHAT IS EXPECTED
 
-\section{Assembely Overview}
-As for the Assmbeley program an overveiw can be seen below
+\section{Assembly Overview}
+As for the Assembly program an overview can be seen below
 
 
 \subsection{Internal Register Definitions and Constants}
-Text goes here
+Four different registers have been setup, those being the multipurpose register (mpr), the wait counter register (waitcnt), and two loop counters, for counting the cycles of the delay function. In addition to these, there are several different constants. WTime defines the time  in milliseconds to wait inside the wait loop. The rest of the defined constants are either input bits, engine enable bits, or engine direction bits.
 
 \subsection{Initialization Routine}
-Text goes here
+The initialization routine sets up several important ports and pointers that allow the rest of the assembly to work. Firstly the stack pointer is initialized at the end of RAM so that when the program pushes and pops items into and out of it, the stack does not interfere with any other data. Port B is then initialized for output, and Port D is initialized for input. The move forward command is also in this phase, to give a default movement type.
 
 \subsection{Main Routine}
-Text goes here
+The main program constantly checks for if either of the whisker buttons have been hit, by reading the input of the PIND. When one of the whiskers is hit, the correct subroutine is called. As long as no button is hit the bump bot will continue in a straight line.
 
 \subsection{Subroutines}
 	\subsubsection{Hit Right}
-	This is just an example.
+	The HitRight subroutine describes what happens when the right whisker bit is triggered. The robot will move backwards for a second, then turn left for a second, then it will continue forward. 
 	
 	\subsubsection{Hit Left}
-	Replace with your owns.
+	The HitLeft subroutine describes what happens when the left whisker bit is triggered. First the bump bot will move backwards for a second, then it will turn right for a second, then it will continue forward. 
+	
+	\subsubsection{Wait}
+	The Wait subroutine controls the wait intervals while the bump bot is preforming an action. Due to each clock cycle taking a measurable amount of time, we can calculate how many times we need to loop for. This function used the olcnt and ilcnt to have two nested loops, running the dec command until they equal zero, thus waiting the requested amount of time.
 
 \section{C Program Overview}
-Each of the methods determined to operate the bump bot can be seen in the code section at the end of this report, their discriptions are here.
+Each of the methods determined to operate the bump bot can be seen in the code section at the end of this report, their descriptions are here.
 
-\subsection{Internal Register Definitions and Constants}
+\subsection{Definitions and Constants}
+Several different constant integer values are prescribed on lines 29 - 33
+
+\subsection{Main Method}
 Text goes here
 
-\subsection{Initialization Routine}
-Text goes here
-
-\subsection{Main Routine}
-Text goes here
-
-\subsection{Subroutines}
+\subsection{Functions}
 	\subsubsection{Hit Right}
 	This is just an example.
 	
@@ -127,16 +129,23 @@ Text goes here
 \section{Conclusion}
 Text goes here
 
-\section{Source Code}
+\section{Source Code}%
 
 
 \lstinputlisting
 [
 caption=Assembely Bump Bot Script,
-language=C++,
+language={[x86masm]Assembler},
 numbers =left,
-tabsize = 4
+rulesepcolor=\color{blue}
 ]{../Lab1/Lab1/main.asm}
+\lstinputlisting[
+caption=C Bump Bot Script,
+language=C,
+numbers =left,
+rulesepcolor=\color{magenta}
+]{../Lab1C/Lab1C/main.c}
+
 
 
 \end{document}
