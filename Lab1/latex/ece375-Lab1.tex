@@ -72,54 +72,134 @@ The main program constantly checks for if either of the whisker buttons have bee
 	The HitLeft subroutine describes what happens when the left whisker bit is triggered. First the bump bot will move backwards for a second, then it will turn right for a second, then it will continue forward. 
 	
 	\subsubsection{Wait}
-	The Wait subroutine controls the wait intervals while the bump bot is preforming an action. Due to each clock cycle taking a measurable amount of time, we can calculate how many times we need to loop for. This function used the olcnt and ilcnt to have two nested loops, running the dec command until they equal zero, thus waiting the requested amount of time.
+	The Wait subroutine controls the wait intervals while the bump bot is preforming an action. Due to each clock cycle taking a measurable amount of time, we can calculate how many times we need to loop for. This function used the olcnt and ilcnt to have two nested loops, running the dec command until they equal zero, thus waiting the requested amount of time. \textbf{The original program was changed by modifying the Wtime constant value by shifting the bit back by 1 space inside of the HitRight subroutine and the HitLeft subroutine. This effectively doubles the wait time. See Lines 167, 201}
 
 \section{C Program Overview}
 Each of the methods determined to operate the bump bot can be seen in the code section at the end of this report, their descriptions are here.
 
 \subsection{Definitions and Constants}
-Several different constant integer values are prescribed on lines 29 - 33
+Several different constant integer values are prescribed on lines 29 - 33. These constants are the binary values for what the LED's should be when enabled. Several functions are defined here as well, those being, BotActionL() , BotActionR() and goBackwards2Sec(). Each of these are quite self explanatory as to what they do.
 
 \subsection{Main Method}
-Text goes here
+The main method initializes ports D and B for input and output respectively. Then for port D, due to the fact that it is an input, has its high 4 bits pulled high to enable inputs on those channels. It is importnat to note that all of the inputs are active low, so we must invert them, this is done on line 51. Next the main function enters an infinite while loop, that constantly checks the input of PIND and depending on the inputs, calls the BotActionL() or BotActionR() functions. It ends the while loop by setting the LEDs to forward direction and debouncing the button press by 50ms.
 
 \subsection{Functions}
-	\subsubsection{Hit Right}
-	This is just an example.
+	\subsubsection{BotActionL()}
+	first this function calls the goBackwards2sec() function, then it sets the left motor to forwards and the right motor to backwards, turning the robot right. It then waits 1 second for the action to take place, then returns to the main loop.
 	
-	\subsubsection{Hit Left}
-	Replace with your owns.
+	\subsubsection{BotActionR()}
+	first this function calls the goBackwards2sec() function, then it sets the right motor to forwards and the left motor to backwards, turning the robot left. It then waits 1 second for the action to take place, then returns to the main loop.
 
-
+	\subsubsection{goBackwards2Sec()}
+	This function sets the LED's to the reverse motor direction for two seconds, then returns to the main loop.
 
 \section{Testing}
-Text and Figures go here.
+Testing was only done for the modified bump bot script and for the C program, as the unchanged bump bot script was left alone.
 \begin{table}[h]
+	\centering
 	\begin{tabular}{|l|l|l|ll}
 		\cline{1-3}
 		Case & Expected & Actual meet expected &  &  \\ \cline{1-3}
-		&          &                      &  &  \\ \cline{1-3}
-		&          &                      &  &  \\ \cline{1-3}
-		&          &                      &  &  \\ \cline{1-3}
+	D4 Pressed	&Backward movement$\rightarrow$Turn Left$\rightarrow$Forward&	\checkmark  &  \\ \cline{1-3}
+	D5 Pressed	&Backward movement$\rightarrow$Turn Right$\rightarrow$Forward&	\checkmark	&  \\ \cline{1-3}
+%		&          &                      &  &  \\ \cline{1-3}
 	\end{tabular}
+\caption{Assembly Testing Cases}
+\end{table}
+
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|l|l|l|ll}
+		\cline{1-3}
+		Case & Expected & Actual meet expected &  &  \\ \cline{1-3}
+	D4 Pressed	&Backward movement$\rightarrow$Turn Left$\rightarrow$Forward&\checkmark&  &  \\ \cline{1-3}
+	D5 Pressed	&Backward movement$\rightarrow$Turn Right$\rightarrow$Forward&\checkmark&  &  \\ \cline{1-3}
+%		&          &                      &  &  \\ \cline{1-3}
+	\end{tabular}
+	\caption{C Testing Cases}
 \end{table}
 
 \section{Additional Questions}
 \begin{enumerate}
     \item
-    The text of the question
+    Take a look at the code you downloaded for today’s lab. Notice the lines that begin with .def and .equ followed by some type of expression. These are known as pre-compiler directives. Define pre-compiler directive. What is the difference between the .def and .equ directives? (HINT: see Section 5.4 of the AVR Assembler User Guide).
 
-    The text of the answer
+    Pre-compiler directive can be defined as just that, a program or method that is run inside of the compiler, to save certain data values to the memory of the program. these values do not typically change. The .def directive defines a human readable word or reference, that the programmer can use instead of the register directly. This makes the code more human readable. The .equ directive creates a constant variable, that references in this case a number directly. This directive also makes the code more human readable, as one can easily see what number needs to be referenced. The main difference between the two is that .equ defines numbers, while .def defines registers, or places numbers can go.
+
+	\item 
+	Read the AVR Instruction Set Manual. Based on this manual, describe the instructions listed below.
+	\begin{enumerate}
+		\item ADIW
+		
+		Adds an immiditate value to a word. This is not a text word, rather a binary word. A binary value of 16bits. The value must be from 0 - 63. (pg33 Amtel AVR Instruction Set Manual)
+		\item BCLR
+		
+		Clears a single Flag in the SREG. (pg38 Amtel AVR Instruction Set Manual)
+		\item BRCC
+		
+		Conditional branch if the carry flag is cleared. Tests the carry flag in SREG and if it is zero branches. (pg42 Amtel AVR Instruction Set Manual)
+		\item BRGE
+		
+		Branches by testing the signed flag in SREG, and branches if that flag is cleared. This works with Signed binary numbers. (pg46 Amtel AVR Instruction Set Manual)
+		\item COM
+		
+		Preforms a ones complement operation on the passed register (pg76 Amtel AVR Instruction Set Manual)
+		\item EOR
+		
+		Compares two registers using exclusive or in a bitwise fashion.(pg91 Amtel AVR Instruction Set Manual)
+		\item LSL
+		
+		Preforms a logical shift left on the passed register moving the topmost bit into the carry flag if necessary. (pg120 Amtel AVR Instruction Set Manual)
+		\item LSR
+		
+		Preforms a logical shift right on the passed register and moves the lowest bit into the carry flag if necessary (pg122 Amtel AVR Instruction Set Manual)
+		\item NEG
+		
+		Preforms the two's complement on the passed register, the value \$80 is left unchanged. (pg129 Amtel AVR Instruction Set Manual)
+		\item OR
+		
+		Preforms the logical OR operation between two registers, saves result in the first one. (pg132 Amtel AVR Instruction Set Manual)
+		\item ORI
+		
+		Preforms a logical OR operation between one register and an immediate value. Results in the register (pg133 Amtel AVR Instruction Set Manual)
+		\item ROL
+		
+		Shifts all bits to the left by one place, taking from the carry flag if necessary, and placing the rotated out bit into the carry flag if necessary. (pg143 Amtel AVR Instruction Set Manual)
+		\item ROR
+		
+		Shifts all bits to the right by one place, taking from the carry flag if necessary, then placing the rotated out bit into the carry flag if necessary. (pg145 Amtel AVR Instruction Set Manual)
+		\item SBC
+		
+		Subtracts two registers with the carry flag being subtracted as well if necessary. Places result in first register(pg147 Amtel AVR Instruction Set Manual)
+		\item SBIW
+		
+		Subtracts an immediate value from a word. (pg154 Amtel AVR Instruction Set Manual)
+		\item SUB
+		
+		Subtracts two registers and puts the result in the first register. (pg181 Amtel AVR Instruction Set Manual)
+		
+	\end{enumerate}
+	\item 
+	The ATmega32U4 microcontroller has six general-purpose input-output (I/O) ports: Port A through Port F. An I/O port is a collection of pins, and these pins can be individually configured to send (output) or receive (input) a single binary bit. Each port has three I/O registers, which are used to control the behavior of its pins: PORTx, DDRx, and PINx. (The
+	“x ” is just a generic notation; for example, Port A’s three I/O registers are PORTA, DDRA, and PINA.)
+	\begin{enumerate}
+		\item 
+		Suppose you want to configure Port B so that all 8 of its pins are configured as outputs. Which I/O register is used to make this configuration, and what 8-bit binary value must be written to configure all 8 pins as outputs?
+		\item 
+		Suppose Port D’s pins 4-7 have been configured as inputs. Which I/O register must be used to read the current state of Port D’s pins?
+		\item 
+		Does the function of a PORTx register differ depending on the setting of its corresponding DDRx register? If so, explain any differences.
+	\end{enumerate}
+
 
     \item
-    The text of the question
-    \begin{enumerate}
-        \item
-        Text of the first part of the answer
-
-        \item
-        Text of the second part of the answer
-    \end{enumerate}
+	This lab required you to modify the sample AVR program so the TekBot can reverse for twice as long before turning away and resuming forward motion. Explain how you have done it with reasons.
+	
+	\item 
+	The Part 2 of this lab required you to compile two C programs (one given as a sample, and another that you wrote) into a binary representation that allows them to run directly on your ATmega32U4 board. Explain some of the benefits of writing code in a language like C that can be “cross compiled”. Also, explain some of the drawbacks of writing this way.
+	
+	\item 
+	The C program you wrote does basically the same thing as the sample AVR	program you looked at in Part 1. What is the size (in bytes) of your Part 1 \& Part 2 output .hex files? Explain why there is a size difference between these two files, even though they both perform the same BumpBot behavior?
 
 \end{enumerate}
 

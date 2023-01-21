@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.19)  20 JAN 2023 09:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.19)  20 JAN 2023 11:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -281,22 +281,20 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
  [1
 
 {C:/Users/deles/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-[1]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 98.
+[1] [2]
+LaTeX Font Info:    Trying to load font information for U+msa on input line 100
+.
 
- (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+(C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 98.
-
+LaTeX Font Info:    Trying to load font information for U+msb on input line 100
+.
 
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-
-LaTeX Warning: `h' float specifier changed to `ht'.
-
-[2]
+[3] [4] [5]
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
@@ -306,15 +304,14 @@ File: lstlang2.sty 2020/03/24 1.8d listings language file
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang3.sty
 File: lstlang3.sty 2020/03/24 1.8d listings language file
 )
-(../Lab1/Lab1/main.asm [3]
+(../Lab1/Lab1/main.asm [6]
 Overfull \hbox (7.11513pt too wide) in paragraph at lines 39--40
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
-[4]
 LaTeX Font Info:    Trying to load font information for OML+cmr on input line 6
 5.
- (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/base\omlcmr.fd
+(C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/base\omlcmr.fd
 File: omlcmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
@@ -332,35 +329,36 @@ LaTeX Font Info:    Font shape `OML/cmr/m/it' in size <12> not available
 LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 75.
 
-[5] [6] [7])
+[7] [8] [9] [10])
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
 )
-(../Lab1C/Lab1C/main.c [8] [9]) [10] (ece375-Lab1.aux) ) 
+(../Lab1C/Lab1C/main.c [11] [12]) [13] (ece375-Lab1.aux) ) 
 Here is how much of TeX's memory you used:
- 6280 strings out of 476404
- 90015 string characters out of 2789524
- 1939324 words of memory out of 3000000
- 26560 multiletter control sequences out of 15000+600000
+ 6281 strings out of 476404
+ 90029 string characters out of 2789524
+ 1938324 words of memory out of 3000000
+ 26561 multiletter control sequences out of 15000+600000
  519810 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,9n,62p,687b,2145s stack positions out of 10000i,1000n,20000p,200000b,80000s
- <C:\Users\deles\AppDat
-a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk> <C:\Users\deles\
-AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcti1200.pk><C:/Users/d
-eles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C
-:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi
-12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
-s/cm/cmr12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public
-/amsfonts/cm/cmr17.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/amsfonts/cm/cmsy10.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on ece375-Lab1.pdf (11 pages, 133214 bytes).
+ 57i,11n,62p,744b,2145s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ <C:\Users\deles\AppD
+ata\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcti1200.pk> <C:\Users\dele
+s\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><C:/Users
+/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+<C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cm
+mi12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfo
+nts/cm/cmr12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/publ
+ic/amsfonts/cm/cmr17.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/ty
+pe1/public/amsfonts/cm/cmsy10.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/deles/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb>
+Output written on ece375-Lab1.pdf (14 pages, 152343 bytes).
 PDF statistics:
- 80 PDF objects out of 1000 (max. 8388607)
+ 95 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
