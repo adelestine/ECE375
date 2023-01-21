@@ -185,33 +185,44 @@ Testing was only done for the modified bump bot script and for the C program, as
 	\begin{enumerate}
 		\item 
 		Suppose you want to configure Port B so that all 8 of its pins are configured as outputs. Which I/O register is used to make this configuration, and what 8-bit binary value must be written to configure all 8 pins as outputs?
+		
+		DDRB would be configured and to enable all 8 pins as outputs it would need to be set to 0b11111111 or \$ff.
 		\item 
 		Suppose Port D’s pins 4-7 have been configured as inputs. Which I/O register must be used to read the current state of Port D’s pins?
+		
+		To read from port D's pins, you must use the PINx command, for example PIND
 		\item 
 		Does the function of a PORTx register differ depending on the setting of its corresponding DDRx register? If so, explain any differences.
+		
+		Yes it does, due to the fact that if DDRx is set to logical 1, it then uses the PORTx as a voltage Sink or Source. PORTx can only be used. This means that PORTx can only be used as an output port if DDRx is set to a logical 1. For other operations, one would be configuring the pull up resistor.
 	\end{enumerate}
 
 
     \item
 	This lab required you to modify the sample AVR program so the TekBot can reverse for twice as long before turning away and resuming forward motion. Explain how you have done it with reasons.
 	
+	This has been done by shifting the bit that had been preset as WTime to the left by 1, thus effectively multiplying it by 2. We did this in this way because we wanted to maintain the value of WTime outside of the move backward function. Looking back on the project I believe it would have been easier to just call the Wait method twice.
+	
 	\item 
 	The Part 2 of this lab required you to compile two C programs (one given as a sample, and another that you wrote) into a binary representation that allows them to run directly on your ATmega32U4 board. Explain some of the benefits of writing code in a language like C that can be “cross compiled”. Also, explain some of the drawbacks of writing this way.
 	
+	Some benefits of having a cross compiled program are that they should be easy to migrate to a different piece of hardware as the code itself should not need to change, only what hardware the code references. Some drawbacks are that it may be difficult to setup for the first time, or it may run slower than a program written specifically for a chip. C however is known for being almost as good as writing directly to hardware, like we are doing with Assembly 
+	
 	\item 
 	The C program you wrote does basically the same thing as the sample AVR	program you looked at in Part 1. What is the size (in bytes) of your Part 1 \& Part 2 output .hex files? Explain why there is a size difference between these two files, even though they both perform the same BumpBot behavior?
+	
+	The Assembly hex file came out to 485 bytes while the C file came out to 1020 bytes. This is over double the size. The main reason for the discrepancy in size can be attributed to possible bloat or automatic functions built into the C program to make it run smoothly. C works for you in this way, however the Assembly file is smaller due to the fact that we have defined exactly what needs to happen at every step thus making it a smaller file and possibly more precise.
+	
 
 \end{enumerate}
 
 \section{Difficulties}
-Text goes here
+This Lab was quite trivial, as such the only difficulties that we encountered were agreeing on how we would preform the requested task with modifying the original bump bot script. 
 
 \section{Conclusion}
 Text goes here
 
 \section{Source Code}%
-
-
 \lstinputlisting
 [
 caption=Assembely Bump Bot Script,
