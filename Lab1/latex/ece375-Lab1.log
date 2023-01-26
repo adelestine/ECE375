@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.19)  20 JAN 2023 11:31
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.1.19)  25 JAN 2023 22:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -309,9 +309,10 @@ Overfull \hbox (7.11513pt too wide) in paragraph at lines 39--40
 [][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
+[7]
 LaTeX Font Info:    Trying to load font information for OML+cmr on input line 6
 5.
-(C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/base\omlcmr.fd
+ (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/base\omlcmr.fd
 File: omlcmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
@@ -329,18 +330,18 @@ LaTeX Font Info:    Font shape `OML/cmr/m/it' in size <12> not available
 LaTeX Font Info:    Font shape `OMS/cmr/m/it' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 75.
 
-[7] [8] [9] [10])
+[8] [9] [10] [11])
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2020/03/24 1.8d (Carsten Heinz)
 )
-(../Lab1C/Lab1C/main.c [11] [12]) [13] (ece375-Lab1.aux) ) 
+(../Lab1C/Lab1C/main.c [12] [13]) [14] (ece375-Lab1.aux) ) 
 Here is how much of TeX's memory you used:
  6281 strings out of 476404
  90029 string characters out of 2789524
- 1938324 words of memory out of 3000000
+ 1941324 words of memory out of 3000000
  26561 multiletter control sequences out of 15000+600000
  519810 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -356,9 +357,9 @@ ic/amsfonts/cm/cmr17.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/ty
 pe1/public/amsfonts/cm/cmsy10.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX
 /fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/deles/AppData/Local/Progra
 ms/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb>
-Output written on ece375-Lab1.pdf (14 pages, 152343 bytes).
+Output written on ece375-Lab1.pdf (15 pages, 155563 bytes).
 PDF statistics:
- 95 PDF objects out of 1000 (max. 8388607)
+ 98 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
  1 words of extra memory for PDF output out of 10000 (max. 10000000)
 
