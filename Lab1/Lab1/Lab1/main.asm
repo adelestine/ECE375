@@ -21,7 +21,7 @@
 ;*	turns left for a second, and then moves forward again.
 ;*	If the left whisker is activated, the TekBot backs up
 ;*	for a second, turns right for a second, and then
-;*	continues forward.
+;*	continues forward. 
 ;*
 ;***********************************************************
 ;*
