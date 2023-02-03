@@ -85,7 +85,7 @@ FUNC:							; Begin a function with a label
 ;-----------------------------------------------------------
 STRING_BEG:
 .DB		"Astrid Delestine"		; Declaring data in ProgMem
-.DB		"Lucas Plasted
+.DB		"Lucas Plasted"
 STRING_END:
 
 ;***********************************************************
