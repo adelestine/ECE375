@@ -1,7 +1,7 @@
 ;***********************************************************
 ;*	This is the skeleton file for Lab 3 of ECE 375
 ;*
-;*	 Author: Astrid Delestine & Lucas Plasted
+;*	 Author: Astrid Delestine & Lucas Plaisted
 ;*	   Date: 2/3/2023
 ;*
 ;***********************************************************
@@ -85,7 +85,8 @@ FUNC:							; Begin a function with a label
 ;-----------------------------------------------------------
 STRING_BEG:
 .DB		"Astrid Delestine"		; Declaring data in ProgMem
-.DB		"Lucas Plasted"
+STRING2_BEG:
+.DB		" Lucas Plaisted "
 STRING_END:
 
 ;***********************************************************
