@@ -1,7 +1,7 @@
 ;***********************************************************
 ;*	This is the skeleton file for Lab 3 of ECE 375
 ;*
-;*	 Author: Astrid Delestine & Lucas Plasitd
+;*	 Author: Astrid Delestine & Lucas Plasted
 ;*	   Date: 2/3/2023
 ;*
 ;***********************************************************
@@ -31,9 +31,12 @@
 ;***********************************************************
 INIT:							; The initialization routine
 		; Initialize Stack Pointer
-
+		ldi		mpr, low(RAMEND) 
+		out		SPL, mpr
+		ldi		mpr, high(RAMEND)
+		out		SPH, mpr
 		; Initialize LCD Display
-
+		rcall LCDInit
 		; NOTE that there is no RET or RJMP from INIT,
 		; this is because the next instruction executed is the
 		; first instruction of the main program
@@ -81,7 +84,8 @@ FUNC:							; Begin a function with a label
 ; after the .DB directive; these can help to access the data
 ;-----------------------------------------------------------
 STRING_BEG:
-.DB		"My Test String"		; Declaring data in ProgMem
+.DB		"Astrid Delestine"		; Declaring data in ProgMem
+.DB		"Lucas Plasted
 STRING_END:
 
 ;***********************************************************
