@@ -17,15 +17,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   6 .debug_abbrev 00000a9e  00000000  00000000  00000eff  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_line   0000034c  00000000  00000000  0000199d  2**0
+  7 .debug_line   0000034b  00000000  00000000  0000199d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_frame  00000054  00000000  00000000  00001cec  2**2
+  8 .debug_frame  00000054  00000000  00000000  00001ce8  2**2
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_str    00000538  00000000  00000000  00001d40  2**0
+  9 .debug_str    00000541  00000000  00000000  00001d3c  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_loc    000000f6  00000000  00000000  00002278  2**0
+ 10 .debug_loc    000000f6  00000000  00000000  0000227d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_ranges 00000028  00000000  00000000  0000236e  2**0
+ 11 .debug_ranges 00000028  00000000  00000000  00002373  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -134,8 +134,7 @@ void goBackwards2Sec(){
 void BotActionL(){
 	goBackwards2Sec(); //self explanatory
   f0:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
-	//left motor forwards, right motor backwards = turn right
-	PORTB = LEFT; 
+	PORTB = LEFT; //left motor forwards, right motor backwards = turn right
   f4:	80 e8       	ldi	r24, 0x80	; 128
   f6:	85 b9       	out	0x05, r24	; 5
   f8:	2f ef       	ldi	r18, 0xFF	; 255
@@ -157,8 +156,7 @@ void BotActionL(){
 void BotActionR(){
 	goBackwards2Sec(); //self explanatory :)
  10c:	0e 94 6d 00 	call	0xda	; 0xda <goBackwards2Sec>
-	//right motor forwards, left motor backwards = turn left
-	PORTB = RIGHT; 
+	PORTB = RIGHT; //right motor forwards, left motor backwards = turn left
  110:	80 e1       	ldi	r24, 0x10	; 16
  112:	85 b9       	out	0x05, r24	; 5
  114:	2f ef       	ldi	r18, 0xFF	; 255
@@ -190,8 +188,7 @@ int main(void)
 
 	while (1) // loop forever
 	{
-		// read and extract only 4-5 th bit
-		uint8_t mpr = PIND & 0b00110000; 
+		uint8_t mpr = PIND & 0b00110000; // read and extract only 4-5 th bit
  130:	89 b1       	in	r24, 0x09	; 9
  132:	80 73       	andi	r24, 0x30	; 48
 		mpr = ~mpr; //flip bits since PINDD is active low
