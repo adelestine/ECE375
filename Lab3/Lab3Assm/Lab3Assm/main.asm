@@ -13,10 +13,11 @@
 ;***********************************************************
 .def	mpr = r16				; Multipurpose register is required for LCD Driver
 .def	cr = r17				; Carry register :)
+.def	count = r18				; Register for counting up to 255 0 indexed
 .equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
 .equ	lcdH1 = 0x01
-.equ	lcdL2 = 0x10
-.equ	lcdH2 = 0x01			
+.equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
+.equ	lcdH2 = 0x01			; lcdH2 means the high part of line 2's location
 ;***********************************************************
 ;*	Start of Code Segment
 ;***********************************************************
@@ -108,7 +109,7 @@ FUNC:							; Begin a function with a label
 ;-----------------------------------------------------------
 ; BTN2MPR: Button to MPR
 ; Desc: Places the 4 button inputs into the higher 4 bits
-;		of mpr
+;		of mpr. Don't forget the buttons are active low!
 ;-----------------------------------------------------------
 BTN2MPR:
 		in		mpr, PIND		; Get input from Port D
@@ -130,6 +131,41 @@ MARQUEE:
 
 		ret
 
+;-----------------------------------------------------------
+; Func: Rotate Characters
+; Desc: Rotates all characters through the locations
+;		where the LCD pulls from, once.
+;-----------------------------------------------------------
+/*
+The example given in the lab doc:
+		Line 1: _____My_Name_is_
+		Line 2: _______Jane_Doe_
+			delay .25s
+		Line 1: ______My_Name_is
+		Line 2: ________Jane_Doe
+			delay .25s
+		Line 1: e______My_Name_i
+		Line 2: s________Jane_Do
+			delay .25s
+
+We know that the data mem locations look like this:
+		Line 1: $0100 : $010F
+		Line 2: $0110 : $011F
+And the shift is always done to the "right", with the
+shifts carrying over into the next line. Each letter is
+nicely one byte, making each line 16 bytes long (why the
+locations go from 0 to f as well). In terms of shifting
+to the right, this means that each letter at M(x) needs 
+to be placed into M(x+1), except for the last letter,
+which is placed into the first characters location.
+
+Psuedocode:
+for x = 0 to 30
+*/
+
+ROTCHAR:
+
+		ret
 ;-----------------------------------------------------------
 ; Func: Display Names
 ; Desc: Cut and paste this and fill in the info at the
