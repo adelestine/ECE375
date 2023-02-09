@@ -16,7 +16,7 @@
 .def	cr = r17				; Carry register :)
 .def	ilcnt = r18				; Counting registers for wait loop
 .def	olcnt = r19
-.def	waitcnt = r20
+;.def	waitcnt = r20
 .equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
 .equ	lcdH1 = 0x01
 .equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
@@ -221,6 +221,7 @@ rotloop:
 		pop YL
 		pop YH				; done
 		ret
+		*/
 ;-----------------------------------------------------------
 ; Func: Display Names
 ; Desc: Displayes names of project members by copying from 

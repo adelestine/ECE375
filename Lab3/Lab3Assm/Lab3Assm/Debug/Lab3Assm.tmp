@@ -23,21 +23,21 @@
   <FILE>Lab3Assm.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <INIT><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>40</LINE></INIT>
+  <INIT><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>42</LINE></INIT>
   <LCDInit><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>71</LINE></LCDInit>
   <LCDBacklightOn><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>123</LINE></LCDBacklightOn>
-  <MAIN><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>67</LINE></MAIN>
-  <BTN2MPR><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>117</LINE></BTN2MPR>
-  <MARQUEE><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>133</LINE></MARQUEE>
-  <DISPNAMES><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>221</LINE></DISPNAMES>
+  <MAIN><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>69</LINE></MAIN>
+  <BTN2MPR><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>119</LINE></BTN2MPR>
+  <MARQUEE><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>138</LINE></MARQUEE>
+  <DISPNAMES><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>230</LINE></DISPNAMES>
   <LCDClr><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>187</LINE></LCDClr>
-  <FUNC><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>96</LINE></FUNC>
-  <STRING_BEG><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>272</LINE></STRING_BEG>
-  <WCNEZ1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>237</LINE></WCNEZ1>
-  <WCNEZ2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>248</LINE></WCNEZ2>
+  <FUNC><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>98</LINE></FUNC>
+  <STRING_BEG><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>281</LINE></STRING_BEG>
+  <WCNEZ1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>246</LINE></WCNEZ1>
+  <WCNEZ2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>257</LINE></WCNEZ2>
   <LCDWrite><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>140</LINE></LCDWrite>
-  <STRING2_BEG><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>274</LINE></STRING2_BEG>
-  <STRING_END><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>276</LINE></STRING_END>
+  <STRING2_BEG><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>283</LINE></STRING2_BEG>
+  <STRING_END><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>285</LINE></STRING_END>
   <LCDDelay><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>501</LINE></LCDDelay>
   <LCD_Internal_WriteCMD><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>485</LINE></LCD_Internal_WriteCMD>
   <LCDBacklightOff><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>131</LINE></LCDBacklightOff>
