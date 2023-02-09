@@ -8,12 +8,13 @@
 
 .include "m32U4def.inc"			; Include definition file
 
+
 ;***********************************************************
 ;*	Internal Register Definitions and Constants
 ;***********************************************************
 .def	mpr = r16				; Multipurpose register is required for LCD Driver
 .def	cr = r17				; Carry register :)
-.def	count = r18				; Register for counting up to 255 0 indexed
+;.def	count = r18				; Register for counting up to 255 0 indexed
 .equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
 .equ	lcdH1 = 0x01
 .equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
@@ -130,7 +131,7 @@ BTN2MPR:
 ;		the highest values.
 ;-----------------------------------------------------------
 MARQUEE:
-
+		
 		ret
 
 ;-----------------------------------------------------------
@@ -191,7 +192,7 @@ work backwards
 	M(bottom+1) <- M(bottom)
 	M(bottom) <- stack
 */
-
+/*
 ROTCHAR:
 		push YH				; push vars to stack
 		push YL
@@ -211,12 +212,53 @@ rotloop:
 		pop YL
 		pop YH
 		ret
+		*/
 ;-----------------------------------------------------------
 ; Func: Display Names
-; Desc: Cut and paste this and fill in the info at the
-;		beginning of your functions
+; Desc: Displayes names of project members by copying from 
+;		data memory into program memory
 ;-----------------------------------------------------------
 DISPNAMES:
+		push ZL				; Save vars to stack
+		push ZH
+		push YL
+		push YH
+		push mpr
+		push cr
+
+		ldi  ZL , low(STRING_BEG<<1)	; Sets ZL to the low bits  
+			 					; of the first string location
+		ldi  ZH , high(STRING_BEG<<1)	; Sets ZH to the first 
+								; of the first string location
+		ldi  YH , lcdH1
+		ldi  YL , lcdL1
+		ldi  cr , 16
+
+WCNEZ1: ; While cr != zero 1
+		lpm  mpr, Z+
+		st   Y+ , mpr
+		dec  cr
+		brne WCNEZ1
+
+		;z is already pointing at the second string due to how memory is stored
+		ldi  YH , lcdH2
+		ldi  YL , lcdL2
+		ldi  cr , 16
+
+WCNEZ2: ; While cr != zero 2
+		lpm  mpr, Z+
+		st   Y+ , mpr
+		dec  cr
+		brne WCNEZ2
+
+		rcall LCDWrite
+
+		pop cr
+		pop mpr
+		pop YH
+		pop YL
+		pop ZH
+		pop ZL					; Pop vars off of stack
 
 		ret
 ;***********************************************************
