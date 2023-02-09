@@ -13,7 +13,9 @@
 ;***********************************************************
 .def	mpr = r16				; Multipurpose register is required for LCD Driver
 .def	cr = r17				; Carry register :)
-.def	count = r18				; Register for counting up to 255 0 indexed
+.def	ilcnt = r18				; Counting registers for wait loop
+.def	olcnt = r19
+.def	waitcnt = r20
 .equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
 .equ	lcdH1 = 0x01
 .equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
@@ -128,9 +130,14 @@ BTN2MPR:
 ;		move. This should be carrying bytes from the low 
 ;		address of the LCD screen and carrying them up to
 ;		the highest values.
+;
+;		I have made the executive decision to stop this by
+;		pressing button 
 ;-----------------------------------------------------------
 MARQUEE:
-
+		rcall DISPNAMES
+		ldi waitcnt, 25	; to wait 25*10ms = .25s
+		rcall ROTCHAR
 		ret
 
 ;-----------------------------------------------------------
@@ -195,22 +202,54 @@ work backwards
 ROTCHAR:
 		push YH				; push vars to stack
 		push YL
-		push mpr
-
-
+		push mpr			; done
 
 		ldi YH, lcdENDH
 		ldi YL, lcdENDL		; Set Y to end of line 2
 		ld	mpr, Y			; pull last character
 		push mpr			; and stack it
 rotloop:
-		
-		brne rotloop
+		ld mpr, -Y			; dec Y, mpr <- m(Y)
+		std Y+1, mpr		; move letter up 1 in data mem
+		cpi YL, $00			; check if just moved first char
+		brne rotloop		; if not go again until done
+
+		pop mpr				; pop last character from stack
+		st Y, mpr			; place last character at first
+							; done with one rotation
 
 		pop mpr				; pop vars from stack
 		pop YL
-		pop YH
+		pop YH				; done
 		ret
+;----------------------------------------------------------------
+; Sub:	Wait
+; Desc:	A wait loop that is 16 + 159975*waitcnt cycles or roughly
+;		waitcnt*10ms.  Just initialize wait for the specific amount
+;		of time in 10ms intervals. Here is the general eqaution
+;		for the number of clock cycles in the wait loop:
+;			(((((3*ilcnt)-1+4)*olcnt)-1+4)*waitcnt)-1+16
+;
+;		Borrowed from Lab 1 <3
+;----------------------------------------------------------------
+Wait:
+		push	waitcnt			; Save wait register
+		push	ilcnt			; Save ilcnt register
+		push	olcnt			; Save olcnt register
+
+Loop:	ldi		olcnt, 224		; load olcnt register
+OLoop:	ldi		ilcnt, 237		; load ilcnt register
+ILoop:	dec		ilcnt			; decrement ilcnt
+		brne	ILoop			; Continue Inner Loop
+		dec		olcnt		; decrement olcnt
+		brne	OLoop			; Continue Outer Loop
+		dec		waitcnt		; Decrement wait
+		brne	Loop			; Continue Wait loop
+
+		pop		olcnt		; Restore olcnt register
+		pop		ilcnt		; Restore ilcnt register
+		pop		waitcnt		; Restore wait register
+		ret				; Return from subroutine
 ;-----------------------------------------------------------
 ; Func: Display Names
 ; Desc: Cut and paste this and fill in the info at the
