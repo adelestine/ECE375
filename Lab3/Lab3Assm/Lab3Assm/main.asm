@@ -13,16 +13,15 @@
 ;*	Internal Register Definitions and Constants
 ;***********************************************************
 .def	mpr = r16				; Multipurpose register is required for LCD Driver
-.def	cr = r17				; Carry register :)
-.def	ilcnt = r18				; Counting registers for wait loop
+.def	waitcnt = r17			; Counting registers for wait loop
+.def	ilcnt = r18				
 .def	olcnt = r19
-;.def	waitcnt = r20
 .equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
 .equ	lcdH1 = 0x01
 .equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
 .equ	lcdH2 = 0x01			; lcdH2 means the high part of line 2's location
 .equ	lcdENDH = 0x01			; as it sounds, the last space in data mem
-.equ	ldcENDL = 0x1F			; for storing lcd text
+.equ	lcdENDL = 0x1F			; for storing lcd text
 ;***********************************************************
 ;*	Start of Code Segment
 ;***********************************************************
@@ -48,6 +47,7 @@ INIT:							; The initialization routine
 		; Initialize LCD Display
 		rcall LCDInit
 		rcall LCDBacklightOn
+		rcall LCDClr
 		; Initialize ports
 		; Initialize Port D for input (from Lab 1)
 		ldi		mpr, $00		; Set Port D Data Direction Register
@@ -68,8 +68,8 @@ INIT:							; The initialization routine
 ;***********************************************************
 MAIN:							; The Main program
 		; Main function design is up to you. Below is an example to brainstorm.
-		rcall	BTN2MPR	; place 4 buttons into upper half of mpr
-						; ACTIVE LOW!!!!!!
+		rcall	BTN2MPR		; place 4 buttons into upper half of mpr
+							; ACTIVE LOW!!!!!!
 		sbrs	mpr, 7
 		rcall	MARQUEE
 		sbrs	mpr, 5
@@ -81,29 +81,10 @@ MAIN:							; The Main program
 
 		; Display the strings on the LCD Display
 
-		rjmp	MAIN			; jump back to main and create an infinite
-								; while loop.  Generally, every main program is an
-								; infinite while loop, never let the main program
-								; just run off
-
-;***********************************************************
-;*	Functions and Subroutines
-;***********************************************************
-
-;-----------------------------------------------------------
-; Func: Template function header
-; Desc: Cut and paste this and fill in the info at the
-;		beginning of your functions
-;-----------------------------------------------------------
-FUNC:							; Begin a function with a label
-		; Save variables by pushing them to the stack
-
-		; Execute the function here
-
-		; Restore variables by popping them from the stack,
-		; in reverse order
-
-		ret						; End a function with RET
+		rjmp	MAIN		; jump back to main and create an infinite
+							; while loop.  Generally, every main program is an
+							; infinite while loop, never let the main program
+							; just run off
 
 
 
@@ -136,7 +117,7 @@ BTN2MPR:
 ;		pressing button 
 ;-----------------------------------------------------------
 MARQUEE:
-
+		rcall DISPNAMES		; make sure the text is on screen
 		ret
 
 ;-----------------------------------------------------------
@@ -197,7 +178,7 @@ work backwards
 	M(bottom+1) <- M(bottom)
 	M(bottom) <- stack
 */
-/*
+
 ROTCHAR:
 		push YH				; push vars to stack
 		push YL
@@ -221,7 +202,7 @@ rotloop:
 		pop YL
 		pop YH				; done
 		ret
-		*/
+		
 ;-----------------------------------------------------------
 ; Func: Display Names
 ; Desc: Displayes names of project members by copying from 
@@ -233,7 +214,7 @@ DISPNAMES:
 		push YL
 		push YH
 		push mpr
-		push cr
+		push ilcnt
 
 		ldi  ZL , low(STRING_BEG<<1)	; Sets ZL to the low bits  
 			 					; of the first string location
@@ -241,28 +222,28 @@ DISPNAMES:
 								; of the first string location
 		ldi  YH , lcdH1
 		ldi  YL , lcdL1
-		ldi  cr , 16
+		ldi  ilcnt , 16
 
-WCNEZ1: ; While cr != zero 1
+WCNEZ1: ; While ilcnt != zero 1
 		lpm  mpr, Z+
 		st   Y+ , mpr
-		dec  cr
+		dec  ilcnt
 		brne WCNEZ1
 
 		;z is already pointing at the second string due to how memory is stored
 		ldi  YH , lcdH2
 		ldi  YL , lcdL2
-		ldi  cr , 16
+		ldi  ilcnt , 16
 
-WCNEZ2: ; While cr != zero 2
+WCNEZ2: ; While ilcnt != zero 2
 		lpm  mpr, Z+
 		st   Y+ , mpr
-		dec  cr
+		dec  ilcnt
 		brne WCNEZ2
 
 		rcall LCDWrite
 
-		pop cr
+		pop ilcnt
 		pop mpr
 		pop YH
 		pop YL
@@ -288,3 +269,24 @@ STRING_END:
 ;*	Additional Program Includes
 ;***********************************************************
 .include "LCDDriver.asm"		; Include the LCD Driver
+
+;***********************************************************
+;*	Functions and Subroutines Template
+;***********************************************************
+/*
+;-----------------------------------------------------------
+; Func: Template function header
+; Desc: Cut and paste this and fill in the info at the
+;		beginning of your functions
+;-----------------------------------------------------------
+FUNC:							; Begin a function with a label
+		; Save variables by pushing them to the stack
+
+		; Execute the function here
+
+		; Restore variables by popping them from the stack,
+		; in reverse order
+
+		ret						; End a function with RET
+
+		*/
