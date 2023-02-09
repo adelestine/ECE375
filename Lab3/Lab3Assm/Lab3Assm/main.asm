@@ -18,6 +18,8 @@
 .equ	lcdH1 = 0x01
 .equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
 .equ	lcdH2 = 0x01			; lcdH2 means the high part of line 2's location
+.equ	lcdENDH = 0x01			; as it sounds, the last space in data mem
+.equ	ldcENDL = 0x1F			; for storing lcd text
 ;***********************************************************
 ;*	Start of Code Segment
 ;***********************************************************
@@ -159,12 +161,55 @@ to the right, this means that each letter at M(x) needs
 to be placed into M(x+1), except for the last letter,
 which is placed into the first characters location.
 
-Psuedocode:
-for x = 0 to 30
+As I see it, this can be done in two different ways.
+	Start at the begining ($0100) and shift up
+	
+	Start at the end and shift up working backwards
+
+Starting at the begining has the issue of needing to
+hold onto the next value, as otherwise it would be
+overwritten when the previous moves forwards. This
+issue could maybe be overcome by using two registers
+and sort of flip flopping between the two? I.e:
+	Reg1 <- M(0)
+	Reg2 <- M(1)
+
+	M(1) <- Reg1 (place M(0) into M(1))
+	Reg1 <- M(2) 
+	M(2) <- Reg2 (place M(1) into M(2))
+	Reg2 <- M(3) 
+	M(3) <- Reg1 cycle repeats! (place M(2) into M(3))
+
+This has the disadvantage of only working in pairs, 
+and in general feels a little silly. Instead I will
+work backwards
+
+	stack <- top value
+	M(top) <- M(top-1)
+	M(top-1) <- M(top-2)
+	...
+	M(bottom+1) <- M(bottom)
+	M(bottom) <- stack
 */
 
 ROTCHAR:
+		push YH				; push vars to stack
+		push YL
+		push mpr
 
+
+
+		ldi YH, lcdENDH
+		ldi YL, lcdENDL		; Set Y to end of line 2
+		ld	mpr, Y			; pull last character
+		push mpr			; and stack it
+rotloop:
+		
+		brne rotloop
+
+		pop mpr				; pop vars from stack
+		pop YL
+		pop YH
 		ret
 ;-----------------------------------------------------------
 ; Func: Display Names
