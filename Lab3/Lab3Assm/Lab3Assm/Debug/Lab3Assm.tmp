@@ -30,15 +30,20 @@
   <MAIN><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>69</LINE></MAIN>
   <BTN2MPR><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>100</LINE></BTN2MPR>
   <MARQUEE><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>119</LINE></MARQUEE>
-  <DISPNAMES><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>211</LINE></DISPNAMES>
-  <ROTCHAR><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>182</LINE></ROTCHAR>
-  <rotloop><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>191</LINE></rotloop>
-  <STRING_BEG><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>262</LINE></STRING_BEG>
-  <WCNEZ1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>227</LINE></WCNEZ1>
-  <WCNEZ2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>238</LINE></WCNEZ2>
+  <DISPNAMES><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>231</LINE></DISPNAMES>
+  <mqloop><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>125</LINE></mqloop>
+  <ROTCHAR><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>202</LINE></ROTCHAR>
   <LCDWrite><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>140</LINE></LCDWrite>
-  <STRING2_BEG><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>264</LINE></STRING2_BEG>
-  <STRING_END><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>266</LINE></STRING_END>
+  <Wait><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>284</LINE></Wait>
+  <rotloop><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>211</LINE></rotloop>
+  <STRING_BEG><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>311</LINE></STRING_BEG>
+  <WINEZ1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>247</LINE></WINEZ1>
+  <WINEZ2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>258</LINE></WINEZ2>
+  <Loop><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>289</LINE></Loop>
+  <OLoop><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>290</LINE></OLoop>
+  <ILoop><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>291</LINE></ILoop>
+  <STRING2_BEG><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>313</LINE></STRING2_BEG>
+  <STRING_END><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm</FILE><LINE>315</LINE></STRING_END>
   <LCDDelay><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>501</LINE></LCDDelay>
   <LCD_Internal_WriteCMD><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>485</LINE></LCD_Internal_WriteCMD>
   <LCDBacklightOff><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm</FILE><LINE>131</LINE></LCDBacklightOff>

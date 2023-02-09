@@ -93,7 +93,7 @@ MAIN:							; The Main program
 ;***********************************************************
 
 ;-----------------------------------------------------------
-; BTN2MPR: Button to MPR
+; BTN2MPR: Button to MPR (BTN2MPR)
 ; Desc: Places the 4 button inputs into the higher 4 bits
 ;		of mpr. Don't forget the buttons are active low!
 ;-----------------------------------------------------------
@@ -104,7 +104,7 @@ BTN2MPR:
 
 
 ;-----------------------------------------------------------
-; Func: Marquee
+; Func: Marquee (MARQUEE)
 ; Desc: Calls DISPNAMES, shifts letters (bytes) from their
 ;		current data memory locations to the right, and if
 ;		going off of the right it will enter the left of
@@ -117,13 +117,33 @@ BTN2MPR:
 ;		pressing button 
 ;-----------------------------------------------------------
 MARQUEE:
-		rcall DISPNAMES		; make sure the text is on screen
+		push	waitcnt
+		push	mpr
+
+		rcall	DISPNAMES		; make sure the text is in mem	
+		ldi		waitcnt, 25		; for 25*10ms = 250ms or .25s
+mqloop:
+		rcall	ROTCHAR		; rotate characters in memory
+		rcall	LCDWrite	; write new rotation to screen
+		rcall	Wait		; wait
+		rcall	BTN2MPR		; 7:4, active low :)
+		sbrs	mpr, 4		; silly speed up
+		dec		waitcnt		; wont underflow i swear
+		sbrs	mpr, 5		; speed down >:(
+		inc		waitcnt		; overflow would take a WHILE!
+		sbrc	mpr, 6		; never used yet! EXIT BUTTON
+		rjmp	mqloop		; do it again?
+
+		pop		mpr
+		pop		waitcnt
 		ret
 
 ;-----------------------------------------------------------
-; Func: Rotate Characters
-; Desc: Rotates all characters through the locations
-;		where the LCD pulls from, once.
+; Func: Rotate Characters (ROTCHAR)
+; Desc: Rotates all characters right through memory
+;		where the LCD pulls from, once. Relies on
+;		existing data in the lcd data memory space
+;		DOES NOT WRITE TO SCREEN. Only edits memory.
 ;-----------------------------------------------------------
 /*
 The example given in the lab doc:
@@ -167,9 +187,9 @@ and sort of flip flopping between the two? I.e:
 	Reg2 <- M(3) 
 	M(3) <- Reg1 cycle repeats! (place M(2) into M(3))
 
-This has the disadvantage of only working in pairs, 
-and in general feels a little silly. Instead I will
-work backwards
+This has the disadvantage of only working in pairs
+for a nice, repeatable algorithm and in general feels 
+a little silly. Instead I will work backwards:
 
 	stack <- top value
 	M(top) <- M(top-1)
@@ -204,7 +224,7 @@ rotloop:
 		ret
 		
 ;-----------------------------------------------------------
-; Func: Display Names
+; Func: Display Names (DISPNAMES)
 ; Desc: Displayes names of project members by copying from 
 ;		data memory into program memory
 ;-----------------------------------------------------------
@@ -224,22 +244,22 @@ DISPNAMES:
 		ldi  YL , lcdL1
 		ldi  ilcnt , 16
 
-WCNEZ1: ; While ilcnt != zero 1
+WINEZ1: ; While ilcnt != zero 1
 		lpm  mpr, Z+
 		st   Y+ , mpr
 		dec  ilcnt
-		brne WCNEZ1
+		brne WINEZ1
 
 		;z is already pointing at the second string due to how memory is stored
 		ldi  YH , lcdH2
 		ldi  YL , lcdL2
 		ldi  ilcnt , 16
 
-WCNEZ2: ; While ilcnt != zero 2
+WINEZ2: ; While ilcnt != zero 2
 		lpm  mpr, Z+
 		st   Y+ , mpr
 		dec  ilcnt
-		brne WCNEZ2
+		brne WINEZ2
 
 		rcall LCDWrite
 
@@ -251,6 +271,35 @@ WCNEZ2: ; While ilcnt != zero 2
 		pop ZL					; Pop vars off of stack
 
 		ret
+
+;----------------------------------------------------------------
+; Sub:	Wait
+; Desc:	A wait loop that is 16 + 159975*waitcnt cycles or roughly
+;		waitcnt*10ms.  Just initialize wait for the specific amount
+;		of time in 10ms intervals. Here is the general eqaution
+;		for the number of clock cycles in the wait loop:
+;			(((((3*ilcnt)-1+4)*olcnt)-1+4)*waitcnt)-1+16
+;		Imported from Lab 1
+;----------------------------------------------------------------
+Wait:
+		push	waitcnt			; Save wait register
+		push	ilcnt			; Save ilcnt register
+		push	olcnt			; Save olcnt register
+
+Loop:	ldi		olcnt, 224		; load olcnt register
+OLoop:	ldi		ilcnt, 237		; load ilcnt register
+ILoop:	dec		ilcnt			; decrement ilcnt
+		brne	ILoop			; Continue Inner Loop
+		dec		olcnt		; decrement olcnt
+		brne	OLoop			; Continue Outer Loop
+		dec		waitcnt		; Decrement wait
+		brne	Loop			; Continue Wait loop
+
+		pop		olcnt		; Restore olcnt register
+		pop		ilcnt		; Restore ilcnt register
+		pop		waitcnt		; Restore wait register
+		ret				; Return from subroutine
+
 ;***********************************************************
 ;*	Stored Program Data
 ;***********************************************************

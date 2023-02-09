@@ -1,13 +1,13 @@
 
-AVRASM ver. 2.2.8  C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm Wed Feb 08 23:59:43 2023
+AVRASM ver. 2.2.8  C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm Thu Feb 09 00:50:11 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m32U4def.inc'
 C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m32U4def.inc'
-C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm(271): Including file 'C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm'
+C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm(320): Including file 'C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm'
 C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm(31): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m32U4def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m32U4def.inc'
 C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m32U4def.inc'
-C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm(271): Including file 'C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm'
+C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\main.asm(320): Including file 'C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm'
 C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver.asm(31): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m32U4def.inc'
                                  
                                  ;***********************************************************
@@ -1493,9 +1493,9 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
 000058 e00a                      		ldi		mpr, high(RAMEND)
 000059 bf0e                      		out		SPH, mpr
                                  		; Initialize LCD Display
-00005a d052                      		rcall LCDInit
-00005b d073                      		rcall LCDBacklightOn
-00005c d08f                      		rcall LCDClr
+00005a d070                      		rcall LCDInit
+00005b d091                      		rcall LCDBacklightOn
+00005c d0ad                      		rcall LCDClr
                                  		; Initialize ports
                                  		; Initialize Port D for input (from Lab 1)
 00005d e000                      		ldi		mpr, $00		; Set Port D Data Direction Register
@@ -1521,9 +1521,9 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
 000062 ff07                      		sbrs	mpr, 7
 000063 d008                      		rcall	MARQUEE
 000064 ff05                      		sbrs	mpr, 5
-000065 d019                      		rcall	DISPNAMES
+000065 d028                      		rcall	DISPNAMES
 000066 ff04                      		sbrs	mpr, 4	
-000067 d084                      		rcall	LCDClr
+000067 d0a2                      		rcall	LCDClr
                                  
                                  		; Move strings from Program Memory to Data Memory
                                  
@@ -1541,7 +1541,7 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;***********************************************************
                                  
                                  ;-----------------------------------------------------------
-                                 ; BTN2MPR: Button to MPR
+                                 ; BTN2MPR: Button to MPR (BTN2MPR)
                                  ; Desc: Places the 4 button inputs into the higher 4 bits
                                  ;		of mpr. Don't forget the buttons are active low!
                                  ;-----------------------------------------------------------
@@ -1552,7 +1552,7 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  
                                  
                                  ;-----------------------------------------------------------
-                                 ; Func: Marquee
+                                 ; Func: Marquee (MARQUEE)
                                  ; Desc: Calls DISPNAMES, shifts letters (bytes) from their
                                  ;		current data memory locations to the right, and if
                                  ;		going off of the right it will enter the left of
@@ -1565,13 +1565,33 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;		pressing button 
                                  ;-----------------------------------------------------------
                                  MARQUEE:
-00006c d012                      		rcall DISPNAMES		; make sure the text is on screen
-00006d 9508                      		ret
+00006c 931f                      		push	waitcnt
+00006d 930f                      		push	mpr
+                                 
+00006e d01f                      		rcall	DISPNAMES		; make sure the text is in mem	
+00006f e119                      		ldi		waitcnt, 25		; for 25*10ms = 250ms or .25s
+                                 mqloop:
+000070 d00c                      		rcall	ROTCHAR		; rotate characters in memory
+000071 d07f                      		rcall	LCDWrite	; write new rotation to screen
+000072 d039                      		rcall	Wait		; wait
+000073 dff5                      		rcall	BTN2MPR		; 7:4, active low :)
+000074 ff04                      		sbrs	mpr, 4		; silly speed up
+000075 951a                      		dec		waitcnt		; wont underflow i swear
+000076 ff05                      		sbrs	mpr, 5		; speed down >:(
+000077 9513                      		inc		waitcnt		; overflow would take a WHILE!
+000078 fd06                      		sbrc	mpr, 6		; never used yet! EXIT BUTTON
+000079 cff6                      		rjmp	mqloop		; do it again?
+                                 
+00007a 910f                      		pop		mpr
+00007b 911f                      		pop		waitcnt
+00007c 9508                      		ret
                                  
                                  ;-----------------------------------------------------------
-                                 ; Func: Rotate Characters
-                                 ; Desc: Rotates all characters through the locations
-                                 ;		where the LCD pulls from, once.
+                                 ; Func: Rotate Characters (ROTCHAR)
+                                 ; Desc: Rotates all characters right through memory
+                                 ;		where the LCD pulls from, once. Relies on
+                                 ;		existing data in the lcd data memory space
+                                 ;		DOES NOT WRITE TO SCREEN. Only edits memory.
                                  ;-----------------------------------------------------------
                                  /*
                                  The example given in the lab doc:
@@ -1615,9 +1635,9 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  	Reg2 <- M(3) 
                                  	M(3) <- Reg1 cycle repeats! (place M(2) into M(3))
                                  
-                                 This has the disadvantage of only working in pairs, 
-                                 and in general feels a little silly. Instead I will
-                                 work backwards
+                                 This has the disadvantage of only working in pairs
+                                 for a nice, repeatable algorithm and in general feels 
+                                 a little silly. Instead I will work backwards:
                                  
                                  	stack <- top value
                                  	M(top) <- M(top-1)
@@ -1628,77 +1648,106 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  */
                                  
                                  ROTCHAR:
-00006e 93df                      		push YH				; push vars to stack
-00006f 93cf                      		push YL
-000070 930f                      		push mpr			; done
+00007d 93df                      		push YH				; push vars to stack
+00007e 93cf                      		push YL
+00007f 930f                      		push mpr			; done
                                  
-000071 e0d1                      		ldi YH, lcdENDH
-000072 e1cf                      		ldi YL, lcdENDL		; Set Y to end of line 2
-000073 8108                      		ld	mpr, Y			; pull last character
-000074 930f                      		push mpr			; and stack it
+000080 e0d1                      		ldi YH, lcdENDH
+000081 e1cf                      		ldi YL, lcdENDL		; Set Y to end of line 2
+000082 8108                      		ld	mpr, Y			; pull last character
+000083 930f                      		push mpr			; and stack it
                                  rotloop:
-000075 910a                      		ld mpr, -Y			; dec Y, mpr <- m(Y)
-000076 8309                      		std Y+1, mpr		; move letter up 1 in data mem
-000077 30c0                      		cpi YL, $00			; check if just moved first char
-000078 f7e1                      		brne rotloop		; if not go again until done
+000084 910a                      		ld mpr, -Y			; dec Y, mpr <- m(Y)
+000085 8309                      		std Y+1, mpr		; move letter up 1 in data mem
+000086 30c0                      		cpi YL, $00			; check if just moved first char
+000087 f7e1                      		brne rotloop		; if not go again until done
                                  
-000079 910f                      		pop mpr				; pop last character from stack
-00007a 8308                      		st Y, mpr			; place last character at first
+000088 910f                      		pop mpr				; pop last character from stack
+000089 8308                      		st Y, mpr			; place last character at first
                                  							; done with one rotation
                                  
-00007b 910f                      		pop mpr				; pop vars from stack
-00007c 91cf                      		pop YL
-00007d 91df                      		pop YH				; done
-00007e 9508                      		ret
+00008a 910f                      		pop mpr				; pop vars from stack
+00008b 91cf                      		pop YL
+00008c 91df                      		pop YH				; done
+00008d 9508                      		ret
                                  		
                                  ;-----------------------------------------------------------
-                                 ; Func: Display Names
+                                 ; Func: Display Names (DISPNAMES)
                                  ; Desc: Displayes names of project members by copying from 
                                  ;		data memory into program memory
                                  ;-----------------------------------------------------------
                                  DISPNAMES:
-00007f 93ef                      		push ZL				; Save vars to stack
-000080 93ff                      		push ZH
-000081 93cf                      		push YL
-000082 93df                      		push YH
-000083 930f                      		push mpr
-000084 932f                      		push ilcnt
+00008e 93ef                      		push ZL				; Save vars to stack
+00008f 93ff                      		push ZH
+000090 93cf                      		push YL
+000091 93df                      		push YH
+000092 930f                      		push mpr
+000093 932f                      		push ilcnt
                                  
-000085 e3ea                      		ldi  ZL , low(STRING_BEG<<1)	; Sets ZL to the low bits  
+000094 e7e6                      		ldi  ZL , low(STRING_BEG<<1)	; Sets ZL to the low bits  
                                  			 					; of the first string location
-000086 e0f1                      		ldi  ZH , high(STRING_BEG<<1)	; Sets ZH to the first 
+000095 e0f1                      		ldi  ZH , high(STRING_BEG<<1)	; Sets ZH to the first 
                                  								; of the first string location
-000087 e0d1                      		ldi  YH , lcdH1
-000088 e0c0                      		ldi  YL , lcdL1
-000089 e120                      		ldi  ilcnt , 16
+000096 e0d1                      		ldi  YH , lcdH1
+000097 e0c0                      		ldi  YL , lcdL1
+000098 e120                      		ldi  ilcnt , 16
                                  
-                                 WCNEZ1: ; While ilcnt != zero 1
-00008a 9105                      		lpm  mpr, Z+
-00008b 9309                      		st   Y+ , mpr
-00008c 952a                      		dec  ilcnt
-00008d f7e1                      		brne WCNEZ1
+                                 WINEZ1: ; While ilcnt != zero 1
+000099 9105                      		lpm  mpr, Z+
+00009a 9309                      		st   Y+ , mpr
+00009b 952a                      		dec  ilcnt
+00009c f7e1                      		brne WINEZ1
                                  
                                  		;z is already pointing at the second string due to how memory is stored
-00008e e0d1                      		ldi  YH , lcdH2
-00008f e1c0                      		ldi  YL , lcdL2
-000090 e120                      		ldi  ilcnt , 16
+00009d e0d1                      		ldi  YH , lcdH2
+00009e e1c0                      		ldi  YL , lcdL2
+00009f e120                      		ldi  ilcnt , 16
                                  
-                                 WCNEZ2: ; While ilcnt != zero 2
-000091 9105                      		lpm  mpr, Z+
-000092 9309                      		st   Y+ , mpr
-000093 952a                      		dec  ilcnt
-000094 f7e1                      		brne WCNEZ2
+                                 WINEZ2: ; While ilcnt != zero 2
+0000a0 9105                      		lpm  mpr, Z+
+0000a1 9309                      		st   Y+ , mpr
+0000a2 952a                      		dec  ilcnt
+0000a3 f7e1                      		brne WINEZ2
                                  
-000095 d03d                      		rcall LCDWrite
+0000a4 d04c                      		rcall LCDWrite
                                  
-000096 912f                      		pop ilcnt
-000097 910f                      		pop mpr
-000098 91df                      		pop YH
-000099 91cf                      		pop YL
-00009a 91ff                      		pop ZH
-00009b 91ef                      		pop ZL					; Pop vars off of stack
+0000a5 912f                      		pop ilcnt
+0000a6 910f                      		pop mpr
+0000a7 91df                      		pop YH
+0000a8 91cf                      		pop YL
+0000a9 91ff                      		pop ZH
+0000aa 91ef                      		pop ZL					; Pop vars off of stack
                                  
-00009c 9508                      		ret
+0000ab 9508                      		ret
+                                 
+                                 ;----------------------------------------------------------------
+                                 ; Sub:	Wait
+                                 ; Desc:	A wait loop that is 16 + 159975*waitcnt cycles or roughly
+                                 ;		waitcnt*10ms.  Just initialize wait for the specific amount
+                                 ;		of time in 10ms intervals. Here is the general eqaution
+                                 ;		for the number of clock cycles in the wait loop:
+                                 ;			(((((3*ilcnt)-1+4)*olcnt)-1+4)*waitcnt)-1+16
+                                 ;		Imported from Lab 1
+                                 ;----------------------------------------------------------------
+                                 Wait:
+0000ac 931f                      		push	waitcnt			; Save wait register
+0000ad 932f                      		push	ilcnt			; Save ilcnt register
+0000ae 933f                      		push	olcnt			; Save olcnt register
+                                 
+0000af ee30                      Loop:	ldi		olcnt, 224		; load olcnt register
+0000b0 ee2d                      OLoop:	ldi		ilcnt, 237		; load ilcnt register
+0000b1 952a                      ILoop:	dec		ilcnt			; decrement ilcnt
+0000b2 f7f1                      		brne	ILoop			; Continue Inner Loop
+0000b3 953a                      		dec		olcnt		; decrement olcnt
+0000b4 f7d9                      		brne	OLoop			; Continue Outer Loop
+0000b5 951a                      		dec		waitcnt		; Decrement wait
+0000b6 f7c1                      		brne	Loop			; Continue Wait loop
+                                 
+0000b7 913f                      		pop		olcnt		; Restore olcnt register
+0000b8 912f                      		pop		ilcnt		; Restore ilcnt register
+0000b9 911f                      		pop		waitcnt		; Restore wait register
+0000ba 9508                      		ret				; Return from subroutine
+                                 
                                  ;***********************************************************
                                  ;*	Stored Program Data
                                  ;***********************************************************
@@ -1708,23 +1757,23 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ; after the .DB directive; these can help to access the data
                                  ;-----------------------------------------------------------
                                  STRING_BEG:
-00009d 7341
-00009e 7274
-00009f 6469
-0000a0 4420
-0000a1 6c65
-0000a2 7365
-0000a3 6974
-0000a4 656e                      .DB		"Astrid Delestine"		; Declaring data in ProgMem
+0000bb 7341
+0000bc 7274
+0000bd 6469
+0000be 4420
+0000bf 6c65
+0000c0 7365
+0000c1 6974
+0000c2 656e                      .DB		"Astrid Delestine"		; Declaring data in ProgMem
                                  STRING2_BEG:
-0000a5 4c20
-0000a6 6375
-0000a7 7361
-0000a8 5020
-0000a9 616c
-0000aa 7369
-0000ab 6574
-0000ac 2064                      .DB		" Lucas Plaisted "
+0000c3 4c20
+0000c4 6375
+0000c5 7361
+0000c6 5020
+0000c7 616c
+0000c8 7369
+0000c9 6574
+0000ca 2064                      .DB		" Lucas Plaisted "
                                  STRING_END:
                                  
                                  ;***********************************************************
@@ -1845,68 +1894,68 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*		sets reasonable values for the configuration registers.
                                  ;*****************************************************************
                                  LCDInit:
-0000ad 930f                      	push	mpr
+0000cb 930f                      	push	mpr
                                  
                                  	; set MOSI, SCL, and SS as outputs
-0000ae 9a22                      	sbi	DDRB, DDB2	; Port B 2
-0000af 9a21                      	sbi	DDRB, DDB1	; Port B 1
-0000b0 9a20                      	sbi	DDRB, DDB0	; Port B 0
+0000cc 9a22                      	sbi	DDRB, DDB2	; Port B 2
+0000cd 9a21                      	sbi	DDRB, DDB1	; Port B 1
+0000ce 9a20                      	sbi	DDRB, DDB0	; Port B 0
                                  	; ensure that SS is deactivated (active low)
-0000b1 9a28                      	sbi	PORTB, 0
+0000cf 9a28                      	sbi	PORTB, 0
                                  	; set lcd_A0 as output
-0000b2 9a81                      	sbi	DDRF, DDF1	; Port F 1
+0000d0 9a81                      	sbi	DDRF, DDF1	; Port F 1
                                  	; enable LCD backlight control
-0000b3 9a3f                      	sbi	DDRC, DDC7	; Port C 7
+0000d1 9a3f                      	sbi	DDRC, DDC7	; Port C 7
                                  	; set lcd_RST_N as output
-0000b4 9a80                      	sbi	DDRF, DDF0	; Port F 0
+0000d2 9a80                      	sbi	DDRF, DDF0	; Port F 0
                                  	; we pull lcd_RST_N low for 1 millisecond
-0000b5 9888                      	cbi	PORTF, 0
-0000b6 940e 0198                 	call	LCDDelay
-0000b8 9a88                      	sbi	PORTF, 0
+0000d3 9888                      	cbi	PORTF, 0
+0000d4 940e 01b6                 	call	LCDDelay
+0000d6 9a88                      	sbi	PORTF, 0
                                  	; Enable SPI mode 3, master configuration, set clock rate fck/2 using SPI2X
-0000b9 e50c                      	ldi	mpr, (1<<SPE)|(1<<MSTR)|(1<<CPOL)|(1<<CPHA)
-0000ba bd0c                      	out	SPCR, mpr
-0000bb e001                      	ldi	mpr, (1<<SPI2X)
-0000bc bd0d                      	out	SPSR, mpr
+0000d7 e50c                      	ldi	mpr, (1<<SPE)|(1<<MSTR)|(1<<CPOL)|(1<<CPHA)
+0000d8 bd0c                      	out	SPCR, mpr
+0000d9 e001                      	ldi	mpr, (1<<SPI2X)
+0000da bd0d                      	out	SPSR, mpr
                                  	; Note: after transmitting a byte, the SPI interrupt flag will
                                  	; be automatically cleared next time we: 1) read SPSR and ALSO 2) access SPDR
                                  
-0000bd 9828                      	cbi	PORTB, 0	; activate slave select
+0000db 9828                      	cbi	PORTB, 0	; activate slave select
                                  	; send a string of initialization commands
-0000be ea02                      	ldi	mpr, lcd_c_disp_set_bias
-0000bf d0d2                      	rcall	LCD_Internal_WriteCMD
-0000c0 ec00                      	ldi	mpr, lcd_c_disp_set_scandir
-0000c1 d0d0                      	rcall	LCD_Internal_WriteCMD
-0000c2 e801                      	ldi	mpr, lcd_c_disp_set_contrast_1
-0000c3 d0ce                      	rcall	LCD_Internal_WriteCMD
-0000c4 e00f                      	ldi	mpr, lcd_c_disp_set_contrast_2
-0000c5 d0cc                      	rcall	LCD_Internal_WriteCMD
-0000c6 e202                      	ldi	mpr, lcd_c_disp_set_res_ratio
-0000c7 d0ca                      	rcall	LCD_Internal_WriteCMD
-0000c8 e20f                      	ldi	mpr, lcd_c_disp_vreg_on
-0000c9 d0c8                      	rcall	LCD_Internal_WriteCMD
-0000ca ea0f                      	ldi	mpr, (lcd_c_disp_en | 1 << 0)
-0000cb d0c6                      	rcall	LCD_Internal_WriteCMD
-0000cc 9a28                      	sbi	PORTB, 0	; deactivate slave select
+0000dc ea02                      	ldi	mpr, lcd_c_disp_set_bias
+0000dd d0d2                      	rcall	LCD_Internal_WriteCMD
+0000de ec00                      	ldi	mpr, lcd_c_disp_set_scandir
+0000df d0d0                      	rcall	LCD_Internal_WriteCMD
+0000e0 e801                      	ldi	mpr, lcd_c_disp_set_contrast_1
+0000e1 d0ce                      	rcall	LCD_Internal_WriteCMD
+0000e2 e00f                      	ldi	mpr, lcd_c_disp_set_contrast_2
+0000e3 d0cc                      	rcall	LCD_Internal_WriteCMD
+0000e4 e202                      	ldi	mpr, lcd_c_disp_set_res_ratio
+0000e5 d0ca                      	rcall	LCD_Internal_WriteCMD
+0000e6 e20f                      	ldi	mpr, lcd_c_disp_vreg_on
+0000e7 d0c8                      	rcall	LCD_Internal_WriteCMD
+0000e8 ea0f                      	ldi	mpr, (lcd_c_disp_en | 1 << 0)
+0000e9 d0c6                      	rcall	LCD_Internal_WriteCMD
+0000ea 9a28                      	sbi	PORTB, 0	; deactivate slave select
                                  
-0000cd 910f                      	pop	mpr
-0000ce 9508                      	ret
+0000eb 910f                      	pop	mpr
+0000ec 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDBacklightOn
                                  ;* Desc:	Enables the backlight
                                  ;*****************************************************************
                                  LCDBacklightOn:
-0000cf 9a47                      	sbi	PORTC, 7
-0000d0 9508                      	ret
+0000ed 9a47                      	sbi	PORTC, 7
+0000ee 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDBacklightOff
                                  ;* Desc:	Disables the backlight
                                  ;*****************************************************************
                                  LCDBacklightOff:
-0000d1 9847                      	cbi	PORTC, 7
-0000d2 9508                      	ret
+0000ef 9847                      	cbi	PORTC, 7
+0000f0 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDWrite
@@ -1914,57 +1963,57 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*		16 chars on the top line and 16 chars on the bottom line.
                                  ;*****************************************************************
                                  LCDWrite:
-0000d3 d002                      	rcall	LCDWrLn1
-0000d4 d00c                      	rcall	LCDWrLn2
-0000d5 9508                      	ret
+0000f1 d002                      	rcall	LCDWrLn1
+0000f2 d00c                      	rcall	LCDWrLn2
+0000f3 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDWrLn1
                                  ;* Desc:	This function writes 16 characters to the top line.
                                  ;*****************************************************************
                                  LCDWrLn1:
-0000d6 93bf                      	push	XH
-0000d7 93af                      	push	XL
-0000d8 931f                      	push	r17
+0000f4 93bf                      	push	XH
+0000f5 93af                      	push	XL
+0000f6 931f                      	push	r17
                                  	; r17 specifies the destination bank in LCD RAM
-0000d9 e013                      	ldi	r17, 3
+0000f7 e013                      	ldi	r17, 3
                                  	; point X at the ASCII data
-0000da e0b1                      	ldi	XH, HIGH(lcd_buffer_addr)
-0000db e0a0                      	ldi	XL, LOW(lcd_buffer_addr)
-0000dc d05c                      	rcall	LCD_Internal_WriteLn
-0000dd 911f                      	pop	r17
-0000de 91af                      	pop	XL
-0000df 91bf                      	pop	XH
-0000e0 9508                      	ret
+0000f8 e0b1                      	ldi	XH, HIGH(lcd_buffer_addr)
+0000f9 e0a0                      	ldi	XL, LOW(lcd_buffer_addr)
+0000fa d05c                      	rcall	LCD_Internal_WriteLn
+0000fb 911f                      	pop	r17
+0000fc 91af                      	pop	XL
+0000fd 91bf                      	pop	XH
+0000fe 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDWrLn2
                                  ;* Desc:	This function writes 16 characters to the bottom line.
                                  ;*****************************************************************
                                  LCDWrLn2:
-0000e1 93bf                      	push	XH
-0000e2 93af                      	push	XL
-0000e3 931f                      	push	r17
+0000ff 93bf                      	push	XH
+000100 93af                      	push	XL
+000101 931f                      	push	r17
                                  	; r17 specifies the destination bank in LCD RAM
-0000e4 e011                      	ldi	r17, 1
+000102 e011                      	ldi	r17, 1
                                  	; point X at the ASCII data
-0000e5 e0b1                      	ldi	XH, HIGH(lcd_buffer_addr+16)
-0000e6 e1a0                      	ldi	XL, LOW(lcd_buffer_addr+16)
-0000e7 d051                      	rcall	LCD_Internal_WriteLn
-0000e8 911f                      	pop	r17
-0000e9 91af                      	pop	XL
-0000ea 91bf                      	pop	XH
-0000eb 9508                      	ret
+000103 e0b1                      	ldi	XH, HIGH(lcd_buffer_addr+16)
+000104 e1a0                      	ldi	XL, LOW(lcd_buffer_addr+16)
+000105 d051                      	rcall	LCD_Internal_WriteLn
+000106 911f                      	pop	r17
+000107 91af                      	pop	XL
+000108 91bf                      	pop	XH
+000109 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDClr
                                  ;* Desc:	This function clears the entire LCD screen.
                                  ;*****************************************************************
                                  LCDClr:
-0000ec d022                      	rcall	LCDClrLn1
-0000ed d027                      	rcall	LCDClrLn2
+00010a d022                      	rcall	LCDClrLn1
+00010b d027                      	rcall	LCDClrLn2
                                  
-0000ee 9508                      	ret
+00010c 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	CLRDM1
@@ -1973,26 +2022,26 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*****************************************************************
                                  CLRDM1:
                                      ; Set X register points to $0100
-0000ef 93bf                      	   push	   XH
-0000f0 93af                      	   PUSH	   XL
-0000f1 930f                                 push    r16
-0000f2 931f                                 push    r17
+00010d 93bf                      	   push	   XH
+00010e 93af                      	   PUSH	   XL
+00010f 930f                                 push    r16
+000110 931f                                 push    r17
                                  
-0000f3 e0b1                                 ldi     XH, HIGH(lcd_buffer_addr)
-0000f4 e0a0                                 ldi     XL, LOW(lcd_buffer_addr)
-0000f5 e110                                 ldi     r17, 16
-0000f6 e200                                 ldi     r16, ' '
+000111 e0b1                                 ldi     XH, HIGH(lcd_buffer_addr)
+000112 e0a0                                 ldi     XL, LOW(lcd_buffer_addr)
+000113 e110                                 ldi     r17, 16
+000114 e200                                 ldi     r16, ' '
                                     CLRloop1:
-0000f7 930d                                 st      X+, r16         ; load data to DM
-0000f8 951a                                 dec     r17
-0000f9 f7e9                                 brne    CLRloop1
+000115 930d                                 st      X+, r16         ; load data to DM
+000116 951a                                 dec     r17
+000117 f7e9                                 brne    CLRloop1
                                  
-0000fa 911f                      	   pop	   r17
-0000fb 910f                      	   pop	   r16
-0000fc 91af                      	   pop	   XL
-0000fd 91bf                      	   pop	   XH
+000118 911f                      	   pop	   r17
+000119 910f                      	   pop	   r16
+00011a 91af                      	   pop	   XL
+00011b 91bf                      	   pop	   XH
                                  
-0000fe 9508                                 ret
+00011c 9508                                 ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	CLRDM2
@@ -2001,51 +2050,51 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*****************************************************************
                                  CLRDM2:
                                      ; Set X register points to $0110
-0000ff 93bf                      	   push	   XH
-000100 93af                      	   PUSH	   XL
-000101 930f                                 push    r16
-000102 931f                                 push    r17
+00011d 93bf                      	   push	   XH
+00011e 93af                      	   PUSH	   XL
+00011f 930f                                 push    r16
+000120 931f                                 push    r17
                                  
-000103 e0b1                                 ldi     XH, HIGH(lcd_buffer_addr+16)
-000104 e1a0                                 ldi     XL, LOW(lcd_buffer_addr+16)
-000105 e110                                 ldi     r17, 16
-000106 e200                                 ldi     r16, ' '
+000121 e0b1                                 ldi     XH, HIGH(lcd_buffer_addr+16)
+000122 e1a0                                 ldi     XL, LOW(lcd_buffer_addr+16)
+000123 e110                                 ldi     r17, 16
+000124 e200                                 ldi     r16, ' '
                                     CLRloop2:
-000107 930d                                 st      X+, r16         ; load data to DM
-000108 951a                                 dec     r17
-000109 f7e9                                 brne    CLRloop2
+000125 930d                                 st      X+, r16         ; load data to DM
+000126 951a                                 dec     r17
+000127 f7e9                                 brne    CLRloop2
                                  
-00010a 911f                      	   pop	   r17
-00010b 910f                      	   pop	   r16
-00010c 91af                      	   pop	   XL
-00010d 91bf                      	   pop	   XH
+000128 911f                      	   pop	   r17
+000129 910f                      	   pop	   r16
+00012a 91af                      	   pop	   XL
+00012b 91bf                      	   pop	   XH
                                  
-00010e 9508                                 ret
+00012c 9508                                 ret
                                  ;*****************************************************************
                                  ;* Func:	LCDClrLn1
                                  ;* Desc:	This function clears the top line of the LCD screen.
                                  ;*****************************************************************
                                  LCDClrLn1:
-00010f 931f                      	push	r17
+00012d 931f                      	push	r17
                                  	; r17 specifies the target bank in LCD RAM
-000110 e013                      	ldi	r17, 3
-000111 d060                      	rcall	LCD_Internal_ClearLn
-000112 dfdc                      	rcall	CLRDM1
-000113 911f                      	pop	r17
-000114 9508                      	ret
+00012e e013                      	ldi	r17, 3
+00012f d060                      	rcall	LCD_Internal_ClearLn
+000130 dfdc                      	rcall	CLRDM1
+000131 911f                      	pop	r17
+000132 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDClrLn2
                                  ;* Desc:	This function clears the bottom line of the LCD screen.
                                  ;*****************************************************************
                                  LCDClrLn2:
-000115 931f                      	push	r17
+000133 931f                      	push	r17
                                  	; r17 specifies the target bank in LCD RAM
-000116 e011                      	ldi	r17, 1
-000117 d05a                      	rcall	LCD_Internal_ClearLn
-000118 dfe6                      	rcall	CLRDM2
-000119 911f                      	pop	r17
-00011a 9508                      	ret
+000134 e011                      	ldi	r17, 1
+000135 d05a                      	rcall	LCD_Internal_ClearLn
+000136 dfe6                      	rcall	CLRDM2
+000137 911f                      	pop	r17
+000138 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	Bin2ASCII
@@ -2058,44 +2107,44 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*				added to the count register
                                  ;*****************************************************************
                                  Bin2ASCII:
-00011b 930f                      	push	mpr			; save mpr
-00011c 936f                      	push	r			; save r
-00011d 935f                      	push	q			; save q
-00011e 93bf                      	push	XH			; save X-pointer
-00011f 93af                      	push	XL			;
+000139 930f                      	push	mpr			; save mpr
+00013a 936f                      	push	r			; save r
+00013b 935f                      	push	q			; save q
+00013c 93bf                      	push	XH			; save X-pointer
+00013d 93af                      	push	XL			;
                                  
                                  	; Determine the range of mpr
-000120 3604                      	cpi	mpr, 100		; is mpr >= 100
-000121 f018                      	brlo	B2A_1			; goto next check
-000122 e043                      	ldi	count, 3		; Three chars are written
-000123 9613                      	adiw	XL, 3			; Increment X 3 address spaces
-000124 c007                      	rjmp	B2A_3			; Continue with program
+00013e 3604                      	cpi	mpr, 100		; is mpr >= 100
+00013f f018                      	brlo	B2A_1			; goto next check
+000140 e043                      	ldi	count, 3		; Three chars are written
+000141 9613                      	adiw	XL, 3			; Increment X 3 address spaces
+000142 c007                      	rjmp	B2A_3			; Continue with program
                                  B2A_1:
-000125 300a                      	cpi	mpr, 10		; is mpr >= 10
-000126 f018                      	brlo	B2A_2			; Continue with program
-000127 e042                      	ldi	count, 2		; Two chars are written
-000128 9612                      	adiw	XL, 2			; Increment X 2 address spaces
-000129 c002                      	rjmp	B2A_3			; Continue with program
+000143 300a                      	cpi	mpr, 10		; is mpr >= 10
+000144 f018                      	brlo	B2A_2			; Continue with program
+000145 e042                      	ldi	count, 2		; Two chars are written
+000146 9612                      	adiw	XL, 2			; Increment X 2 address spaces
+000147 c002                      	rjmp	B2A_3			; Continue with program
                                  B2A_2:
-00012a 9611                      	adiw	XL, 1			; Increment X 1 address space
-00012b e041                      	ldi	count, 1		; One char is written
+000148 9611                      	adiw	XL, 1			; Increment X 1 address space
+000149 e041                      	ldi	count, 1		; One char is written
                                  
                                  B2A_3:
                                  	; Do-While statement that converts Binary to ASCII
-00012c d076                      	rcall	div10			; Call the div10 function
-00012d e300                      	ldi	mpr, '0'		; Set the base ASCII integer value
-00012e 0f06                      	add	mpr, r		; Create the ASCII integer value
-00012f 930e                      	st	-X, mpr		; Load ASCII value to memory
-000130 2f05                      	mov	mpr, q		; Set mpr to quotient value
-000131 3000                      	cpi	mpr, 0		; does mpr == 0
-000132 f7c9                      	brne	B2A_3			; do while (mpr != 0)
+00014a d076                      	rcall	div10			; Call the div10 function
+00014b e300                      	ldi	mpr, '0'		; Set the base ASCII integer value
+00014c 0f06                      	add	mpr, r		; Create the ASCII integer value
+00014d 930e                      	st	-X, mpr		; Load ASCII value to memory
+00014e 2f05                      	mov	mpr, q		; Set mpr to quotient value
+00014f 3000                      	cpi	mpr, 0		; does mpr == 0
+000150 f7c9                      	brne	B2A_3			; do while (mpr != 0)
                                  
-000133 91af                      	pop	XL			; restore X-pointer
-000134 91bf                      	pop	XH			;
-000135 915f                      	pop	q			; restore q
-000136 916f                      	pop	r			; restore r
-000137 910f                      	pop	mpr			; restore mpr
-000138 9508                      	ret				; return from function
+000151 91af                      	pop	XL			; restore X-pointer
+000152 91bf                      	pop	XH			;
+000153 915f                      	pop	q			; restore q
+000154 916f                      	pop	r			; restore r
+000155 910f                      	pop	mpr			; restore mpr
+000156 9508                      	ret				; return from function
                                  
                                  ;*****************************************************************
                                  ;*	The functions below here are intended for internal use only.
@@ -2111,91 +2160,91 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*		
                                  ;*****************************************************************
                                  LCD_Internal_WriteLn:
-000139 920f                      	push	r0
-00013a 921f                      	push	r1
-00013b 930f                      	push	mpr
-00013c 932f                      	push	r18
-00013d 933f                      	push	r19
-00013e 938f                      	push	r24
-00013f 939f                      	push	r25
-000140 93ef                      	push	ZL
-000141 93ff                      	push	ZH
+000157 920f                      	push	r0
+000158 921f                      	push	r1
+000159 930f                      	push	mpr
+00015a 932f                      	push	r18
+00015b 933f                      	push	r19
+00015c 938f                      	push	r24
+00015d 939f                      	push	r25
+00015e 93ef                      	push	ZL
+00015f 93ff                      	push	ZH
                                  
                                  	; r25:24 holds a pointer to the base address of the bitmap array
-000142 e093                      	ldi	r25, HIGH(FontBitmap << 1);
-000143 e982                      	ldi	r24, LOW(FontBitmap << 1);
+000160 e093                      	ldi	r25, HIGH(FontBitmap << 1);
+000161 ec8e                      	ldi	r24, LOW(FontBitmap << 1);
                                  
-000144 9828                      	cbi	PORTB, 0	; activate slave select
+000162 9828                      	cbi	PORTB, 0	; activate slave select
                                  
                                  	; use a counter to track if we are on the top chunk or bottom chunk of each char
-000145 e022                      	ldi	r18, 2
+000163 e022                      	ldi	r18, 2
                                  
                                  LCD_WL_display_bank:
                                  	; set the column to 0
-000146 e100                      	ldi	mpr, lcd_c_disp_set_col_addr_h
-000147 d04a                      	rcall	LCD_Internal_WriteCMD
-000148 e000                      	ldi	mpr, lcd_c_disp_set_col_addr_l
-000149 d048                      	rcall	LCD_Internal_WriteCMD
+000164 e100                      	ldi	mpr, lcd_c_disp_set_col_addr_h
+000165 d04a                      	rcall	LCD_Internal_WriteCMD
+000166 e000                      	ldi	mpr, lcd_c_disp_set_col_addr_l
+000167 d048                      	rcall	LCD_Internal_WriteCMD
                                  	; we need to select the appropriate page
-00014a eb00                      	ldi	mpr, lcd_c_disp_set_page_addr
-00014b 2b01                      	or	mpr, r17	; set the lower 4 bits
-00014c d045                      	rcall	LCD_Internal_WriteCMD
+000168 eb00                      	ldi	mpr, lcd_c_disp_set_page_addr
+000169 2b01                      	or	mpr, r17	; set the lower 4 bits
+00016a d045                      	rcall	LCD_Internal_WriteCMD
                                  
-00014d e130                      	ldi	r19, 16	; there are 16 characters per line
+00016b e130                      	ldi	r19, 16	; there are 16 characters per line
                                  
                                  LCD_WL_next_char:
                                  	; get ascii code point & determine location of corresponding character bitmap
-00014e 900d                      	ld	r0, X+	; this should be a value from 0 to 255
-00014f e100                      	ldi	mpr, 16	; there are 16 bytes per character
-000150 9e00                      	mul	r0, mpr	; determine the byte offset for the desired char
-000151 01fc                      	movw	ZH:ZL, r25:r24	; copy the base address to Z
-000152 0de0                      	add	ZL, r0	; finally, compute a pointer to the char bitmap
-000153 1df1                      	adc	ZH, r1
+00016c 900d                      	ld	r0, X+	; this should be a value from 0 to 255
+00016d e100                      	ldi	mpr, 16	; there are 16 bytes per character
+00016e 9e00                      	mul	r0, mpr	; determine the byte offset for the desired char
+00016f 01fc                      	movw	ZH:ZL, r25:r24	; copy the base address to Z
+000170 0de0                      	add	ZL, r0	; finally, compute a pointer to the char bitmap
+000171 1df1                      	adc	ZH, r1
                                  
-000154 e008                      	ldi	mpr, 8	; there are 8 columns for each character
+000172 e008                      	ldi	mpr, 8	; there are 8 columns for each character
                                  
                                  	; this is where we display the chunk of character (either a top chunk or bottom chunk)
-000155 9004                      	lpm	r0, Z
+000173 9004                      	lpm	r0, Z
                                  LCD_WL_next_col:
-000156 bc0e                      	out	SPDR, r0
-000157 9a89                      	sbi	PORTF, 1	; set lcd_A0 to specify data mode
-000158 9632                      	adiw	ZH:ZL, 2	; point Z at the next column for this bank
-000159 9004                      	lpm	r0, Z		; this is a sneaky way to save a few clock cycles (since we are waiting for the SPI communication)
+000174 bc0e                      	out	SPDR, r0
+000175 9a89                      	sbi	PORTF, 1	; set lcd_A0 to specify data mode
+000176 9632                      	adiw	ZH:ZL, 2	; point Z at the next column for this bank
+000177 9004                      	lpm	r0, Z		; this is a sneaky way to save a few clock cycles (since we are waiting for the SPI communication)
                                  LCD_WL_wait_spi:
-00015a b41d                      	in	r1, SPSR
-00015b fe17                      	sbrs	r1, SPIF	; wait for SPI to finish
-00015c cffd                      	rjmp	LCD_WL_wait_spi
+000178 b41d                      	in	r1, SPSR
+000179 fe17                      	sbrs	r1, SPIF	; wait for SPI to finish
+00017a cffd                      	rjmp	LCD_WL_wait_spi
                                  
                                  	; keep going until we have displayed all the columns for this character
-00015d 950a                      	dec	mpr
-00015e f7b9                      	brne	LCD_WL_next_col
+00017b 950a                      	dec	mpr
+00017c f7b9                      	brne	LCD_WL_next_col
                                  
                                  	; move to the next character
-00015f 953a                      	dec	r19
-000160 f769                      	brne	LCD_WL_next_char
+00017d 953a                      	dec	r19
+00017e f769                      	brne	LCD_WL_next_char
                                  
                                  	; if we are at the end of the line, configure the bank and starting array offset for the bottom half of each char
-000161 952a                      	dec	r18		; did we display both banks yet?
-000162 f021                      	breq	LCD_WL_all_done
+00017f 952a                      	dec	r18		; did we display both banks yet?
+000180 f021                      	breq	LCD_WL_all_done
                                  	; if not, then prepare to display the bottom chunk of each character
-000163 951a                      	dec	r17		; decrement the bank number
-000164 9750                      	sbiw	XH:XL, 16	; X needs to point back at the beginning character of the line
-000165 9601                      	adiw	r25:r24, 1	; increment the base address pointer (now it will point to the second chunk of each char)
-000166 cfdf                      	rjmp	LCD_WL_display_bank
+000181 951a                      	dec	r17		; decrement the bank number
+000182 9750                      	sbiw	XH:XL, 16	; X needs to point back at the beginning character of the line
+000183 9601                      	adiw	r25:r24, 1	; increment the base address pointer (now it will point to the second chunk of each char)
+000184 cfdf                      	rjmp	LCD_WL_display_bank
                                  
                                  LCD_WL_all_done:
-000167 9a28                      	sbi	PORTB, 0	; deactivate slave select
+000185 9a28                      	sbi	PORTB, 0	; deactivate slave select
                                  
-000168 91ff                      	pop	ZH
-000169 91ef                      	pop	ZL
-00016a 919f                      	pop	r25
-00016b 918f                      	pop	r24
-00016c 913f                      	pop	r19
-00016d 912f                      	pop	r18
-00016e 910f                      	pop	mpr
-00016f 901f                      	pop	r1
-000170 900f                      	pop	r0
-000171 9508                      	ret
+000186 91ff                      	pop	ZH
+000187 91ef                      	pop	ZL
+000188 919f                      	pop	r25
+000189 918f                      	pop	r24
+00018a 913f                      	pop	r19
+00018b 912f                      	pop	r18
+00018c 910f                      	pop	mpr
+00018d 901f                      	pop	r1
+00018e 900f                      	pop	r0
+00018f 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCD_Internal_ClearLn
@@ -2203,54 +2252,54 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*		r17 specifies the starting bank to wipe.
                                  ;*****************************************************************
                                  LCD_Internal_ClearLn:
-000172 930f                      	push	mpr
-000173 921f                      	push	r1
-000174 932f                      	push	r18
-000175 933f                      	push	r19
+000190 930f                      	push	mpr
+000191 921f                      	push	r1
+000192 932f                      	push	r18
+000193 933f                      	push	r19
                                  
-000176 9828                      	cbi	PORTB, 0	; activate slave select
-000177 e032                      	ldi	r19, 2	; we are going to clear two banks
+000194 9828                      	cbi	PORTB, 0	; activate slave select
+000195 e032                      	ldi	r19, 2	; we are going to clear two banks
                                  
                                  LCD_CLRLN_clear_bank:
                                  	; set the column to 0
-000178 e100                      	ldi	mpr, lcd_c_disp_set_col_addr_h
-000179 d018                      	rcall	LCD_Internal_WriteCMD
-00017a e000                      	ldi	mpr, lcd_c_disp_set_col_addr_l
-00017b d016                      	rcall	LCD_Internal_WriteCMD
+000196 e100                      	ldi	mpr, lcd_c_disp_set_col_addr_h
+000197 d018                      	rcall	LCD_Internal_WriteCMD
+000198 e000                      	ldi	mpr, lcd_c_disp_set_col_addr_l
+000199 d016                      	rcall	LCD_Internal_WriteCMD
                                  	; we need to select the appropriate page
-00017c eb00                      	ldi	mpr, lcd_c_disp_set_page_addr
-00017d 2b01                      	or	mpr, r17	; configure the lower 4 bits
-00017e d013                      	rcall	LCD_Internal_WriteCMD
+00019a eb00                      	ldi	mpr, lcd_c_disp_set_page_addr
+00019b 2b01                      	or	mpr, r17	; configure the lower 4 bits
+00019c d013                      	rcall	LCD_Internal_WriteCMD
                                  
-00017f e820                      	ldi	r18, 128	; there are 128 columns on the LCD
-000180 2700                      	clr	mpr		; we will fill each column with empty dots (i.e. blank space)
-000181 9a89                      	sbi	PORTF, 1	; set lcd_A0 to specify data mode
+00019d e820                      	ldi	r18, 128	; there are 128 columns on the LCD
+00019e 2700                      	clr	mpr		; we will fill each column with empty dots (i.e. blank space)
+00019f 9a89                      	sbi	PORTF, 1	; set lcd_A0 to specify data mode
                                  
                                  LCD_CLRLN_write_col:
-000182 bd0e                      	out	SPDR, mpr	; send an empty column to the LCD via SPI
+0001a0 bd0e                      	out	SPDR, mpr	; send an empty column to the LCD via SPI
                                  LCD_CLRLN_wait_spi:
-000183 b41d                      	in	r1, SPSR
-000184 fe17                      	sbrs	r1, SPIF	; wait for SPI to finish
-000185 cffd                      	rjmp	LCD_CLRLN_wait_spi
+0001a1 b41d                      	in	r1, SPSR
+0001a2 fe17                      	sbrs	r1, SPIF	; wait for SPI to finish
+0001a3 cffd                      	rjmp	LCD_CLRLN_wait_spi
                                  
-000186 952a                      	dec	r18
-000187 f7d1                      	brne	LCD_CLRLN_write_col	; cycle through all 128 columns
+0001a4 952a                      	dec	r18
+0001a5 f7d1                      	brne	LCD_CLRLN_write_col	; cycle through all 128 columns
                                  
                                  	; clear the remaining bank if we haven't done so already
-000188 953a                      	dec	r19
-000189 f011                      	breq	LCD_CLRLN_all_done
-00018a 951a                      	dec	r17		; decrement the bank index
-00018b cfec                      	rjmp	LCD_CLRLN_clear_bank
+0001a6 953a                      	dec	r19
+0001a7 f011                      	breq	LCD_CLRLN_all_done
+0001a8 951a                      	dec	r17		; decrement the bank index
+0001a9 cfec                      	rjmp	LCD_CLRLN_clear_bank
                                  
                                  LCD_CLRLN_all_done:
-00018c 9a28                      	sbi	PORTB, 0	; deactivate slave select	
+0001aa 9a28                      	sbi	PORTB, 0	; deactivate slave select	
                                  	
                                  	; pop registers...
-00018d 913f                      	pop	r19
-00018e 912f                      	pop	r18
-00018f 901f                      	pop	r1
-000190 910f                      	pop	mpr
-000191 9508                      	ret
+0001ab 913f                      	pop	r19
+0001ac 912f                      	pop	r18
+0001ad 901f                      	pop	r1
+0001ae 910f                      	pop	mpr
+0001af 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCD_Internal_WriteCMD
@@ -2259,15 +2308,15 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*		YOU ARE RESPONSIBLE for handling the slave select line!
                                  ;*****************************************************************
                                  LCD_Internal_WriteCMD:
-000192 bd0e                      	out	SPDR, mpr	; initiate transmission
-000193 9889                      	cbi	PORTF, 1	; clear lcd_A0 to put the lcd into command mode
+0001b0 bd0e                      	out	SPDR, mpr	; initiate transmission
+0001b1 9889                      	cbi	PORTF, 1	; clear lcd_A0 to put the lcd into command mode
                                  				; (this just has to be done before the 8th bit
                                  				; is transmitted via SPI)
                                  LCD_IWC_L1:
-000194 b50d                      	in	mpr, SPSR
-000195 ff07                      	sbrs	mpr, SPIF	; wait for SPI to finish
-000196 cffd                      	rjmp LCD_IWC_L1
-000197 9508                      	ret
+0001b2 b50d                      	in	mpr, SPSR
+0001b3 ff07                      	sbrs	mpr, SPIF	; wait for SPI to finish
+0001b4 cffd                      	rjmp LCD_IWC_L1
+0001b5 9508                      	ret
                                  
                                  ;*****************************************************************
                                  ;* Func:	LCDDelay
@@ -2275,19 +2324,19 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*		Note that a CALL takes 4 cycles on top of this delay.
                                  ;*****************************************************************
                                  LCDDelay:
-000198 930f                      	push	mpr		; 2 cycles
-000199 931f                      	push	r17		; 2 cycles
-00019a e01b                      	ldi	r17, 11	; 1 cycle
+0001b6 930f                      	push	mpr		; 2 cycles
+0001b7 931f                      	push	r17		; 2 cycles
+0001b8 e01b                      	ldi	r17, 11	; 1 cycle
                                  LCDDelay_L1:
-00019b ef02                      	ldi	mpr, 242	; 1 cycle
+0001b9 ef02                      	ldi	mpr, 242	; 1 cycle
                                  LCDDelay_L2:
-00019c 950a                      	dec	mpr		; 1 cycle
-00019d f7f1                      	brne	LCDDelay_L2	; 2 cycles on branch, 1 if no branch
-00019e 951a                      	dec	r17		; 1 cycle
-00019f f7d9                      	brne	LCDDelay_L1	; 2 cycles on branch, 1 if no branch
-0001a0 911f                      	pop	r17		; 2 cycles
-0001a1 910f                      	pop	mpr		; 2 cycles
-0001a2 9508                      	ret			; 4 cycles
+0001ba 950a                      	dec	mpr		; 1 cycle
+0001bb f7f1                      	brne	LCDDelay_L2	; 2 cycles on branch, 1 if no branch
+0001bc 951a                      	dec	r17		; 1 cycle
+0001bd f7d9                      	brne	LCDDelay_L1	; 2 cycles on branch, 1 if no branch
+0001be 911f                      	pop	r17		; 2 cycles
+0001bf 910f                      	pop	mpr		; 2 cycles
+0001c0 9508                      	ret			; 4 cycles
                                  
                                  ;*****************************************************************
                                  ;* Func:	div10
@@ -2298,54 +2347,54 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*	divide by 10 :)  ~DZ		
                                  ;*****************************************************************
                                  div10:
-0001a3 920f                      	push	r0		; Save register
+0001c1 920f                      	push	r0		; Save register
                                  
                                  	; q = mpr / 10 = mpr * 0.000110011001101b
-0001a4 2f50                      	mov	q, mpr	; q = mpr * 1.0b
-0001a5 9556                      	lsr	q		; q >> 2
-0001a6 9556                      	lsr	q		; q = mpr * 0.01b
-0001a7 0f50                      	add	q, mpr	; q = (q + mpr) >> 1
-0001a8 9556                      	lsr	q		; q = mpr * 0.101b
-0001a9 0f50                      	add	q, mpr	; q = (q + mpr) >> 3
-0001aa 9556                      	lsr	q
-0001ab 9556                      	lsr	q
-0001ac 9556                      	lsr	q		; q = mpr * 0.001101b
-0001ad 0f50                      	add	q, mpr	; q = (q + mpr) >> 1
-0001ae 9556                      	lsr	q		; q = mpr * 0.1001101b
-0001af 0f50                      	add	q, mpr	; q = (q + mpr) >> 3
-0001b0 9556                      	lsr	q				
-0001b1 9556                      	lsr	q
-0001b2 9556                      	lsr	q		; q = mpr * 0.0011001101b
-0001b3 0f50                      	add	q, mpr	; q = (q + mpr) >> 1
-0001b4 9556                      	lsr	q		; q = mpr * 0.10011001101b
-0001b5 0f50                      	add	q, mpr	; q = (q + mpr) >> 4
-0001b6 9556                      	lsr	q
-0001b7 9556                      	lsr	q
-0001b8 9556                      	lsr	q
-0001b9 9556                      	lsr	q		; q = mpr * 0.000110011001101b
+0001c2 2f50                      	mov	q, mpr	; q = mpr * 1.0b
+0001c3 9556                      	lsr	q		; q >> 2
+0001c4 9556                      	lsr	q		; q = mpr * 0.01b
+0001c5 0f50                      	add	q, mpr	; q = (q + mpr) >> 1
+0001c6 9556                      	lsr	q		; q = mpr * 0.101b
+0001c7 0f50                      	add	q, mpr	; q = (q + mpr) >> 3
+0001c8 9556                      	lsr	q
+0001c9 9556                      	lsr	q
+0001ca 9556                      	lsr	q		; q = mpr * 0.001101b
+0001cb 0f50                      	add	q, mpr	; q = (q + mpr) >> 1
+0001cc 9556                      	lsr	q		; q = mpr * 0.1001101b
+0001cd 0f50                      	add	q, mpr	; q = (q + mpr) >> 3
+0001ce 9556                      	lsr	q				
+0001cf 9556                      	lsr	q
+0001d0 9556                      	lsr	q		; q = mpr * 0.0011001101b
+0001d1 0f50                      	add	q, mpr	; q = (q + mpr) >> 1
+0001d2 9556                      	lsr	q		; q = mpr * 0.10011001101b
+0001d3 0f50                      	add	q, mpr	; q = (q + mpr) >> 4
+0001d4 9556                      	lsr	q
+0001d5 9556                      	lsr	q
+0001d6 9556                      	lsr	q
+0001d7 9556                      	lsr	q		; q = mpr * 0.000110011001101b
                                  
                                  	; compute the remainder as r = i - 10 * q
                                  	; calculate r = q * 10 = q * 1010b
-0001ba 2f65                      	mov	r, q		; r = q * 1
-0001bb 0f66                      	lsl	r		; r << 2
-0001bc 0f66                      	lsl	r		; r = q * 100b
-0001bd 0f65                      	add	r, q		; r = (r + q) << 1
-0001be 0f66                      	lsl	r		; r = q * 1010b
-0001bf 2e06                      	mov	r0, r		; r0 = 10 * q
-0001c0 2f60                      	mov	r, mpr	; r = mpr
-0001c1 1960                      	sub	r, r0		; r = mpr - 10 * q
+0001d8 2f65                      	mov	r, q		; r = q * 1
+0001d9 0f66                      	lsl	r		; r << 2
+0001da 0f66                      	lsl	r		; r = q * 100b
+0001db 0f65                      	add	r, q		; r = (r + q) << 1
+0001dc 0f66                      	lsl	r		; r = q * 1010b
+0001dd 2e06                      	mov	r0, r		; r0 = 10 * q
+0001de 2f60                      	mov	r, mpr	; r = mpr
+0001df 1960                      	sub	r, r0		; r = mpr - 10 * q
                                  
                                  	; Fix any errors that occur
                                  div10_1:
-0001c2 306a                      	cpi	r, 10		; Compare with 10
-0001c3 f018                      	brlo	div10_2	; do nothing if r < 10
-0001c4 9553                      	inc	q		; fix quotient
-0001c5 506a                      	subi	r, 10		; fix remainder
-0001c6 cffb                      	rjmp	div10_1	; Continue until error is corrected
+0001e0 306a                      	cpi	r, 10		; Compare with 10
+0001e1 f018                      	brlo	div10_2	; do nothing if r < 10
+0001e2 9553                      	inc	q		; fix quotient
+0001e3 506a                      	subi	r, 10		; fix remainder
+0001e4 cffb                      	rjmp	div10_1	; Continue until error is corrected
                                  
                                  div10_2:
-0001c7 900f                      	pop	r0		; Restore registers
-0001c8 9508                      	ret			; Return from function
+0001e5 900f                      	pop	r0		; Restore registers
+0001e6 9508                      	ret			; Return from function
                                  
                                  ;*********************************************************************
                                  ;*	Bitmap Font Information
@@ -2367,2054 +2416,2054 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab3\Lab3Assm\Lab3Assm\LCDDriver
                                  ;*	Tamzen font is provided "as is" without any express or implied warranty.
                                  ;*********************************************************************
                                  FontBitmap:
-0001c9 0000
-0001ca f00f
-0001cb 1008
-0001cc 1008
-0001cd 1008
-0001ce 1008
-0001cf f00f
-0001d0 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x0F, 0xF0, 0x00, 0x00	; U+0000
-0001d1 fe03
-0001d2 fa7f
-0001d3 f683
-0001d4 ea83
-0001d5 d683
-0001d6 aa83
-0001d7 567f
-0001d8 fe03                      .DB	0x03, 0xFE, 0x7F, 0xFA, 0x83, 0xF6, 0x83, 0xEA, 0x83, 0xD6, 0x83, 0xAA, 0x7F, 0x56, 0x03, 0xFE	; U+E0A2
-0001d9 5455
-0001da aaaa
-0001db 5455
-0001dc aaaa
-0001dd 5455
-0001de aaaa
-0001df 5455
-0001e0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; U+2592
-0001e1 5455
-0001e2 aaaa
-0001e3 5455
-0001e4 aaaa
-0001e5 5455
-0001e6 aaaa
-0001e7 5455
-0001e8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0001e9 5455
-0001ea aaaa
-0001eb 5455
-0001ec aaaa
-0001ed 5455
-0001ee aaaa
-0001ef 5455
-0001f0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0001f1 5455
-0001f2 aaaa
-0001f3 5455
-0001f4 aaaa
-0001f5 5455
-0001f6 aaaa
+0001e7 0000
+0001e8 f00f
+0001e9 1008
+0001ea 1008
+0001eb 1008
+0001ec 1008
+0001ed f00f
+0001ee 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x0F, 0xF0, 0x00, 0x00	; U+0000
+0001ef fe03
+0001f0 fa7f
+0001f1 f683
+0001f2 ea83
+0001f3 d683
+0001f4 aa83
+0001f5 567f
+0001f6 fe03                      .DB	0x03, 0xFE, 0x7F, 0xFA, 0x83, 0xF6, 0x83, 0xEA, 0x83, 0xD6, 0x83, 0xAA, 0x7F, 0x56, 0x03, 0xFE	; U+E0A2
 0001f7 5455
-0001f8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0001f8 aaaa
 0001f9 5455
 0001fa aaaa
 0001fb 5455
 0001fc aaaa
 0001fd 5455
-0001fe aaaa
+0001fe aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; U+2592
 0001ff 5455
-000200 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000201 0000
-000202 0007
-000203 8008
-000204 8008
-000205 8008
-000206 0007
-000207 0000
-000208 0000                      .DB	0x00, 0x00, 0x07, 0x00, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00B0
+000200 aaaa
+000201 5455
+000202 aaaa
+000203 5455
+000204 aaaa
+000205 5455
+000206 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000207 5455
+000208 aaaa
 000209 5455
 00020a aaaa
 00020b 5455
 00020c aaaa
 00020d 5455
-00020e aaaa
+00020e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00020f 5455
-000210 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000210 aaaa
 000211 5455
 000212 aaaa
 000213 5455
 000214 aaaa
 000215 5455
-000216 aaaa
+000216 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000217 5455
-000218 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000218 aaaa
 000219 5455
 00021a aaaa
 00021b 5455
 00021c aaaa
 00021d 5455
-00021e aaaa
-00021f 5455
-000220 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000221 8000
-000222 8000
-000223 8000
-000224 8000
-000225 80ff
-000226 0000
-000227 0000
-000228 0000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2518
-000229 8000
-00022a 8000
-00022b 8000
-00022c 8000
-00022d fe00
-00022e 0000
-00022f 0000
-000230 0000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2510
-000231 0000
-000232 0000
-000233 0000
-000234 0000
-000235 fe00
-000236 8000
-000237 8000
-000238 8000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+250C
-000239 0000
-00023a 0000
-00023b 0000
-00023c 0000
-00023d 80ff
-00023e 8000
+00021e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+00021f 0000
+000220 0007
+000221 8008
+000222 8008
+000223 8008
+000224 0007
+000225 0000
+000226 0000                      .DB	0x00, 0x00, 0x07, 0x00, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00B0
+000227 5455
+000228 aaaa
+000229 5455
+00022a aaaa
+00022b 5455
+00022c aaaa
+00022d 5455
+00022e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+00022f 5455
+000230 aaaa
+000231 5455
+000232 aaaa
+000233 5455
+000234 aaaa
+000235 5455
+000236 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000237 5455
+000238 aaaa
+000239 5455
+00023a aaaa
+00023b 5455
+00023c aaaa
+00023d 5455
+00023e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00023f 8000
-000240 8000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+2514
+000240 8000
 000241 8000
 000242 8000
-000243 8000
-000244 8000
-000245 feff
-000246 8000
+000243 80ff
+000244 0000
+000245 0000
+000246 0000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2518
 000247 8000
-000248 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+253C
-000249 5455
-00024a aaaa
-00024b 5455
-00024c aaaa
-00024d 5455
-00024e aaaa
-00024f 5455
-000250 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000251 5455
-000252 aaaa
-000253 5455
-000254 aaaa
-000255 5455
-000256 aaaa
-000257 5455
-000258 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000259 8000
-00025a 8000
-00025b 8000
+000248 8000
+000249 8000
+00024a 8000
+00024b fe00
+00024c 0000
+00024d 0000
+00024e 0000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2510
+00024f 0000
+000250 0000
+000251 0000
+000252 0000
+000253 fe00
+000254 8000
+000255 8000
+000256 8000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+250C
+000257 0000
+000258 0000
+000259 0000
+00025a 0000
+00025b 80ff
 00025c 8000
 00025d 8000
-00025e 8000
+00025e 8000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+2514
 00025f 8000
-000260 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+2500
-000261 5455
-000262 aaaa
-000263 5455
-000264 aaaa
-000265 5455
-000266 aaaa
+000260 8000
+000261 8000
+000262 8000
+000263 feff
+000264 8000
+000265 8000
+000266 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+253C
 000267 5455
-000268 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000268 aaaa
 000269 5455
 00026a aaaa
 00026b 5455
 00026c aaaa
 00026d 5455
-00026e aaaa
+00026e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00026f 5455
-000270 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000271 0000
-000272 0000
-000273 0000
-000274 0000
-000275 feff
-000276 8000
+000270 aaaa
+000271 5455
+000272 aaaa
+000273 5455
+000274 aaaa
+000275 5455
+000276 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000277 8000
-000278 8000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+251C
+000278 8000
 000279 8000
 00027a 8000
 00027b 8000
 00027c 8000
-00027d feff
-00027e 0000
-00027f 0000
-000280 0000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2524
-000281 8000
-000282 8000
-000283 8000
-000284 8000
-000285 80ff
-000286 8000
-000287 8000
-000288 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+2534
-000289 8000
-00028a 8000
-00028b 8000
-00028c 8000
-00028d fe00
-00028e 8000
-00028f 8000
-000290 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+252C
+00027d 8000
+00027e 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+2500
+00027f 5455
+000280 aaaa
+000281 5455
+000282 aaaa
+000283 5455
+000284 aaaa
+000285 5455
+000286 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000287 5455
+000288 aaaa
+000289 5455
+00028a aaaa
+00028b 5455
+00028c aaaa
+00028d 5455
+00028e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+00028f 0000
+000290 0000
 000291 0000
 000292 0000
-000293 0000
-000294 0000
-000295 feff
-000296 0000
-000297 0000
-000298 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2502
-000299 5455
-00029a aaaa
-00029b 5455
-00029c aaaa
-00029d 5455
-00029e aaaa
-00029f 5455
-0002a0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0002a1 5455
-0002a2 aaaa
-0002a3 5455
-0002a4 aaaa
-0002a5 5455
-0002a6 aaaa
-0002a7 5455
-0002a8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0002a9 5455
-0002aa aaaa
-0002ab 5455
-0002ac aaaa
-0002ad 5455
-0002ae aaaa
-0002af 5455
-0002b0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0002b1 5455
-0002b2 aaaa
-0002b3 5455
-0002b4 aaaa
-0002b5 5455
-0002b6 aaaa
+000293 feff
+000294 8000
+000295 8000
+000296 8000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+251C
+000297 8000
+000298 8000
+000299 8000
+00029a 8000
+00029b feff
+00029c 0000
+00029d 0000
+00029e 0000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2524
+00029f 8000
+0002a0 8000
+0002a1 8000
+0002a2 8000
+0002a3 80ff
+0002a4 8000
+0002a5 8000
+0002a6 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0xFF, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+2534
+0002a7 8000
+0002a8 8000
+0002a9 8000
+0002aa 8000
+0002ab fe00
+0002ac 8000
+0002ad 8000
+0002ae 8000                      .DB	0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0xFE, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+252C
+0002af 0000
+0002b0 0000
+0002b1 0000
+0002b2 0000
+0002b3 feff
+0002b4 0000
+0002b5 0000
+0002b6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0xFE, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+2502
 0002b7 5455
-0002b8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0002b9 0000
-0002ba 1001
-0002bb 2001
-0002bc e007
-0002bd 2009
-0002be 1009
-0002bf 1008
-0002c0 2004                      .DB	0x00, 0x00, 0x01, 0x10, 0x01, 0x20, 0x07, 0xE0, 0x09, 0x20, 0x09, 0x10, 0x08, 0x10, 0x04, 0x20	; U+00A3
+0002b8 aaaa
+0002b9 5455
+0002ba aaaa
+0002bb 5455
+0002bc aaaa
+0002bd 5455
+0002be aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0002bf 5455
+0002c0 aaaa
 0002c1 5455
 0002c2 aaaa
 0002c3 5455
 0002c4 aaaa
 0002c5 5455
-0002c6 aaaa
+0002c6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0002c7 5455
-0002c8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0002c9 0000
-0002ca 0000
-0002cb 0000
-0002cc 0000
-0002cd 0000
-0002ce 0000
-0002cf 0000
-0002d0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0020
-0002d1 0000
-0002d2 0000
-0002d3 0000
-0002d4 301f
-0002d5 0000
-0002d6 0000
+0002c8 aaaa
+0002c9 5455
+0002ca aaaa
+0002cb 5455
+0002cc aaaa
+0002cd 5455
+0002ce aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0002cf 5455
+0002d0 aaaa
+0002d1 5455
+0002d2 aaaa
+0002d3 5455
+0002d4 aaaa
+0002d5 5455
+0002d6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0002d7 0000
-0002d8 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1F, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0021
-0002d9 0000
-0002da 0000
-0002db 001e
-0002dc 0000
-0002dd 0000
-0002de 001e
-0002df 0000
-0002e0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0022
-0002e1 0000
-0002e2 4002
-0002e3 f00f
-0002e4 4002
-0002e5 4002
-0002e6 f00f
-0002e7 4002
-0002e8 0000                      .DB	0x00, 0x00, 0x02, 0x40, 0x0F, 0xF0, 0x02, 0x40, 0x02, 0x40, 0x0F, 0xF0, 0x02, 0x40, 0x00, 0x00	; U+0023
+0002d8 1001
+0002d9 2001
+0002da e007
+0002db 2009
+0002dc 1009
+0002dd 1008
+0002de 2004                      .DB	0x00, 0x00, 0x01, 0x10, 0x01, 0x20, 0x07, 0xE0, 0x09, 0x20, 0x09, 0x10, 0x08, 0x10, 0x04, 0x20	; U+00A3
+0002df 5455
+0002e0 aaaa
+0002e1 5455
+0002e2 aaaa
+0002e3 5455
+0002e4 aaaa
+0002e5 5455
+0002e6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0002e7 0000
+0002e8 0000
 0002e9 0000
 0002ea 0000
-0002eb 2006
-0002ec 2009
-0002ed 3839
-0002ee 2009
-0002ef c008
-0002f0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x06, 0x20, 0x09, 0x20, 0x39, 0x38, 0x09, 0x20, 0x08, 0xC0, 0x00, 0x00	; U+0024
+0002eb 0000
+0002ec 0000
+0002ed 0000
+0002ee 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0020
+0002ef 0000
+0002f0 0000
 0002f1 0000
-0002f2 200c
-0002f3 4012
-0002f4 8012
-0002f5 600d
-0002f6 9002
-0002f7 9004
-0002f8 6008                      .DB	0x00, 0x00, 0x0C, 0x20, 0x12, 0x40, 0x12, 0x80, 0x0D, 0x60, 0x02, 0x90, 0x04, 0x90, 0x08, 0x60	; U+0025
-0002f9 0000
-0002fa e00c
-0002fb 1013
-0002fc 1013
-0002fd 900c
-0002fe 6000
-0002ff 6000
-000300 9001                      .DB	0x00, 0x00, 0x0C, 0xE0, 0x13, 0x10, 0x13, 0x10, 0x0C, 0x90, 0x00, 0x60, 0x00, 0x60, 0x01, 0x90	; U+0026
-000301 0000
-000302 0000
-000303 0000
-000304 001e
-000305 0000
-000306 0000
+0002f2 301f
+0002f3 0000
+0002f4 0000
+0002f5 0000
+0002f6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1F, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0021
+0002f7 0000
+0002f8 0000
+0002f9 001e
+0002fa 0000
+0002fb 0000
+0002fc 001e
+0002fd 0000
+0002fe 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0022
+0002ff 0000
+000300 4002
+000301 f00f
+000302 4002
+000303 4002
+000304 f00f
+000305 4002
+000306 0000                      .DB	0x00, 0x00, 0x02, 0x40, 0x0F, 0xF0, 0x02, 0x40, 0x02, 0x40, 0x0F, 0xF0, 0x02, 0x40, 0x00, 0x00	; U+0023
 000307 0000
-000308 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0027
-000309 0000
-00030a 0000
-00030b 0000
-00030c e003
-00030d 180c
-00030e 0410
+000308 0000
+000309 2006
+00030a 2009
+00030b 3839
+00030c 2009
+00030d c008
+00030e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x06, 0x20, 0x09, 0x20, 0x39, 0x38, 0x09, 0x20, 0x08, 0xC0, 0x00, 0x00	; U+0024
 00030f 0000
-000310 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xE0, 0x0C, 0x18, 0x10, 0x04, 0x00, 0x00, 0x00, 0x00	; U+0028
-000311 0000
-000312 0000
-000313 0410
-000314 180c
-000315 e003
-000316 0000
+000310 200c
+000311 4012
+000312 8012
+000313 600d
+000314 9002
+000315 9004
+000316 6008                      .DB	0x00, 0x00, 0x0C, 0x20, 0x12, 0x40, 0x12, 0x80, 0x0D, 0x60, 0x02, 0x90, 0x04, 0x90, 0x08, 0x60	; U+0025
 000317 0000
-000318 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x10, 0x04, 0x0C, 0x18, 0x03, 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0029
-000319 0000
-00031a 8000
-00031b a002
-00031c c001
-00031d c001
-00031e a002
-00031f 8000
-000320 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x02, 0xA0, 0x01, 0xC0, 0x01, 0xC0, 0x02, 0xA0, 0x00, 0x80, 0x00, 0x00	; U+002A
+000318 e00c
+000319 1013
+00031a 1013
+00031b 900c
+00031c 6000
+00031d 6000
+00031e 9001                      .DB	0x00, 0x00, 0x0C, 0xE0, 0x13, 0x10, 0x13, 0x10, 0x0C, 0x90, 0x00, 0x60, 0x00, 0x60, 0x01, 0x90	; U+0026
+00031f 0000
+000320 0000
 000321 0000
-000322 8000
-000323 8000
-000324 8000
-000325 f007
-000326 8000
-000327 8000
-000328 8000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x07, 0xF0, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+002B
+000322 001e
+000323 0000
+000324 0000
+000325 0000
+000326 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0027
+000327 0000
+000328 0000
 000329 0000
-00032a 0000
-00032b 0000
-00032c 3200
-00032d 3c00
-00032e 0000
+00032a e003
+00032b 180c
+00032c 0410
+00032d 0000
+00032e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0xE0, 0x0C, 0x18, 0x10, 0x04, 0x00, 0x00, 0x00, 0x00	; U+0028
 00032f 0000
-000330 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x00, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+002C
-000331 0000
-000332 8000
-000333 8000
-000334 8000
-000335 8000
-000336 8000
-000337 8000
-000338 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00	; U+002D
-000339 0000
-00033a 0000
-00033b 0000
-00033c 3000
-00033d 3000
-00033e 0000
+000330 0000
+000331 0410
+000332 180c
+000333 e003
+000334 0000
+000335 0000
+000336 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x10, 0x04, 0x0C, 0x18, 0x03, 0xE0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0029
+000337 0000
+000338 8000
+000339 a002
+00033a c001
+00033b c001
+00033c a002
+00033d 8000
+00033e 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x02, 0xA0, 0x01, 0xC0, 0x01, 0xC0, 0x02, 0xA0, 0x00, 0x80, 0x00, 0x00	; U+002A
 00033f 0000
-000340 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+002E
-000341 0000
-000342 0c00
-000343 3000
-000344 c000
-000345 0003
-000346 000c
+000340 8000
+000341 8000
+000342 8000
+000343 f007
+000344 8000
+000345 8000
+000346 8000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x07, 0xF0, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80	; U+002B
 000347 0000
-000348 0000                      .DB	0x00, 0x00, 0x00, 0x0C, 0x00, 0x30, 0x00, 0xC0, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00	; U+002F
+000348 0000
 000349 0000
-00034a e007
-00034b 5008
-00034c 9008
-00034d 1009
-00034e 100a
-00034f e007
-000350 0000                      .DB	0x00, 0x00, 0x07, 0xE0, 0x08, 0x50, 0x08, 0x90, 0x09, 0x10, 0x0A, 0x10, 0x07, 0xE0, 0x00, 0x00	; U+0030
-000351 0000
-000352 0000
-000353 1002
-000354 1004
-000355 f00f
-000356 1000
-000357 1000
-000358 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x10, 0x04, 0x10, 0x0F, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+0031
+00034a 3200
+00034b 3c00
+00034c 0000
+00034d 0000
+00034e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x32, 0x00, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+002C
+00034f 0000
+000350 8000
+000351 8000
+000352 8000
+000353 8000
+000354 8000
+000355 8000
+000356 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00	; U+002D
+000357 0000
+000358 0000
 000359 0000
-00035a 1004
-00035b 3008
-00035c 5008
-00035d 9008
-00035e 1009
-00035f 1006
-000360 0000                      .DB	0x00, 0x00, 0x04, 0x10, 0x08, 0x30, 0x08, 0x50, 0x08, 0x90, 0x09, 0x10, 0x06, 0x10, 0x00, 0x00	; U+0032
-000361 0000
-000362 2008
-000363 1008
-000364 1009
-000365 100b
-000366 100d
-000367 e008
-000368 0000                      .DB	0x00, 0x00, 0x08, 0x20, 0x08, 0x10, 0x09, 0x10, 0x0B, 0x10, 0x0D, 0x10, 0x08, 0xE0, 0x00, 0x00	; U+0033
-000369 0000
-00036a c000
-00036b 4001
-00036c 4002
-00036d 4004
-00036e f00f
-00036f 4000
-000370 0000                      .DB	0x00, 0x00, 0x00, 0xC0, 0x01, 0x40, 0x02, 0x40, 0x04, 0x40, 0x0F, 0xF0, 0x00, 0x40, 0x00, 0x00	; U+0034
-000371 0000
-000372 200f
-000373 1009
-000374 1009
-000375 1009
-000376 1009
-000377 e008
-000378 0000                      .DB	0x00, 0x00, 0x0F, 0x20, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0xE0, 0x00, 0x00	; U+0035
-000379 0000
-00037a e003
-00037b 1005
+00035a 3000
+00035b 3000
+00035c 0000
+00035d 0000
+00035e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x30, 0x00, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+002E
+00035f 0000
+000360 0c00
+000361 3000
+000362 c000
+000363 0003
+000364 000c
+000365 0000
+000366 0000                      .DB	0x00, 0x00, 0x00, 0x0C, 0x00, 0x30, 0x00, 0xC0, 0x03, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00	; U+002F
+000367 0000
+000368 e007
+000369 5008
+00036a 9008
+00036b 1009
+00036c 100a
+00036d e007
+00036e 0000                      .DB	0x00, 0x00, 0x07, 0xE0, 0x08, 0x50, 0x08, 0x90, 0x09, 0x10, 0x0A, 0x10, 0x07, 0xE0, 0x00, 0x00	; U+0030
+00036f 0000
+000370 0000
+000371 1002
+000372 1004
+000373 f00f
+000374 1000
+000375 1000
+000376 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x10, 0x04, 0x10, 0x0F, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+0031
+000377 0000
+000378 1004
+000379 3008
+00037a 5008
+00037b 9008
 00037c 1009
-00037d 1009
-00037e 1001
-00037f e000
-000380 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x05, 0x10, 0x09, 0x10, 0x09, 0x10, 0x01, 0x10, 0x00, 0xE0, 0x00, 0x00	; U+0036
-000381 0000
-000382 0008
-000383 0008
-000384 3008
-000385 c008
-000386 000b
-000387 000c
-000388 0000                      .DB	0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x08, 0x30, 0x08, 0xC0, 0x0B, 0x00, 0x0C, 0x00, 0x00, 0x00	; U+0037
-000389 0000
-00038a e006
-00038b 1009
-00038c 1009
-00038d 1009
-00038e 1009
-00038f e006
-000390 0000                      .DB	0x00, 0x00, 0x06, 0xE0, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x06, 0xE0, 0x00, 0x00	; U+0038
-000391 0000
-000392 0007
-000393 8008
-000394 9008
-000395 9008
-000396 a008
-000397 c007
-000398 0000                      .DB	0x00, 0x00, 0x07, 0x00, 0x08, 0x80, 0x08, 0x90, 0x08, 0x90, 0x08, 0xA0, 0x07, 0xC0, 0x00, 0x00	; U+0039
-000399 0000
-00039a 0000
-00039b 0000
-00039c 3006
-00039d 3006
-00039e 0000
+00037d 1006
+00037e 0000                      .DB	0x00, 0x00, 0x04, 0x10, 0x08, 0x30, 0x08, 0x50, 0x08, 0x90, 0x09, 0x10, 0x06, 0x10, 0x00, 0x00	; U+0032
+00037f 0000
+000380 2008
+000381 1008
+000382 1009
+000383 100b
+000384 100d
+000385 e008
+000386 0000                      .DB	0x00, 0x00, 0x08, 0x20, 0x08, 0x10, 0x09, 0x10, 0x0B, 0x10, 0x0D, 0x10, 0x08, 0xE0, 0x00, 0x00	; U+0033
+000387 0000
+000388 c000
+000389 4001
+00038a 4002
+00038b 4004
+00038c f00f
+00038d 4000
+00038e 0000                      .DB	0x00, 0x00, 0x00, 0xC0, 0x01, 0x40, 0x02, 0x40, 0x04, 0x40, 0x0F, 0xF0, 0x00, 0x40, 0x00, 0x00	; U+0034
+00038f 0000
+000390 200f
+000391 1009
+000392 1009
+000393 1009
+000394 1009
+000395 e008
+000396 0000                      .DB	0x00, 0x00, 0x0F, 0x20, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0xE0, 0x00, 0x00	; U+0035
+000397 0000
+000398 e003
+000399 1005
+00039a 1009
+00039b 1009
+00039c 1001
+00039d e000
+00039e 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x05, 0x10, 0x09, 0x10, 0x09, 0x10, 0x01, 0x10, 0x00, 0xE0, 0x00, 0x00	; U+0036
 00039f 0000
-0003a0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x30, 0x06, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+003A
-0003a1 0000
-0003a2 0000
-0003a3 0000
-0003a4 3206
-0003a5 3c06
-0003a6 0000
+0003a0 0008
+0003a1 0008
+0003a2 3008
+0003a3 c008
+0003a4 000b
+0003a5 000c
+0003a6 0000                      .DB	0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x08, 0x30, 0x08, 0xC0, 0x0B, 0x00, 0x0C, 0x00, 0x00, 0x00	; U+0037
 0003a7 0000
-0003a8 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x32, 0x06, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+003B
-0003a9 0000
-0003aa 0000
-0003ab 8000
-0003ac 4001
-0003ad 2002
-0003ae 1004
+0003a8 e006
+0003a9 1009
+0003aa 1009
+0003ab 1009
+0003ac 1009
+0003ad e006
+0003ae 0000                      .DB	0x00, 0x00, 0x06, 0xE0, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x06, 0xE0, 0x00, 0x00	; U+0038
 0003af 0000
-0003b0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x04, 0x10, 0x00, 0x00, 0x00, 0x00	; U+003C
-0003b1 0000
-0003b2 4002
-0003b3 4002
-0003b4 4002
-0003b5 4002
-0003b6 4002
-0003b7 4002
-0003b8 0000                      .DB	0x00, 0x00, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x00, 0x00	; U+003D
+0003b0 0007
+0003b1 8008
+0003b2 9008
+0003b3 9008
+0003b4 a008
+0003b5 c007
+0003b6 0000                      .DB	0x00, 0x00, 0x07, 0x00, 0x08, 0x80, 0x08, 0x90, 0x08, 0x90, 0x08, 0xA0, 0x07, 0xC0, 0x00, 0x00	; U+0039
+0003b7 0000
+0003b8 0000
 0003b9 0000
-0003ba 0000
-0003bb 1004
-0003bc 2002
-0003bd 4001
-0003be 8000
+0003ba 3006
+0003bb 3006
+0003bc 0000
+0003bd 0000
+0003be 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x30, 0x06, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+003A
 0003bf 0000
-0003c0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x04, 0x10, 0x02, 0x20, 0x01, 0x40, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00	; U+003E
+0003c0 0000
 0003c1 0000
-0003c2 0008
-0003c3 0010
-0003c4 3011
-0003c5 0012
-0003c6 0014
-0003c7 0008
-0003c8 0000                      .DB	0x00, 0x00, 0x08, 0x00, 0x10, 0x00, 0x11, 0x30, 0x12, 0x00, 0x14, 0x00, 0x08, 0x00, 0x00, 0x00	; U+003F
-0003c9 0000
-0003ca f007
-0003cb 0808
-0003cc c411
-0003cd 2412
-0003ce 2412
-0003cf 440a
-0003d0 e407                      .DB	0x00, 0x00, 0x07, 0xF0, 0x08, 0x08, 0x11, 0xC4, 0x12, 0x24, 0x12, 0x24, 0x0A, 0x44, 0x07, 0xE4	; U+0040
-0003d1 0000
-0003d2 f003
-0003d3 8004
-0003d4 8008
-0003d5 8008
-0003d6 8004
-0003d7 f003
-0003d8 0000                      .DB	0x00, 0x00, 0x03, 0xF0, 0x04, 0x80, 0x08, 0x80, 0x08, 0x80, 0x04, 0x80, 0x03, 0xF0, 0x00, 0x00	; U+0041
-0003d9 0000
-0003da f00f
-0003db 1009
-0003dc 1009
-0003dd 1009
-0003de 1009
-0003df e006
-0003e0 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x06, 0xE0, 0x00, 0x00	; U+0042
-0003e1 0000
-0003e2 c003
-0003e3 2004
-0003e4 1008
-0003e5 1008
-0003e6 1008
-0003e7 1008
-0003e8 0000                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+0043
-0003e9 0000
-0003ea f00f
-0003eb 1008
-0003ec 1008
-0003ed 1008
-0003ee 2004
-0003ef c003
-0003f0 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x04, 0x20, 0x03, 0xC0, 0x00, 0x00	; U+0044
-0003f1 0000
-0003f2 f00f
-0003f3 1009
-0003f4 1009
-0003f5 1009
-0003f6 1009
-0003f7 1008
-0003f8 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10, 0x00, 0x00	; U+0045
-0003f9 0000
-0003fa f00f
-0003fb 0009
-0003fc 0009
-0003fd 0009
-0003fe 0009
-0003ff 0008
-000400 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x00, 0x09, 0x00, 0x09, 0x00, 0x09, 0x00, 0x08, 0x00, 0x00, 0x00	; U+0046
-000401 0000
-000402 c003
-000403 2004
+0003c2 3206
+0003c3 3c06
+0003c4 0000
+0003c5 0000
+0003c6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x06, 0x32, 0x06, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+003B
+0003c7 0000
+0003c8 0000
+0003c9 8000
+0003ca 4001
+0003cb 2002
+0003cc 1004
+0003cd 0000
+0003ce 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x04, 0x10, 0x00, 0x00, 0x00, 0x00	; U+003C
+0003cf 0000
+0003d0 4002
+0003d1 4002
+0003d2 4002
+0003d3 4002
+0003d4 4002
+0003d5 4002
+0003d6 0000                      .DB	0x00, 0x00, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x02, 0x40, 0x00, 0x00	; U+003D
+0003d7 0000
+0003d8 0000
+0003d9 1004
+0003da 2002
+0003db 4001
+0003dc 8000
+0003dd 0000
+0003de 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x04, 0x10, 0x02, 0x20, 0x01, 0x40, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00	; U+003E
+0003df 0000
+0003e0 0008
+0003e1 0010
+0003e2 3011
+0003e3 0012
+0003e4 0014
+0003e5 0008
+0003e6 0000                      .DB	0x00, 0x00, 0x08, 0x00, 0x10, 0x00, 0x11, 0x30, 0x12, 0x00, 0x14, 0x00, 0x08, 0x00, 0x00, 0x00	; U+003F
+0003e7 0000
+0003e8 f007
+0003e9 0808
+0003ea c411
+0003eb 2412
+0003ec 2412
+0003ed 440a
+0003ee e407                      .DB	0x00, 0x00, 0x07, 0xF0, 0x08, 0x08, 0x11, 0xC4, 0x12, 0x24, 0x12, 0x24, 0x0A, 0x44, 0x07, 0xE4	; U+0040
+0003ef 0000
+0003f0 f003
+0003f1 8004
+0003f2 8008
+0003f3 8008
+0003f4 8004
+0003f5 f003
+0003f6 0000                      .DB	0x00, 0x00, 0x03, 0xF0, 0x04, 0x80, 0x08, 0x80, 0x08, 0x80, 0x04, 0x80, 0x03, 0xF0, 0x00, 0x00	; U+0041
+0003f7 0000
+0003f8 f00f
+0003f9 1009
+0003fa 1009
+0003fb 1009
+0003fc 1009
+0003fd e006
+0003fe 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x06, 0xE0, 0x00, 0x00	; U+0042
+0003ff 0000
+000400 c003
+000401 2004
+000402 1008
+000403 1008
 000404 1008
 000405 1008
-000406 9008
-000407 f008
-000408 0000                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x08, 0x10, 0x08, 0x10, 0x08, 0x90, 0x08, 0xF0, 0x00, 0x00	; U+0047
-000409 0000
-00040a f00f
-00040b 0001
-00040c 0001
-00040d 0001
-00040e 0001
-00040f f00f
-000410 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x0F, 0xF0, 0x00, 0x00	; U+0048
-000411 0000
-000412 0000
-000413 1008
-000414 1008
-000415 f00f
-000416 1008
-000417 1008
-000418 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x08, 0x10, 0x0F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+0049
-000419 0000
-00041a 6000
-00041b 1000
-00041c 1000
-00041d 1000
-00041e 1000
-00041f e00f
-000420 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+004A
-000421 0000
-000422 f00f
-000423 8001
-000424 8001
-000425 4002
-000426 2004
-000427 1008
-000428 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x01, 0x80, 0x01, 0x80, 0x02, 0x40, 0x04, 0x20, 0x08, 0x10, 0x00, 0x00	; U+004B
-000429 0000
-00042a f00f
-00042b 1000
-00042c 1000
-00042d 1000
-00042e 1000
-00042f 1000
-000430 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+004C
-000431 0000
-000432 f00f
-000433 0004
-000434 0002
-000435 8001
-000436 0002
-000437 0004
-000438 f00f                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x04, 0x00, 0x02, 0x00, 0x01, 0x80, 0x02, 0x00, 0x04, 0x00, 0x0F, 0xF0	; U+004D
-000439 0000
-00043a f00f
-00043b 0004
-00043c 0002
-00043d 0001
-00043e 8000
-00043f f00f
-000440 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x04, 0x00, 0x02, 0x00, 0x01, 0x00, 0x00, 0x80, 0x0F, 0xF0, 0x00, 0x00	; U+004E
-000441 0000
-000442 e007
-000443 1008
-000444 1008
+000406 0000                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+0043
+000407 0000
+000408 f00f
+000409 1008
+00040a 1008
+00040b 1008
+00040c 2004
+00040d c003
+00040e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x04, 0x20, 0x03, 0xC0, 0x00, 0x00	; U+0044
+00040f 0000
+000410 f00f
+000411 1009
+000412 1009
+000413 1009
+000414 1009
+000415 1008
+000416 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10, 0x00, 0x00	; U+0045
+000417 0000
+000418 f00f
+000419 0009
+00041a 0009
+00041b 0009
+00041c 0009
+00041d 0008
+00041e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x00, 0x09, 0x00, 0x09, 0x00, 0x09, 0x00, 0x08, 0x00, 0x00, 0x00	; U+0046
+00041f 0000
+000420 c003
+000421 2004
+000422 1008
+000423 1008
+000424 9008
+000425 f008
+000426 0000                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x08, 0x10, 0x08, 0x10, 0x08, 0x90, 0x08, 0xF0, 0x00, 0x00	; U+0047
+000427 0000
+000428 f00f
+000429 0001
+00042a 0001
+00042b 0001
+00042c 0001
+00042d f00f
+00042e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x0F, 0xF0, 0x00, 0x00	; U+0048
+00042f 0000
+000430 0000
+000431 1008
+000432 1008
+000433 f00f
+000434 1008
+000435 1008
+000436 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x08, 0x10, 0x0F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+0049
+000437 0000
+000438 6000
+000439 1000
+00043a 1000
+00043b 1000
+00043c 1000
+00043d e00f
+00043e 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+004A
+00043f 0000
+000440 f00f
+000441 8001
+000442 8001
+000443 4002
+000444 2004
 000445 1008
-000446 1008
-000447 e007
-000448 0000                      .DB	0x00, 0x00, 0x07, 0xE0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x07, 0xE0, 0x00, 0x00	; U+004F
-000449 0000
-00044a f00f
-00044b 8008
-00044c 8008
-00044d 8008
-00044e 8008
-00044f 0007
-000450 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x07, 0x00, 0x00, 0x00	; U+0050
-000451 0000
-000452 e007
-000453 1008
-000454 1008
-000455 1008
-000456 1808
-000457 e407
-000458 0000                      .DB	0x00, 0x00, 0x07, 0xE0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x18, 0x07, 0xE4, 0x00, 0x00	; U+0051
-000459 0000
-00045a f00f
-00045b 8008
-00045c 8008
-00045d c008
-00045e a008
-00045f 1007
-000460 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x80, 0x08, 0x80, 0x08, 0xC0, 0x08, 0xA0, 0x07, 0x10, 0x00, 0x00	; U+0052
-000461 0000
-000462 1006
-000463 1009
-000464 1009
-000465 9008
-000466 9008
-000467 6008
-000468 0000                      .DB	0x00, 0x00, 0x06, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0x90, 0x08, 0x90, 0x08, 0x60, 0x00, 0x00	; U+0053
-000469 0000
-00046a 0008
-00046b 0008
-00046c 0008
-00046d f00f
-00046e 0008
-00046f 0008
-000470 0008                      .DB	0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x08, 0x00, 0x0F, 0xF0, 0x08, 0x00, 0x08, 0x00, 0x08, 0x00	; U+0054
-000471 0000
-000472 e00f
-000473 1000
-000474 1000
-000475 1000
-000476 1000
-000477 e00f
-000478 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+0055
-000479 0000
-00047a 000f
-00047b c000
-00047c 3000
-00047d 3000
-00047e c000
-00047f 000f
-000480 0000                      .DB	0x00, 0x00, 0x0F, 0x00, 0x00, 0xC0, 0x00, 0x30, 0x00, 0x30, 0x00, 0xC0, 0x0F, 0x00, 0x00, 0x00	; U+0056
-000481 0000
-000482 f00f
-000483 1000
-000484 2000
-000485 c000
-000486 2000
-000487 1000
-000488 f00f                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x00, 0x10, 0x00, 0x20, 0x00, 0xC0, 0x00, 0x20, 0x00, 0x10, 0x0F, 0xF0	; U+0057
-000489 0000
-00048a 300c
-00048b 4002
-00048c 8001
-00048d 8001
-00048e 4002
-00048f 300c
-000490 0000                      .DB	0x00, 0x00, 0x0C, 0x30, 0x02, 0x40, 0x01, 0x80, 0x01, 0x80, 0x02, 0x40, 0x0C, 0x30, 0x00, 0x00	; U+0058
-000491 0000
-000492 000c
-000493 0002
-000494 0001
-000495 f000
-000496 0001
-000497 0002
-000498 000c                      .DB	0x00, 0x00, 0x0C, 0x00, 0x02, 0x00, 0x01, 0x00, 0x00, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x0C, 0x00	; U+0059
-000499 0000
-00049a 3008
-00049b 5008
-00049c 9008
-00049d 1009
-00049e 100a
-00049f 100c
-0004a0 1008                      .DB	0x00, 0x00, 0x08, 0x30, 0x08, 0x50, 0x08, 0x90, 0x09, 0x10, 0x0A, 0x10, 0x0C, 0x10, 0x08, 0x10	; U+005A
-0004a1 0000
-0004a2 0000
-0004a3 0000
-0004a4 fc1f
-0004a5 0410
-0004a6 0410
-0004a7 0410
-0004a8 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1F, 0xFC, 0x10, 0x04, 0x10, 0x04, 0x10, 0x04, 0x00, 0x00	; U+005B
-0004a9 0000
-0004aa 000c
-0004ab 0003
-0004ac c000
-0004ad 3000
-0004ae 0c00
+000446 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x01, 0x80, 0x01, 0x80, 0x02, 0x40, 0x04, 0x20, 0x08, 0x10, 0x00, 0x00	; U+004B
+000447 0000
+000448 f00f
+000449 1000
+00044a 1000
+00044b 1000
+00044c 1000
+00044d 1000
+00044e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+004C
+00044f 0000
+000450 f00f
+000451 0004
+000452 0002
+000453 8001
+000454 0002
+000455 0004
+000456 f00f                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x04, 0x00, 0x02, 0x00, 0x01, 0x80, 0x02, 0x00, 0x04, 0x00, 0x0F, 0xF0	; U+004D
+000457 0000
+000458 f00f
+000459 0004
+00045a 0002
+00045b 0001
+00045c 8000
+00045d f00f
+00045e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x04, 0x00, 0x02, 0x00, 0x01, 0x00, 0x00, 0x80, 0x0F, 0xF0, 0x00, 0x00	; U+004E
+00045f 0000
+000460 e007
+000461 1008
+000462 1008
+000463 1008
+000464 1008
+000465 e007
+000466 0000                      .DB	0x00, 0x00, 0x07, 0xE0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x07, 0xE0, 0x00, 0x00	; U+004F
+000467 0000
+000468 f00f
+000469 8008
+00046a 8008
+00046b 8008
+00046c 8008
+00046d 0007
+00046e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x07, 0x00, 0x00, 0x00	; U+0050
+00046f 0000
+000470 e007
+000471 1008
+000472 1008
+000473 1008
+000474 1808
+000475 e407
+000476 0000                      .DB	0x00, 0x00, 0x07, 0xE0, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x08, 0x18, 0x07, 0xE4, 0x00, 0x00	; U+0051
+000477 0000
+000478 f00f
+000479 8008
+00047a 8008
+00047b c008
+00047c a008
+00047d 1007
+00047e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x08, 0x80, 0x08, 0x80, 0x08, 0xC0, 0x08, 0xA0, 0x07, 0x10, 0x00, 0x00	; U+0052
+00047f 0000
+000480 1006
+000481 1009
+000482 1009
+000483 9008
+000484 9008
+000485 6008
+000486 0000                      .DB	0x00, 0x00, 0x06, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0x90, 0x08, 0x90, 0x08, 0x60, 0x00, 0x00	; U+0053
+000487 0000
+000488 0008
+000489 0008
+00048a 0008
+00048b f00f
+00048c 0008
+00048d 0008
+00048e 0008                      .DB	0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x08, 0x00, 0x0F, 0xF0, 0x08, 0x00, 0x08, 0x00, 0x08, 0x00	; U+0054
+00048f 0000
+000490 e00f
+000491 1000
+000492 1000
+000493 1000
+000494 1000
+000495 e00f
+000496 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+0055
+000497 0000
+000498 000f
+000499 c000
+00049a 3000
+00049b 3000
+00049c c000
+00049d 000f
+00049e 0000                      .DB	0x00, 0x00, 0x0F, 0x00, 0x00, 0xC0, 0x00, 0x30, 0x00, 0x30, 0x00, 0xC0, 0x0F, 0x00, 0x00, 0x00	; U+0056
+00049f 0000
+0004a0 f00f
+0004a1 1000
+0004a2 2000
+0004a3 c000
+0004a4 2000
+0004a5 1000
+0004a6 f00f                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x00, 0x10, 0x00, 0x20, 0x00, 0xC0, 0x00, 0x20, 0x00, 0x10, 0x0F, 0xF0	; U+0057
+0004a7 0000
+0004a8 300c
+0004a9 4002
+0004aa 8001
+0004ab 8001
+0004ac 4002
+0004ad 300c
+0004ae 0000                      .DB	0x00, 0x00, 0x0C, 0x30, 0x02, 0x40, 0x01, 0x80, 0x01, 0x80, 0x02, 0x40, 0x0C, 0x30, 0x00, 0x00	; U+0058
 0004af 0000
-0004b0 0000                      .DB	0x00, 0x00, 0x0C, 0x00, 0x03, 0x00, 0x00, 0xC0, 0x00, 0x30, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00	; U+005C
-0004b1 0000
-0004b2 0410
-0004b3 0410
-0004b4 0410
-0004b5 fc1f
-0004b6 0000
+0004b0 000c
+0004b1 0002
+0004b2 0001
+0004b3 f000
+0004b4 0001
+0004b5 0002
+0004b6 000c                      .DB	0x00, 0x00, 0x0C, 0x00, 0x02, 0x00, 0x01, 0x00, 0x00, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x0C, 0x00	; U+0059
 0004b7 0000
-0004b8 0000                      .DB	0x00, 0x00, 0x10, 0x04, 0x10, 0x04, 0x10, 0x04, 0x1F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+005D
-0004b9 0000
-0004ba 0002
-0004bb 0004
-0004bc 0008
-0004bd 0004
-0004be 0002
+0004b8 3008
+0004b9 5008
+0004ba 9008
+0004bb 1009
+0004bc 100a
+0004bd 100c
+0004be 1008                      .DB	0x00, 0x00, 0x08, 0x30, 0x08, 0x50, 0x08, 0x90, 0x09, 0x10, 0x0A, 0x10, 0x0C, 0x10, 0x08, 0x10	; U+005A
 0004bf 0000
-0004c0 0000                      .DB	0x00, 0x00, 0x02, 0x00, 0x04, 0x00, 0x08, 0x00, 0x04, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00	; U+005E
-0004c1 0400
-0004c2 0400
-0004c3 0400
-0004c4 0400
-0004c5 0400
-0004c6 0400
-0004c7 0400
-0004c8 0400                      .DB	0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04	; U+005F
-0004c9 0000
-0004ca 0000
-0004cb 0000
-0004cc 0010
-0004cd 0008
-0004ce 0004
+0004c0 0000
+0004c1 0000
+0004c2 fc1f
+0004c3 0410
+0004c4 0410
+0004c5 0410
+0004c6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1F, 0xFC, 0x10, 0x04, 0x10, 0x04, 0x10, 0x04, 0x00, 0x00	; U+005B
+0004c7 0000
+0004c8 000c
+0004c9 0003
+0004ca c000
+0004cb 3000
+0004cc 0c00
+0004cd 0000
+0004ce 0000                      .DB	0x00, 0x00, 0x0C, 0x00, 0x03, 0x00, 0x00, 0xC0, 0x00, 0x30, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00	; U+005C
 0004cf 0000
-0004d0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x08, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0060
-0004d1 0000
-0004d2 6000
-0004d3 9002
-0004d4 9002
-0004d5 9002
-0004d6 9002
-0004d7 f001
-0004d8 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+0061
-0004d9 0000
-0004da f01f
-0004db 1001
-0004dc 1002
-0004dd 1002
-0004de 1002
-0004df e001
-0004e0 0000                      .DB	0x00, 0x00, 0x1F, 0xF0, 0x01, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+0062
-0004e1 0000
-0004e2 e001
-0004e3 1002
-0004e4 1002
-0004e5 1002
-0004e6 1002
-0004e7 2001
-0004e8 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0x20, 0x00, 0x00	; U+0063
+0004d0 0410
+0004d1 0410
+0004d2 0410
+0004d3 fc1f
+0004d4 0000
+0004d5 0000
+0004d6 0000                      .DB	0x00, 0x00, 0x10, 0x04, 0x10, 0x04, 0x10, 0x04, 0x1F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+005D
+0004d7 0000
+0004d8 0002
+0004d9 0004
+0004da 0008
+0004db 0004
+0004dc 0002
+0004dd 0000
+0004de 0000                      .DB	0x00, 0x00, 0x02, 0x00, 0x04, 0x00, 0x08, 0x00, 0x04, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00	; U+005E
+0004df 0400
+0004e0 0400
+0004e1 0400
+0004e2 0400
+0004e3 0400
+0004e4 0400
+0004e5 0400
+0004e6 0400                      .DB	0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04, 0x00, 0x04	; U+005F
+0004e7 0000
+0004e8 0000
 0004e9 0000
-0004ea e001
-0004eb 1002
-0004ec 1002
-0004ed 1002
-0004ee 2002
-0004ef f01f
-0004f0 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x20, 0x1F, 0xF0, 0x00, 0x00	; U+0064
-0004f1 0000
-0004f2 e001
+0004ea 0010
+0004eb 0008
+0004ec 0004
+0004ed 0000
+0004ee 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x10, 0x00, 0x08, 0x00, 0x04, 0x00, 0x00, 0x00, 0x00, 0x00	; U+0060
+0004ef 0000
+0004f0 6000
+0004f1 9002
+0004f2 9002
 0004f3 9002
 0004f4 9002
-0004f5 9002
-0004f6 9002
-0004f7 9001
-0004f8 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0x90, 0x00, 0x00	; U+0065
-0004f9 0000
-0004fa 0002
-0004fb 0002
-0004fc f00f
-0004fd 0012
-0004fe 0012
-0004ff 0012
-000500 0000                      .DB	0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0F, 0xF0, 0x12, 0x00, 0x12, 0x00, 0x12, 0x00, 0x00, 0x00	; U+0066
-000501 0000
-000502 e001
-000503 1202
-000504 1202
-000505 1202
-000506 1202
-000507 fc03
-000508 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x12, 0x02, 0x12, 0x02, 0x12, 0x02, 0x12, 0x03, 0xFC, 0x00, 0x00	; U+0067
-000509 0000
-00050a f01f
-00050b 0001
-00050c 0002
-00050d 0002
-00050e 0002
-00050f f001
-000510 0000                      .DB	0x00, 0x00, 0x1F, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0, 0x00, 0x00	; U+0068
-000511 0000
-000512 0000
-000513 1002
-000514 1002
-000515 f01b
-000516 1000
-000517 1000
-000518 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x10, 0x02, 0x10, 0x1B, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+0069
-000519 0000
-00051a 0000
-00051b 0200
-00051c 0202
-00051d 0202
-00051e fc1b
+0004f5 f001
+0004f6 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+0061
+0004f7 0000
+0004f8 f01f
+0004f9 1001
+0004fa 1002
+0004fb 1002
+0004fc 1002
+0004fd e001
+0004fe 0000                      .DB	0x00, 0x00, 0x1F, 0xF0, 0x01, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+0062
+0004ff 0000
+000500 e001
+000501 1002
+000502 1002
+000503 1002
+000504 1002
+000505 2001
+000506 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0x20, 0x00, 0x00	; U+0063
+000507 0000
+000508 e001
+000509 1002
+00050a 1002
+00050b 1002
+00050c 2002
+00050d f01f
+00050e 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x20, 0x1F, 0xF0, 0x00, 0x00	; U+0064
+00050f 0000
+000510 e001
+000511 9002
+000512 9002
+000513 9002
+000514 9002
+000515 9001
+000516 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0x90, 0x00, 0x00	; U+0065
+000517 0000
+000518 0002
+000519 0002
+00051a f00f
+00051b 0012
+00051c 0012
+00051d 0012
+00051e 0000                      .DB	0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0F, 0xF0, 0x12, 0x00, 0x12, 0x00, 0x12, 0x00, 0x00, 0x00	; U+0066
 00051f 0000
-000520 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x02, 0x02, 0x02, 0x02, 0x1B, 0xFC, 0x00, 0x00, 0x00, 0x00	; U+006A
-000521 0000
-000522 f01f
-000523 4000
-000524 8000
-000525 4001
-000526 2002
-000527 1000
-000528 0000                      .DB	0x00, 0x00, 0x1F, 0xF0, 0x00, 0x40, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x00, 0x10, 0x00, 0x00	; U+006B
-000529 0000
-00052a 0010
-00052b 0010
-00052c e01f
-00052d 1000
-00052e 1000
-00052f 1000
-000530 0000                      .DB	0x00, 0x00, 0x10, 0x00, 0x10, 0x00, 0x1F, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+006c
-000531 0000
-000532 f003
-000533 0002
-000534 0002
-000535 f001
-000536 0002
-000537 0002
-000538 f001                      .DB	0x00, 0x00, 0x03, 0xF0, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0	; U+006d
-000539 0000
-00053a f003
-00053b 0001
-00053c 0002
-00053d 0002
-00053e 0002
-00053f f001
-000540 0000                      .DB	0x00, 0x00, 0x03, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0, 0x00, 0x00	; U+006e
-000541 0000
-000542 e001
-000543 1002
-000544 1002
-000545 1002
-000546 1002
-000547 e001
-000548 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+006F
-000549 0000
-00054a fe03
-00054b 1001
-00054c 1002
-00054d 1002
-00054e 1002
-00054f e001
-000550 0000                      .DB	0x00, 0x00, 0x03, 0xFE, 0x01, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+0070
-000551 0000
-000552 e001
-000553 1002
-000554 1002
-000555 1002
-000556 2002
-000557 fe03
-000558 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x20, 0x03, 0xFE, 0x00, 0x00	; U+0071
-000559 0000
-00055a f003
-00055b 0001
+000520 e001
+000521 1202
+000522 1202
+000523 1202
+000524 1202
+000525 fc03
+000526 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x12, 0x02, 0x12, 0x02, 0x12, 0x02, 0x12, 0x03, 0xFC, 0x00, 0x00	; U+0067
+000527 0000
+000528 f01f
+000529 0001
+00052a 0002
+00052b 0002
+00052c 0002
+00052d f001
+00052e 0000                      .DB	0x00, 0x00, 0x1F, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0, 0x00, 0x00	; U+0068
+00052f 0000
+000530 0000
+000531 1002
+000532 1002
+000533 f01b
+000534 1000
+000535 1000
+000536 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x10, 0x02, 0x10, 0x1B, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+0069
+000537 0000
+000538 0000
+000539 0200
+00053a 0202
+00053b 0202
+00053c fc1b
+00053d 0000
+00053e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x02, 0x02, 0x02, 0x02, 0x1B, 0xFC, 0x00, 0x00, 0x00, 0x00	; U+006A
+00053f 0000
+000540 f01f
+000541 4000
+000542 8000
+000543 4001
+000544 2002
+000545 1000
+000546 0000                      .DB	0x00, 0x00, 0x1F, 0xF0, 0x00, 0x40, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x00, 0x10, 0x00, 0x00	; U+006B
+000547 0000
+000548 0010
+000549 0010
+00054a e01f
+00054b 1000
+00054c 1000
+00054d 1000
+00054e 0000                      .DB	0x00, 0x00, 0x10, 0x00, 0x10, 0x00, 0x1F, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+006c
+00054f 0000
+000550 f003
+000551 0002
+000552 0002
+000553 f001
+000554 0002
+000555 0002
+000556 f001                      .DB	0x00, 0x00, 0x03, 0xF0, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0	; U+006d
+000557 0000
+000558 f003
+000559 0001
+00055a 0002
+00055b 0002
 00055c 0002
-00055d 0002
-00055e 0002
-00055f 0001
-000560 0000                      .DB	0x00, 0x00, 0x03, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x01, 0x00, 0x00, 0x00	; U+0072
-000561 0000
-000562 1001
-000563 9002
-000564 9002
-000565 5002
-000566 5002
-000567 2002
-000568 0000                      .DB	0x00, 0x00, 0x01, 0x10, 0x02, 0x90, 0x02, 0x90, 0x02, 0x50, 0x02, 0x50, 0x02, 0x20, 0x00, 0x00	; U+0073
-000569 0000
-00056a 0002
-00056b 0002
-00056c e00f
-00056d 1002
-00056e 1002
-00056f 1002
-000570 0000                      .DB	0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0F, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x00, 0x00	; U+0074
-000571 0000
-000572 e003
-000573 1000
-000574 1000
-000575 1000
-000576 2000
-000577 f003
-000578 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x20, 0x03, 0xF0, 0x00, 0x00	; U+0075
-000579 0000
-00057a 0003
-00057b c000
-00057c 3000
-00057d 3000
-00057e c000
-00057f 0003
-000580 0000                      .DB	0x00, 0x00, 0x03, 0x00, 0x00, 0xC0, 0x00, 0x30, 0x00, 0x30, 0x00, 0xC0, 0x03, 0x00, 0x00, 0x00	; U+0076
-000581 0000
-000582 e003
-000583 1000
-000584 1000
-000585 e001
-000586 1000
-000587 1000
-000588 e003                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x01, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x03, 0xE0	; U+0077
-000589 0000
-00058a 1002
-00058b 2001
-00058c c000
-00058d c000
-00058e 2001
-00058f 1002
-000590 0000                      .DB	0x00, 0x00, 0x02, 0x10, 0x01, 0x20, 0x00, 0xC0, 0x00, 0xC0, 0x01, 0x20, 0x02, 0x10, 0x00, 0x00	; U+0078
-000591 0000
-000592 e003
-000593 1200
-000594 1200
-000595 1200
-000596 2200
-000597 fc03
-000598 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x12, 0x00, 0x12, 0x00, 0x12, 0x00, 0x22, 0x03, 0xFC, 0x00, 0x00	; U+0079
-000599 0000
-00059a 1002
-00059b 3002
-00059c 5002
-00059d 9002
-00059e 1003
-00059f 1002
-0005a0 0000                      .DB	0x00, 0x00, 0x02, 0x10, 0x02, 0x30, 0x02, 0x50, 0x02, 0x90, 0x03, 0x10, 0x02, 0x10, 0x00, 0x00	; U+007A
-0005a1 0000
-0005a2 0000
-0005a3 8000
-0005a4 8000
-0005a5 780f
-0005a6 0410
-0005a7 0410
-0005a8 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x0F, 0x78, 0x10, 0x04, 0x10, 0x04, 0x00, 0x00	; U+007B
-0005a9 0000
-0005aa 0000
-0005ab 0000
-0005ac 0000
-0005ad fc3f
-0005ae 0000
+00055d f001
+00055e 0000                      .DB	0x00, 0x00, 0x03, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x01, 0xF0, 0x00, 0x00	; U+006e
+00055f 0000
+000560 e001
+000561 1002
+000562 1002
+000563 1002
+000564 1002
+000565 e001
+000566 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+006F
+000567 0000
+000568 fe03
+000569 1001
+00056a 1002
+00056b 1002
+00056c 1002
+00056d e001
+00056e 0000                      .DB	0x00, 0x00, 0x03, 0xFE, 0x01, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+0070
+00056f 0000
+000570 e001
+000571 1002
+000572 1002
+000573 1002
+000574 2002
+000575 fe03
+000576 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x20, 0x03, 0xFE, 0x00, 0x00	; U+0071
+000577 0000
+000578 f003
+000579 0001
+00057a 0002
+00057b 0002
+00057c 0002
+00057d 0001
+00057e 0000                      .DB	0x00, 0x00, 0x03, 0xF0, 0x01, 0x00, 0x02, 0x00, 0x02, 0x00, 0x02, 0x00, 0x01, 0x00, 0x00, 0x00	; U+0072
+00057f 0000
+000580 1001
+000581 9002
+000582 9002
+000583 5002
+000584 5002
+000585 2002
+000586 0000                      .DB	0x00, 0x00, 0x01, 0x10, 0x02, 0x90, 0x02, 0x90, 0x02, 0x50, 0x02, 0x50, 0x02, 0x20, 0x00, 0x00	; U+0073
+000587 0000
+000588 0002
+000589 0002
+00058a e00f
+00058b 1002
+00058c 1002
+00058d 1002
+00058e 0000                      .DB	0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0F, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x00, 0x00	; U+0074
+00058f 0000
+000590 e003
+000591 1000
+000592 1000
+000593 1000
+000594 2000
+000595 f003
+000596 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x10, 0x00, 0x20, 0x03, 0xF0, 0x00, 0x00	; U+0075
+000597 0000
+000598 0003
+000599 c000
+00059a 3000
+00059b 3000
+00059c c000
+00059d 0003
+00059e 0000                      .DB	0x00, 0x00, 0x03, 0x00, 0x00, 0xC0, 0x00, 0x30, 0x00, 0x30, 0x00, 0xC0, 0x03, 0x00, 0x00, 0x00	; U+0076
+00059f 0000
+0005a0 e003
+0005a1 1000
+0005a2 1000
+0005a3 e001
+0005a4 1000
+0005a5 1000
+0005a6 e003                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x01, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x03, 0xE0	; U+0077
+0005a7 0000
+0005a8 1002
+0005a9 2001
+0005aa c000
+0005ab c000
+0005ac 2001
+0005ad 1002
+0005ae 0000                      .DB	0x00, 0x00, 0x02, 0x10, 0x01, 0x20, 0x00, 0xC0, 0x00, 0xC0, 0x01, 0x20, 0x02, 0x10, 0x00, 0x00	; U+0078
 0005af 0000
-0005b0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+007C
-0005b1 0000
-0005b2 0410
-0005b3 0410
-0005b4 780f
-0005b5 8000
-0005b6 8000
+0005b0 e003
+0005b1 1200
+0005b2 1200
+0005b3 1200
+0005b4 2200
+0005b5 fc03
+0005b6 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x12, 0x00, 0x12, 0x00, 0x12, 0x00, 0x22, 0x03, 0xFC, 0x00, 0x00	; U+0079
 0005b7 0000
-0005b8 0000                      .DB	0x00, 0x00, 0x10, 0x04, 0x10, 0x04, 0x0F, 0x78, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00	; U+007D
-0005b9 0000
-0005ba 0006
-0005bb 0008
-0005bc 0008
-0005bd 0004
-0005be 0002
-0005bf 0002
-0005c0 000c                      .DB	0x00, 0x00, 0x06, 0x00, 0x08, 0x00, 0x08, 0x00, 0x04, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0C, 0x00	; U+007E
-0005c1 5455
-0005c2 aaaa
-0005c3 5455
-0005c4 aaaa
-0005c5 5455
-0005c6 aaaa
-0005c7 5455
-0005c8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0005c9 5455
-0005ca aaaa
-0005cb 5455
-0005cc aaaa
-0005cd 5455
-0005ce aaaa
-0005cf 5455
-0005d0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0005d1 5455
-0005d2 aaaa
-0005d3 5455
-0005d4 aaaa
-0005d5 5455
-0005d6 aaaa
-0005d7 5455
-0005d8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0005d9 5455
-0005da aaaa
-0005db 5455
-0005dc aaaa
-0005dd 5455
-0005de aaaa
+0005b8 1002
+0005b9 3002
+0005ba 5002
+0005bb 9002
+0005bc 1003
+0005bd 1002
+0005be 0000                      .DB	0x00, 0x00, 0x02, 0x10, 0x02, 0x30, 0x02, 0x50, 0x02, 0x90, 0x03, 0x10, 0x02, 0x10, 0x00, 0x00	; U+007A
+0005bf 0000
+0005c0 0000
+0005c1 8000
+0005c2 8000
+0005c3 780f
+0005c4 0410
+0005c5 0410
+0005c6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x0F, 0x78, 0x10, 0x04, 0x10, 0x04, 0x00, 0x00	; U+007B
+0005c7 0000
+0005c8 0000
+0005c9 0000
+0005ca 0000
+0005cb fc3f
+0005cc 0000
+0005cd 0000
+0005ce 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x3F, 0xFC, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+007C
+0005cf 0000
+0005d0 0410
+0005d1 0410
+0005d2 780f
+0005d3 8000
+0005d4 8000
+0005d5 0000
+0005d6 0000                      .DB	0x00, 0x00, 0x10, 0x04, 0x10, 0x04, 0x0F, 0x78, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00	; U+007D
+0005d7 0000
+0005d8 0006
+0005d9 0008
+0005da 0008
+0005db 0004
+0005dc 0002
+0005dd 0002
+0005de 000c                      .DB	0x00, 0x00, 0x06, 0x00, 0x08, 0x00, 0x08, 0x00, 0x04, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0C, 0x00	; U+007E
 0005df 5455
-0005e0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0005e0 aaaa
 0005e1 5455
 0005e2 aaaa
 0005e3 5455
 0005e4 aaaa
 0005e5 5455
-0005e6 aaaa
+0005e6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0005e7 5455
-0005e8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0005e8 aaaa
 0005e9 5455
 0005ea aaaa
 0005eb 5455
 0005ec aaaa
 0005ed 5455
-0005ee aaaa
+0005ee aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0005ef 5455
-0005f0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0005f0 aaaa
 0005f1 5455
 0005f2 aaaa
 0005f3 5455
 0005f4 aaaa
 0005f5 5455
-0005f6 aaaa
+0005f6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0005f7 5455
-0005f8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0005f8 aaaa
 0005f9 5455
 0005fa aaaa
 0005fb 5455
 0005fc aaaa
 0005fd 5455
-0005fe aaaa
+0005fe aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0005ff 5455
-000600 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000600 aaaa
 000601 5455
 000602 aaaa
 000603 5455
 000604 aaaa
 000605 5455
-000606 aaaa
+000606 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000607 5455
-000608 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000608 aaaa
 000609 5455
 00060a aaaa
 00060b 5455
 00060c aaaa
 00060d 5455
-00060e aaaa
+00060e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00060f 5455
-000610 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000610 aaaa
 000611 5455
 000612 aaaa
 000613 5455
 000614 aaaa
 000615 5455
-000616 aaaa
+000616 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000617 5455
-000618 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000618 aaaa
 000619 5455
 00061a aaaa
 00061b 5455
 00061c aaaa
 00061d 5455
-00061e aaaa
+00061e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00061f 5455
-000620 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000620 aaaa
 000621 5455
 000622 aaaa
 000623 5455
 000624 aaaa
 000625 5455
-000626 aaaa
+000626 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000627 5455
-000628 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000628 aaaa
 000629 5455
 00062a aaaa
 00062b 5455
 00062c aaaa
 00062d 5455
-00062e aaaa
+00062e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00062f 5455
-000630 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000630 aaaa
 000631 5455
 000632 aaaa
 000633 5455
 000634 aaaa
 000635 5455
-000636 aaaa
+000636 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000637 5455
-000638 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000638 aaaa
 000639 5455
 00063a aaaa
 00063b 5455
 00063c aaaa
 00063d 5455
-00063e aaaa
+00063e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00063f 5455
-000640 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000640 aaaa
 000641 5455
 000642 aaaa
 000643 5455
 000644 aaaa
 000645 5455
-000646 aaaa
+000646 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000647 5455
-000648 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000648 aaaa
 000649 5455
 00064a aaaa
 00064b 5455
 00064c aaaa
 00064d 5455
-00064e aaaa
+00064e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00064f 5455
-000650 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000650 aaaa
 000651 5455
 000652 aaaa
 000653 5455
 000654 aaaa
 000655 5455
-000656 aaaa
+000656 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000657 5455
-000658 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000658 aaaa
 000659 5455
 00065a aaaa
 00065b 5455
 00065c aaaa
 00065d 5455
-00065e aaaa
+00065e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00065f 5455
-000660 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000660 aaaa
 000661 5455
 000662 aaaa
 000663 5455
 000664 aaaa
 000665 5455
-000666 aaaa
+000666 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000667 5455
-000668 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000668 aaaa
 000669 5455
 00066a aaaa
 00066b 5455
 00066c aaaa
 00066d 5455
-00066e aaaa
+00066e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00066f 5455
-000670 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000670 aaaa
 000671 5455
 000672 aaaa
 000673 5455
 000674 aaaa
 000675 5455
-000676 aaaa
+000676 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000677 5455
-000678 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000678 aaaa
 000679 5455
 00067a aaaa
 00067b 5455
 00067c aaaa
 00067d 5455
-00067e aaaa
+00067e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00067f 5455
-000680 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000680 aaaa
 000681 5455
 000682 aaaa
 000683 5455
 000684 aaaa
 000685 5455
-000686 aaaa
+000686 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000687 5455
-000688 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000688 aaaa
 000689 5455
 00068a aaaa
 00068b 5455
 00068c aaaa
 00068d 5455
-00068e aaaa
+00068e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00068f 5455
-000690 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000690 aaaa
 000691 5455
 000692 aaaa
 000693 5455
 000694 aaaa
 000695 5455
-000696 aaaa
+000696 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000697 5455
-000698 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000698 aaaa
 000699 5455
 00069a aaaa
 00069b 5455
 00069c aaaa
 00069d 5455
-00069e aaaa
+00069e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00069f 5455
-0006a0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006a0 aaaa
 0006a1 5455
 0006a2 aaaa
 0006a3 5455
 0006a4 aaaa
 0006a5 5455
-0006a6 aaaa
+0006a6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0006a7 5455
-0006a8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006a8 aaaa
 0006a9 5455
 0006aa aaaa
 0006ab 5455
 0006ac aaaa
 0006ad 5455
-0006ae aaaa
+0006ae aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0006af 5455
-0006b0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006b0 aaaa
 0006b1 5455
 0006b2 aaaa
 0006b3 5455
 0006b4 aaaa
 0006b5 5455
-0006b6 aaaa
+0006b6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0006b7 5455
-0006b8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006b8 aaaa
 0006b9 5455
 0006ba aaaa
 0006bb 5455
 0006bc aaaa
 0006bd 5455
-0006be aaaa
+0006be aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0006bf 5455
-0006c0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006c0 aaaa
 0006c1 5455
 0006c2 aaaa
 0006c3 5455
 0006c4 aaaa
 0006c5 5455
-0006c6 aaaa
+0006c6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0006c7 5455
-0006c8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0006c9 0000
-0006ca 0000
-0006cb 0000
-0006cc 0000
-0006cd 0000
-0006ce 0000
-0006cf 0000
-0006d0 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A0
-0006d1 0000
-0006d2 0000
-0006d3 0000
-0006d4 3e03
-0006d5 0000
-0006d6 0000
-0006d7 0000
-0006d8 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x3E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A1
-0006d9 0000
-0006da c003
-0006db 2004
-0006dc 2004
-0006dd f81f
-0006de 2004
-0006df 2004
-0006e0 4002                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x04, 0x20, 0x1F, 0xF8, 0x04, 0x20, 0x04, 0x20, 0x02, 0x40	; U+00A2
-0006e1 0000
-0006e2 1001
-0006e3 2001
-0006e4 e007
-0006e5 2009
-0006e6 1009
-0006e7 1008
-0006e8 2004                      .DB	0x00, 0x00, 0x01, 0x10, 0x01, 0x20, 0x07, 0xE0, 0x09, 0x20, 0x09, 0x10, 0x08, 0x10, 0x04, 0x20	; U+00A3
+0006c8 aaaa
+0006c9 5455
+0006ca aaaa
+0006cb 5455
+0006cc aaaa
+0006cd 5455
+0006ce aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006cf 5455
+0006d0 aaaa
+0006d1 5455
+0006d2 aaaa
+0006d3 5455
+0006d4 aaaa
+0006d5 5455
+0006d6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006d7 5455
+0006d8 aaaa
+0006d9 5455
+0006da aaaa
+0006db 5455
+0006dc aaaa
+0006dd 5455
+0006de aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006df 5455
+0006e0 aaaa
+0006e1 5455
+0006e2 aaaa
+0006e3 5455
+0006e4 aaaa
+0006e5 5455
+0006e6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0006e7 0000
+0006e8 0000
 0006e9 0000
-0006ea 2004
-0006eb c003
-0006ec 4002
-0006ed 4002
-0006ee c003
-0006ef 2004
-0006f0 0000                      .DB	0x00, 0x00, 0x04, 0x20, 0x03, 0xC0, 0x02, 0x40, 0x02, 0x40, 0x03, 0xC0, 0x04, 0x20, 0x00, 0x00	; U+00A4
+0006ea 0000
+0006eb 0000
+0006ec 0000
+0006ed 0000
+0006ee 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A0
+0006ef 0000
+0006f0 0000
 0006f1 0000
-0006f2 0008
-0006f3 4005
-0006f4 4003
-0006f5 f001
-0006f6 4003
-0006f7 4005
-0006f8 0008                      .DB	0x00, 0x00, 0x08, 0x00, 0x05, 0x40, 0x03, 0x40, 0x01, 0xF0, 0x03, 0x40, 0x05, 0x40, 0x08, 0x00	; U+00A5
-0006f9 0000
-0006fa 0000
-0006fb 0000
-0006fc 0000
-0006fd 3c0f
-0006fe 0000
+0006f2 3e03
+0006f3 0000
+0006f4 0000
+0006f5 0000
+0006f6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x3E, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A1
+0006f7 0000
+0006f8 c003
+0006f9 2004
+0006fa 2004
+0006fb f81f
+0006fc 2004
+0006fd 2004
+0006fe 4002                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x04, 0x20, 0x1F, 0xF8, 0x04, 0x20, 0x04, 0x20, 0x02, 0x40	; U+00A2
 0006ff 0000
-000700 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A6
-000701 5455
-000702 aaaa
-000703 5455
-000704 aaaa
-000705 5455
-000706 aaaa
-000707 5455
-000708 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000709 0000
-00070a 0000
-00070b 0060
-00070c 0000
-00070d 0000
-00070e 0060
+000700 1001
+000701 2001
+000702 e007
+000703 2009
+000704 1009
+000705 1008
+000706 2004                      .DB	0x00, 0x00, 0x01, 0x10, 0x01, 0x20, 0x07, 0xE0, 0x09, 0x20, 0x09, 0x10, 0x08, 0x10, 0x04, 0x20	; U+00A3
+000707 0000
+000708 2004
+000709 c003
+00070a 4002
+00070b 4002
+00070c c003
+00070d 2004
+00070e 0000                      .DB	0x00, 0x00, 0x04, 0x20, 0x03, 0xC0, 0x02, 0x40, 0x02, 0x40, 0x03, 0xC0, 0x04, 0x20, 0x00, 0x00	; U+00A4
 00070f 0000
-000710 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A8
-000711 0000
-000712 c003
-000713 2004
-000714 9009
-000715 500a
-000716 500a
-000717 2004
-000718 c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x09, 0x90, 0x0A, 0x50, 0x0A, 0x50, 0x04, 0x20, 0x03, 0xC0	; U+00A9
-000719 5455
-00071a aaaa
-00071b 5455
-00071c aaaa
-00071d 5455
-00071e aaaa
+000710 0008
+000711 4005
+000712 4003
+000713 f001
+000714 4003
+000715 4005
+000716 0008                      .DB	0x00, 0x00, 0x08, 0x00, 0x05, 0x40, 0x03, 0x40, 0x01, 0xF0, 0x03, 0x40, 0x05, 0x40, 0x08, 0x00	; U+00A5
+000717 0000
+000718 0000
+000719 0000
+00071a 0000
+00071b 3c0f
+00071c 0000
+00071d 0000
+00071e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0F, 0x3C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A6
 00071f 5455
-000720 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000721 0000
-000722 8000
-000723 4001
-000724 2002
-000725 9004
-000726 4001
-000727 2002
-000728 1004                      .DB	0x00, 0x00, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x04, 0x90, 0x01, 0x40, 0x02, 0x20, 0x04, 0x10	; U+00AB
-000729 5455
-00072a aaaa
-00072b 5455
-00072c aaaa
-00072d 5455
-00072e aaaa
-00072f 5455
-000730 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000731 0000
-000732 8000
-000733 8000
-000734 8000
-000735 8000
-000736 8000
-000737 8000
-000738 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00	; U+00AD
+000720 aaaa
+000721 5455
+000722 aaaa
+000723 5455
+000724 aaaa
+000725 5455
+000726 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000727 0000
+000728 0000
+000729 0060
+00072a 0000
+00072b 0000
+00072c 0060
+00072d 0000
+00072e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00, 0x60, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00A8
+00072f 0000
+000730 c003
+000731 2004
+000732 9009
+000733 500a
+000734 500a
+000735 2004
+000736 c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x09, 0x90, 0x0A, 0x50, 0x0A, 0x50, 0x04, 0x20, 0x03, 0xC0	; U+00A9
+000737 5455
+000738 aaaa
 000739 5455
 00073a aaaa
 00073b 5455
 00073c aaaa
 00073d 5455
-00073e aaaa
-00073f 5455
-000740 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000741 5455
-000742 aaaa
-000743 5455
-000744 aaaa
-000745 5455
-000746 aaaa
+00073e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+00073f 0000
+000740 8000
+000741 4001
+000742 2002
+000743 9004
+000744 4001
+000745 2002
+000746 1004                      .DB	0x00, 0x00, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x04, 0x90, 0x01, 0x40, 0x02, 0x20, 0x04, 0x10	; U+00AB
 000747 5455
-000748 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000749 0000
-00074a 0007
-00074b 8008
-00074c 8008
-00074d 8008
-00074e 0007
+000748 aaaa
+000749 5455
+00074a aaaa
+00074b 5455
+00074c aaaa
+00074d 5455
+00074e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00074f 0000
-000750 0000                      .DB	0x00, 0x00, 0x07, 0x00, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00B0
-000751 5455
-000752 aaaa
-000753 5455
-000754 aaaa
-000755 5455
-000756 aaaa
+000750 8000
+000751 8000
+000752 8000
+000753 8000
+000754 8000
+000755 8000
+000756 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00	; U+00AD
 000757 5455
-000758 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000758 aaaa
 000759 5455
 00075a aaaa
 00075b 5455
 00075c aaaa
 00075d 5455
-00075e aaaa
+00075e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00075f 5455
-000760 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000760 aaaa
 000761 5455
 000762 aaaa
 000763 5455
 000764 aaaa
 000765 5455
-000766 aaaa
-000767 5455
-000768 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000769 5455
-00076a aaaa
-00076b 5455
-00076c aaaa
-00076d 5455
-00076e aaaa
+000766 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000767 0000
+000768 0007
+000769 8008
+00076a 8008
+00076b 8008
+00076c 0007
+00076d 0000
+00076e 0000                      .DB	0x00, 0x00, 0x07, 0x00, 0x08, 0x80, 0x08, 0x80, 0x08, 0x80, 0x07, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00B0
 00076f 5455
-000770 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000770 aaaa
 000771 5455
 000772 aaaa
 000773 5455
 000774 aaaa
 000775 5455
-000776 aaaa
+000776 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000777 5455
-000778 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000778 aaaa
 000779 5455
 00077a aaaa
 00077b 5455
 00077c aaaa
 00077d 5455
-00077e aaaa
+00077e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00077f 5455
-000780 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000780 aaaa
 000781 5455
 000782 aaaa
 000783 5455
 000784 aaaa
 000785 5455
-000786 aaaa
+000786 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000787 5455
-000788 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-000789 0000
-00078a 0000
-00078b 0200
-00078c 0200
-00078d 0c00
-00078e 0000
-00078f 0000
-000790 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00B8
+000788 aaaa
+000789 5455
+00078a aaaa
+00078b 5455
+00078c aaaa
+00078d 5455
+00078e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+00078f 5455
+000790 aaaa
 000791 5455
 000792 aaaa
 000793 5455
 000794 aaaa
 000795 5455
-000796 aaaa
+000796 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 000797 5455
-000798 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+000798 aaaa
 000799 5455
 00079a aaaa
 00079b 5455
 00079c aaaa
 00079d 5455
-00079e aaaa
+00079e aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 00079f 5455
-0007a0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0007a1 0000
-0007a2 1004
-0007a3 2002
-0007a4 4001
-0007a5 9004
-0007a6 2002
-0007a7 4001
-0007a8 8000                      .DB	0x00, 0x00, 0x04, 0x10, 0x02, 0x20, 0x01, 0x40, 0x04, 0x90, 0x02, 0x20, 0x01, 0x40, 0x00, 0x80	; U+00BB
-0007a9 5455
-0007aa aaaa
-0007ab 5455
-0007ac aaaa
-0007ad 5455
-0007ae aaaa
+0007a0 aaaa
+0007a1 5455
+0007a2 aaaa
+0007a3 5455
+0007a4 aaaa
+0007a5 5455
+0007a6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0007a7 0000
+0007a8 0000
+0007a9 0200
+0007aa 0200
+0007ab 0c00
+0007ac 0000
+0007ad 0000
+0007ae 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x02, 0x00, 0x0C, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00	; U+00B8
 0007af 5455
-0007b0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0007b0 aaaa
 0007b1 5455
 0007b2 aaaa
 0007b3 5455
 0007b4 aaaa
 0007b5 5455
-0007b6 aaaa
+0007b6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
 0007b7 5455
-0007b8 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0007b8 aaaa
 0007b9 5455
 0007ba aaaa
 0007bb 5455
 0007bc aaaa
 0007bd 5455
-0007be aaaa
-0007bf 5455
-0007c0 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
-0007c1 0000
-0007c2 0000
-0007c3 0c00
-0007c4 1200
-0007c5 2203
-0007c6 0200
-0007c7 0400
-0007c8 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x12, 0x03, 0x22, 0x00, 0x02, 0x00, 0x04, 0x00, 0x00	; U+00BF
-0007c9 0000
-0007ca 7000
-0007cb c043
-0007cc 402c
-0007cd 400c
-0007ce c003
-0007cf 7000
-0007d0 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x43, 0xC0, 0x2C, 0x40, 0x0C, 0x40, 0x03, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C0
-0007d1 0000
-0007d2 7000
-0007d3 c003
-0007d4 400c
-0007d5 402c
-0007d6 c043
-0007d7 7000
-0007d8 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x03, 0xC0, 0x0C, 0x40, 0x2C, 0x40, 0x43, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C1
-0007d9 0000
-0007da 7000
-0007db c023
-0007dc 404c
-0007dd 404c
-0007de c023
-0007df 7000
-0007e0 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x23, 0xC0, 0x4C, 0x40, 0x4C, 0x40, 0x23, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C2
-0007e1 0000
-0007e2 7020
-0007e3 c043
-0007e4 404c
-0007e5 402c
-0007e6 c023
-0007e7 7040
-0007e8 0000                      .DB	0x00, 0x00, 0x20, 0x70, 0x43, 0xC0, 0x4C, 0x40, 0x2C, 0x40, 0x23, 0xC0, 0x40, 0x70, 0x00, 0x00	; U+00C3
-0007e9 0000
-0007ea 7000
-0007eb c063
-0007ec 400c
-0007ed 400c
-0007ee c063
-0007ef 7000
-0007f0 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x63, 0xC0, 0x0C, 0x40, 0x0C, 0x40, 0x63, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C4
-0007f1 0000
-0007f2 7000
-0007f3 c033
-0007f4 404c
-0007f5 404c
-0007f6 c033
-0007f7 7000
-0007f8 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x33, 0xC0, 0x4C, 0x40, 0x4C, 0x40, 0x33, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C5
-0007f9 0000
-0007fa 7000
-0007fb c003
-0007fc 400c
-0007fd f00f
-0007fe 1009
-0007ff 1009
-000800 1008                      .DB	0x00, 0x00, 0x00, 0x70, 0x03, 0xC0, 0x0C, 0x40, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10	; U+00C6
-000801 0000
-000802 c003
-000803 2204
-000804 1208
-000805 1c08
-000806 1008
-000807 1008
-000808 0000                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x22, 0x08, 0x12, 0x08, 0x1C, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00C7
-000809 0000
-00080a f00f
-00080b 1049
-00080c 1029
-00080d 1009
-00080e 1009
-00080f 1008
-000810 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x49, 0x10, 0x29, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00C8
-000811 0000
-000812 f00f
-000813 1009
-000814 1009
-000815 1029
-000816 1049
-000817 1008
-000818 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x29, 0x10, 0x49, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00C9
-000819 0000
-00081a f00f
-00081b 1029
-00081c 1049
-00081d 1049
-00081e 1029
-00081f 1008
-000820 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x29, 0x10, 0x49, 0x10, 0x49, 0x10, 0x29, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CA
-000821 0000
-000822 f00f
-000823 1069
-000824 1009
-000825 1009
-000826 1069
-000827 1008
-000828 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x69, 0x10, 0x09, 0x10, 0x09, 0x10, 0x69, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CB
-000829 0000
-00082a 0000
-00082b 1008
-00082c 1048
-00082d f02f
-00082e 1008
-00082f 1008
-000830 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x48, 0x10, 0x2F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CC
-000831 0000
-000832 0000
-000833 1008
-000834 1008
-000835 f02f
-000836 1048
-000837 1008
-000838 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x08, 0x10, 0x2F, 0xF0, 0x48, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CD
-000839 0000
-00083a 0000
-00083b 1008
-00083c 1028
-00083d f04f
-00083e 1028
-00083f 1008
-000840 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x28, 0x10, 0x4F, 0xF0, 0x28, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CE
-000841 0000
-000842 0000
-000843 1008
-000844 1068
-000845 f00f
-000846 1068
-000847 1008
-000848 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x68, 0x10, 0x0F, 0xF0, 0x68, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CF
-000849 0000
-00084a 0001
-00084b f00f
-00084c 1009
-00084d 1009
-00084e 1008
-00084f 2004
-000850 c003                      .DB	0x00, 0x00, 0x01, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D0
-000851 0000
-000852 f02f
-000853 0044
-000854 0042
-000855 0021
-000856 8020
-000857 f04f
-000858 0000                      .DB	0x00, 0x00, 0x2F, 0xF0, 0x44, 0x00, 0x42, 0x00, 0x21, 0x00, 0x20, 0x80, 0x4F, 0xF0, 0x00, 0x00	; U+00D1
-000859 0000
-00085a c003
-00085b 2004
-00085c 1048
-00085d 1028
-00085e 1008
-00085f 2004
-000860 c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x48, 0x10, 0x28, 0x10, 0x08, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D2
-000861 0000
-000862 c003
-000863 2004
-000864 1008
-000865 1028
-000866 1048
-000867 2004
-000868 c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x08, 0x10, 0x28, 0x10, 0x48, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D3
-000869 0000
-00086a c003
-00086b 2004
-00086c 1028
-00086d 1048
-00086e 1028
-00086f 2004
-000870 c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x28, 0x10, 0x48, 0x10, 0x28, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D4
-000871 0000
-000872 c003
-000873 2024
-000874 1048
-000875 1048
-000876 1028
-000877 2024
-000878 c043                      .DB	0x00, 0x00, 0x03, 0xC0, 0x24, 0x20, 0x48, 0x10, 0x48, 0x10, 0x28, 0x10, 0x24, 0x20, 0x43, 0xC0	; U+00D5
-000879 0000
-00087a c003
-00087b 2064
+0007be aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0007bf 0000
+0007c0 1004
+0007c1 2002
+0007c2 4001
+0007c3 9004
+0007c4 2002
+0007c5 4001
+0007c6 8000                      .DB	0x00, 0x00, 0x04, 0x10, 0x02, 0x20, 0x01, 0x40, 0x04, 0x90, 0x02, 0x20, 0x01, 0x40, 0x00, 0x80	; U+00BB
+0007c7 5455
+0007c8 aaaa
+0007c9 5455
+0007ca aaaa
+0007cb 5455
+0007cc aaaa
+0007cd 5455
+0007ce aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0007cf 5455
+0007d0 aaaa
+0007d1 5455
+0007d2 aaaa
+0007d3 5455
+0007d4 aaaa
+0007d5 5455
+0007d6 aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0007d7 5455
+0007d8 aaaa
+0007d9 5455
+0007da aaaa
+0007db 5455
+0007dc aaaa
+0007dd 5455
+0007de aaaa                      .DB	0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA, 0x55, 0x54, 0xAA, 0xAA	; Unused character
+0007df 0000
+0007e0 0000
+0007e1 0c00
+0007e2 1200
+0007e3 2203
+0007e4 0200
+0007e5 0400
+0007e6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x00, 0x0C, 0x00, 0x12, 0x03, 0x22, 0x00, 0x02, 0x00, 0x04, 0x00, 0x00	; U+00BF
+0007e7 0000
+0007e8 7000
+0007e9 c043
+0007ea 402c
+0007eb 400c
+0007ec c003
+0007ed 7000
+0007ee 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x43, 0xC0, 0x2C, 0x40, 0x0C, 0x40, 0x03, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C0
+0007ef 0000
+0007f0 7000
+0007f1 c003
+0007f2 400c
+0007f3 402c
+0007f4 c043
+0007f5 7000
+0007f6 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x03, 0xC0, 0x0C, 0x40, 0x2C, 0x40, 0x43, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C1
+0007f7 0000
+0007f8 7000
+0007f9 c023
+0007fa 404c
+0007fb 404c
+0007fc c023
+0007fd 7000
+0007fe 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x23, 0xC0, 0x4C, 0x40, 0x4C, 0x40, 0x23, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C2
+0007ff 0000
+000800 7020
+000801 c043
+000802 404c
+000803 402c
+000804 c023
+000805 7040
+000806 0000                      .DB	0x00, 0x00, 0x20, 0x70, 0x43, 0xC0, 0x4C, 0x40, 0x2C, 0x40, 0x23, 0xC0, 0x40, 0x70, 0x00, 0x00	; U+00C3
+000807 0000
+000808 7000
+000809 c063
+00080a 400c
+00080b 400c
+00080c c063
+00080d 7000
+00080e 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x63, 0xC0, 0x0C, 0x40, 0x0C, 0x40, 0x63, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C4
+00080f 0000
+000810 7000
+000811 c033
+000812 404c
+000813 404c
+000814 c033
+000815 7000
+000816 0000                      .DB	0x00, 0x00, 0x00, 0x70, 0x33, 0xC0, 0x4C, 0x40, 0x4C, 0x40, 0x33, 0xC0, 0x00, 0x70, 0x00, 0x00	; U+00C5
+000817 0000
+000818 7000
+000819 c003
+00081a 400c
+00081b f00f
+00081c 1009
+00081d 1009
+00081e 1008                      .DB	0x00, 0x00, 0x00, 0x70, 0x03, 0xC0, 0x0C, 0x40, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10	; U+00C6
+00081f 0000
+000820 c003
+000821 2204
+000822 1208
+000823 1c08
+000824 1008
+000825 1008
+000826 0000                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x22, 0x08, 0x12, 0x08, 0x1C, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00C7
+000827 0000
+000828 f00f
+000829 1049
+00082a 1029
+00082b 1009
+00082c 1009
+00082d 1008
+00082e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x49, 0x10, 0x29, 0x10, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00C8
+00082f 0000
+000830 f00f
+000831 1009
+000832 1009
+000833 1029
+000834 1049
+000835 1008
+000836 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x29, 0x10, 0x49, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00C9
+000837 0000
+000838 f00f
+000839 1029
+00083a 1049
+00083b 1049
+00083c 1029
+00083d 1008
+00083e 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x29, 0x10, 0x49, 0x10, 0x49, 0x10, 0x29, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CA
+00083f 0000
+000840 f00f
+000841 1069
+000842 1009
+000843 1009
+000844 1069
+000845 1008
+000846 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x69, 0x10, 0x09, 0x10, 0x09, 0x10, 0x69, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CB
+000847 0000
+000848 0000
+000849 1008
+00084a 1048
+00084b f02f
+00084c 1008
+00084d 1008
+00084e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x48, 0x10, 0x2F, 0xF0, 0x08, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CC
+00084f 0000
+000850 0000
+000851 1008
+000852 1008
+000853 f02f
+000854 1048
+000855 1008
+000856 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x08, 0x10, 0x2F, 0xF0, 0x48, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CD
+000857 0000
+000858 0000
+000859 1008
+00085a 1028
+00085b f04f
+00085c 1028
+00085d 1008
+00085e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x28, 0x10, 0x4F, 0xF0, 0x28, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CE
+00085f 0000
+000860 0000
+000861 1008
+000862 1068
+000863 f00f
+000864 1068
+000865 1008
+000866 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x08, 0x10, 0x68, 0x10, 0x0F, 0xF0, 0x68, 0x10, 0x08, 0x10, 0x00, 0x00	; U+00CF
+000867 0000
+000868 0001
+000869 f00f
+00086a 1009
+00086b 1009
+00086c 1008
+00086d 2004
+00086e c003                      .DB	0x00, 0x00, 0x01, 0x00, 0x0F, 0xF0, 0x09, 0x10, 0x09, 0x10, 0x08, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D0
+00086f 0000
+000870 f02f
+000871 0044
+000872 0042
+000873 0021
+000874 8020
+000875 f04f
+000876 0000                      .DB	0x00, 0x00, 0x2F, 0xF0, 0x44, 0x00, 0x42, 0x00, 0x21, 0x00, 0x20, 0x80, 0x4F, 0xF0, 0x00, 0x00	; U+00D1
+000877 0000
+000878 c003
+000879 2004
+00087a 1048
+00087b 1028
 00087c 1008
-00087d 1008
-00087e 1008
-00087f 2064
-000880 c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x64, 0x20, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x64, 0x20, 0x03, 0xC0	; U+00D6
-000881 0000
-000882 0000
-000883 2002
-000884 4001
-000885 8000
-000886 4001
-000887 2002
-000888 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x20, 0x01, 0x40, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x00, 0x00	; U+00D7
-000889 0000
-00088a c803
-00088b 3004
-00088c 5008
-00088d 9009
-00088e 100a
-00088f 200c
-000890 c013                      .DB	0x00, 0x00, 0x03, 0xC8, 0x04, 0x30, 0x08, 0x50, 0x09, 0x90, 0x0A, 0x10, 0x0C, 0x20, 0x13, 0xC0	; U+00D8
-000891 0000
-000892 e00f
-000893 1040
-000894 1020
-000895 1000
-000896 1000
-000897 e00f
-000898 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x40, 0x10, 0x20, 0x10, 0x00, 0x10, 0x00, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00D9
-000899 0000
-00089a e00f
-00089b 1000
-00089c 1000
-00089d 1020
-00089e 1040
-00089f e00f
-0008a0 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x20, 0x10, 0x40, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00DA
-0008a1 0000
-0008a2 e00f
-0008a3 1020
-0008a4 1040
-0008a5 1040
-0008a6 1020
-0008a7 e00f
-0008a8 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x20, 0x10, 0x40, 0x10, 0x40, 0x10, 0x20, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00DB
-0008a9 0000
-0008aa e00f
-0008ab 1060
-0008ac 1000
-0008ad 1000
-0008ae 1060
-0008af e00f
-0008b0 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x60, 0x10, 0x00, 0x10, 0x00, 0x10, 0x60, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00DC
-0008b1 0000
-0008b2 000c
-0008b3 0062
-0008b4 0001
-0008b5 f000
-0008b6 0001
-0008b7 0062
-0008b8 000c                      .DB	0x00, 0x00, 0x0C, 0x00, 0x62, 0x00, 0x01, 0x00, 0x00, 0xF0, 0x01, 0x00, 0x62, 0x00, 0x0C, 0x00	; U+00DD
-0008b9 0000
-0008ba f00f
-0008bb 2004
-0008bc 2004
-0008bd 2004
-0008be 2004
-0008bf c003
-0008c0 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x03, 0xC0, 0x00, 0x00	; U+00DE
-0008c1 0000
-0008c2 f007
-0008c3 0008
-0008c4 0008
-0008c5 1009
-0008c6 100b
-0008c7 e004
-0008c8 0000                      .DB	0x00, 0x00, 0x07, 0xF0, 0x08, 0x00, 0x08, 0x00, 0x09, 0x10, 0x0B, 0x10, 0x04, 0xE0, 0x00, 0x00	; U+00DF
-0008c9 0000
-0008ca 6000
-0008cb 9012
-0008cc 900a
-0008cd 9002
-0008ce 9002
-0008cf f001
-0008d0 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x12, 0x90, 0x0A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E0
-0008d1 0000
-0008d2 6000
-0008d3 9002
-0008d4 9002
-0008d5 900a
-0008d6 9012
-0008d7 f001
-0008d8 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x02, 0x90, 0x02, 0x90, 0x0A, 0x90, 0x12, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E1
-0008d9 0000
-0008da 6000
-0008db 900a
-0008dc 9012
-0008dd 9012
-0008de 900a
-0008df f001
-0008e0 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x0A, 0x90, 0x12, 0x90, 0x12, 0x90, 0x0A, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E2
-0008e1 0000
-0008e2 6008
-0008e3 9012
-0008e4 9012
-0008e5 900a
-0008e6 900a
-0008e7 f011
-0008e8 0000                      .DB	0x00, 0x00, 0x08, 0x60, 0x12, 0x90, 0x12, 0x90, 0x0A, 0x90, 0x0A, 0x90, 0x11, 0xF0, 0x00, 0x00	; U+00E3
-0008e9 0000
-0008ea 6000
-0008eb 901a
+00087d 2004
+00087e c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x48, 0x10, 0x28, 0x10, 0x08, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D2
+00087f 0000
+000880 c003
+000881 2004
+000882 1008
+000883 1028
+000884 1048
+000885 2004
+000886 c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x08, 0x10, 0x28, 0x10, 0x48, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D3
+000887 0000
+000888 c003
+000889 2004
+00088a 1028
+00088b 1048
+00088c 1028
+00088d 2004
+00088e c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x04, 0x20, 0x28, 0x10, 0x48, 0x10, 0x28, 0x10, 0x04, 0x20, 0x03, 0xC0	; U+00D4
+00088f 0000
+000890 c003
+000891 2024
+000892 1048
+000893 1048
+000894 1028
+000895 2024
+000896 c043                      .DB	0x00, 0x00, 0x03, 0xC0, 0x24, 0x20, 0x48, 0x10, 0x48, 0x10, 0x28, 0x10, 0x24, 0x20, 0x43, 0xC0	; U+00D5
+000897 0000
+000898 c003
+000899 2064
+00089a 1008
+00089b 1008
+00089c 1008
+00089d 2064
+00089e c003                      .DB	0x00, 0x00, 0x03, 0xC0, 0x64, 0x20, 0x08, 0x10, 0x08, 0x10, 0x08, 0x10, 0x64, 0x20, 0x03, 0xC0	; U+00D6
+00089f 0000
+0008a0 0000
+0008a1 2002
+0008a2 4001
+0008a3 8000
+0008a4 4001
+0008a5 2002
+0008a6 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x20, 0x01, 0x40, 0x00, 0x80, 0x01, 0x40, 0x02, 0x20, 0x00, 0x00	; U+00D7
+0008a7 0000
+0008a8 c803
+0008a9 3004
+0008aa 5008
+0008ab 9009
+0008ac 100a
+0008ad 200c
+0008ae c013                      .DB	0x00, 0x00, 0x03, 0xC8, 0x04, 0x30, 0x08, 0x50, 0x09, 0x90, 0x0A, 0x10, 0x0C, 0x20, 0x13, 0xC0	; U+00D8
+0008af 0000
+0008b0 e00f
+0008b1 1040
+0008b2 1020
+0008b3 1000
+0008b4 1000
+0008b5 e00f
+0008b6 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x40, 0x10, 0x20, 0x10, 0x00, 0x10, 0x00, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00D9
+0008b7 0000
+0008b8 e00f
+0008b9 1000
+0008ba 1000
+0008bb 1020
+0008bc 1040
+0008bd e00f
+0008be 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x20, 0x10, 0x40, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00DA
+0008bf 0000
+0008c0 e00f
+0008c1 1020
+0008c2 1040
+0008c3 1040
+0008c4 1020
+0008c5 e00f
+0008c6 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x20, 0x10, 0x40, 0x10, 0x40, 0x10, 0x20, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00DB
+0008c7 0000
+0008c8 e00f
+0008c9 1060
+0008ca 1000
+0008cb 1000
+0008cc 1060
+0008cd e00f
+0008ce 0000                      .DB	0x00, 0x00, 0x0F, 0xE0, 0x60, 0x10, 0x00, 0x10, 0x00, 0x10, 0x60, 0x10, 0x0F, 0xE0, 0x00, 0x00	; U+00DC
+0008cf 0000
+0008d0 000c
+0008d1 0062
+0008d2 0001
+0008d3 f000
+0008d4 0001
+0008d5 0062
+0008d6 000c                      .DB	0x00, 0x00, 0x0C, 0x00, 0x62, 0x00, 0x01, 0x00, 0x00, 0xF0, 0x01, 0x00, 0x62, 0x00, 0x0C, 0x00	; U+00DD
+0008d7 0000
+0008d8 f00f
+0008d9 2004
+0008da 2004
+0008db 2004
+0008dc 2004
+0008dd c003
+0008de 0000                      .DB	0x00, 0x00, 0x0F, 0xF0, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x04, 0x20, 0x03, 0xC0, 0x00, 0x00	; U+00DE
+0008df 0000
+0008e0 f007
+0008e1 0008
+0008e2 0008
+0008e3 1009
+0008e4 100b
+0008e5 e004
+0008e6 0000                      .DB	0x00, 0x00, 0x07, 0xF0, 0x08, 0x00, 0x08, 0x00, 0x09, 0x10, 0x0B, 0x10, 0x04, 0xE0, 0x00, 0x00	; U+00DF
+0008e7 0000
+0008e8 6000
+0008e9 9012
+0008ea 900a
+0008eb 9002
 0008ec 9002
-0008ed 9002
-0008ee 901a
-0008ef f001
-0008f0 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x1A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x1A, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E4
-0008f1 0000
-0008f2 6000
-0008f3 9032
-0008f4 904a
-0008f5 904a
-0008f6 9032
-0008f7 f001
-0008f8 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x32, 0x90, 0x4A, 0x90, 0x4A, 0x90, 0x32, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E5
-0008f9 0000
-0008fa 6000
-0008fb 9002
-0008fc 9002
-0008fd e001
-0008fe 9002
-0008ff 9002
-000900 9001                      .DB	0x00, 0x00, 0x00, 0x60, 0x02, 0x90, 0x02, 0x90, 0x01, 0xE0, 0x02, 0x90, 0x02, 0x90, 0x01, 0x90	; U+00E6
-000901 0000
-000902 e001
-000903 1202
-000904 1202
-000905 1c02
-000906 1002
-000907 2001
-000908 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x12, 0x02, 0x12, 0x02, 0x1C, 0x02, 0x10, 0x01, 0x20, 0x00, 0x00	; U+00E7
-000909 0000
-00090a e001
-00090b 9012
-00090c 900a
-00090d 9002
-00090e 9002
-00090f 9001
-000910 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x12, 0x90, 0x0A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00E8
-000911 0000
-000912 e001
-000913 9002
-000914 9002
-000915 900a
-000916 9012
-000917 9001
-000918 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x90, 0x02, 0x90, 0x0A, 0x90, 0x12, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00E9
-000919 0000
-00091a e001
-00091b 900a
-00091c 9012
-00091d 9012
-00091e 900a
-00091f 9001
-000920 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x0A, 0x90, 0x12, 0x90, 0x12, 0x90, 0x0A, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00EA
-000921 0000
-000922 e001
-000923 901a
-000924 9002
-000925 9002
-000926 901a
-000927 9001
-000928 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x1A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x1A, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00EB
-000929 0000
-00092a 0000
-00092b 1012
-00092c 100a
-00092d f003
-00092e 1000
-00092f 1000
-000930 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x12, 0x10, 0x0A, 0x10, 0x03, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00EC
-000931 0000
-000932 0000
-000933 1002
-000934 1002
-000935 f00b
-000936 1010
-000937 1000
-000938 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x10, 0x02, 0x10, 0x0B, 0xF0, 0x10, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00ED
-000939 0000
-00093a 0000
-00093b 100a
-00093c 1012
-00093d f013
-00093e 1008
-00093f 1000
-000940 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x0A, 0x10, 0x12, 0x10, 0x13, 0xF0, 0x08, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00EE
-000941 0000
-000942 0000
-000943 101a
-000944 1002
-000945 f003
-000946 1018
-000947 1000
-000948 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x1A, 0x10, 0x02, 0x10, 0x03, 0xF0, 0x18, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00EF
-000949 0000
-00094a e001
-00094b 100a
-00094c 102a
-00094d 101a
-00094e 1016
-00094f e021
-000950 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x0A, 0x10, 0x2A, 0x10, 0x1A, 0x10, 0x16, 0x10, 0x21, 0xE0, 0x00, 0x00	; U+00F0
-000951 0000
-000952 f00b
-000953 0012
-000954 0012
-000955 000a
-000956 000a
-000957 f011
-000958 0000                      .DB	0x00, 0x00, 0x0B, 0xF0, 0x12, 0x00, 0x12, 0x00, 0x0A, 0x00, 0x0A, 0x00, 0x11, 0xF0, 0x00, 0x00	; U+00F1
-000959 0000
-00095a e001
-00095b 1012
-00095c 100a
-00095d 1002
-00095e 1002
-00095f e001
-000960 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x12, 0x10, 0x0A, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F2
-000961 0000
-000962 e001
-000963 1002
-000964 1002
-000965 100a
-000966 1012
-000967 e001
-000968 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x0A, 0x10, 0x12, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F3
-000969 0000
-00096a e001
-00096b 100a
-00096c 1012
-00096d 1012
-00096e 100a
-00096f e001
-000970 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x0A, 0x10, 0x12, 0x10, 0x12, 0x10, 0x0A, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F4
-000971 0000
-000972 e009
-000973 1012
-000974 1012
-000975 100a
-000976 100a
-000977 e011
-000978 0000                      .DB	0x00, 0x00, 0x09, 0xE0, 0x12, 0x10, 0x12, 0x10, 0x0A, 0x10, 0x0A, 0x10, 0x11, 0xE0, 0x00, 0x00	; U+00F5
-000979 0000
-00097a e001
-00097b 101a
+0008ed f001
+0008ee 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x12, 0x90, 0x0A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E0
+0008ef 0000
+0008f0 6000
+0008f1 9002
+0008f2 9002
+0008f3 900a
+0008f4 9012
+0008f5 f001
+0008f6 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x02, 0x90, 0x02, 0x90, 0x0A, 0x90, 0x12, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E1
+0008f7 0000
+0008f8 6000
+0008f9 900a
+0008fa 9012
+0008fb 9012
+0008fc 900a
+0008fd f001
+0008fe 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x0A, 0x90, 0x12, 0x90, 0x12, 0x90, 0x0A, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E2
+0008ff 0000
+000900 6008
+000901 9012
+000902 9012
+000903 900a
+000904 900a
+000905 f011
+000906 0000                      .DB	0x00, 0x00, 0x08, 0x60, 0x12, 0x90, 0x12, 0x90, 0x0A, 0x90, 0x0A, 0x90, 0x11, 0xF0, 0x00, 0x00	; U+00E3
+000907 0000
+000908 6000
+000909 901a
+00090a 9002
+00090b 9002
+00090c 901a
+00090d f001
+00090e 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x1A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x1A, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E4
+00090f 0000
+000910 6000
+000911 9032
+000912 904a
+000913 904a
+000914 9032
+000915 f001
+000916 0000                      .DB	0x00, 0x00, 0x00, 0x60, 0x32, 0x90, 0x4A, 0x90, 0x4A, 0x90, 0x32, 0x90, 0x01, 0xF0, 0x00, 0x00	; U+00E5
+000917 0000
+000918 6000
+000919 9002
+00091a 9002
+00091b e001
+00091c 9002
+00091d 9002
+00091e 9001                      .DB	0x00, 0x00, 0x00, 0x60, 0x02, 0x90, 0x02, 0x90, 0x01, 0xE0, 0x02, 0x90, 0x02, 0x90, 0x01, 0x90	; U+00E6
+00091f 0000
+000920 e001
+000921 1202
+000922 1202
+000923 1c02
+000924 1002
+000925 2001
+000926 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x12, 0x02, 0x12, 0x02, 0x1C, 0x02, 0x10, 0x01, 0x20, 0x00, 0x00	; U+00E7
+000927 0000
+000928 e001
+000929 9012
+00092a 900a
+00092b 9002
+00092c 9002
+00092d 9001
+00092e 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x12, 0x90, 0x0A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00E8
+00092f 0000
+000930 e001
+000931 9002
+000932 9002
+000933 900a
+000934 9012
+000935 9001
+000936 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x90, 0x02, 0x90, 0x0A, 0x90, 0x12, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00E9
+000937 0000
+000938 e001
+000939 900a
+00093a 9012
+00093b 9012
+00093c 900a
+00093d 9001
+00093e 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x0A, 0x90, 0x12, 0x90, 0x12, 0x90, 0x0A, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00EA
+00093f 0000
+000940 e001
+000941 901a
+000942 9002
+000943 9002
+000944 901a
+000945 9001
+000946 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x1A, 0x90, 0x02, 0x90, 0x02, 0x90, 0x1A, 0x90, 0x01, 0x90, 0x00, 0x00	; U+00EB
+000947 0000
+000948 0000
+000949 1012
+00094a 100a
+00094b f003
+00094c 1000
+00094d 1000
+00094e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x12, 0x10, 0x0A, 0x10, 0x03, 0xF0, 0x00, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00EC
+00094f 0000
+000950 0000
+000951 1002
+000952 1002
+000953 f00b
+000954 1010
+000955 1000
+000956 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x02, 0x10, 0x02, 0x10, 0x0B, 0xF0, 0x10, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00ED
+000957 0000
+000958 0000
+000959 100a
+00095a 1012
+00095b f013
+00095c 1008
+00095d 1000
+00095e 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x0A, 0x10, 0x12, 0x10, 0x13, 0xF0, 0x08, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00EE
+00095f 0000
+000960 0000
+000961 101a
+000962 1002
+000963 f003
+000964 1018
+000965 1000
+000966 0000                      .DB	0x00, 0x00, 0x00, 0x00, 0x1A, 0x10, 0x02, 0x10, 0x03, 0xF0, 0x18, 0x10, 0x00, 0x10, 0x00, 0x00	; U+00EF
+000967 0000
+000968 e001
+000969 100a
+00096a 102a
+00096b 101a
+00096c 1016
+00096d e021
+00096e 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x0A, 0x10, 0x2A, 0x10, 0x1A, 0x10, 0x16, 0x10, 0x21, 0xE0, 0x00, 0x00	; U+00F0
+00096f 0000
+000970 f00b
+000971 0012
+000972 0012
+000973 000a
+000974 000a
+000975 f011
+000976 0000                      .DB	0x00, 0x00, 0x0B, 0xF0, 0x12, 0x00, 0x12, 0x00, 0x0A, 0x00, 0x0A, 0x00, 0x11, 0xF0, 0x00, 0x00	; U+00F1
+000977 0000
+000978 e001
+000979 1012
+00097a 100a
+00097b 1002
 00097c 1002
-00097d 1002
-00097e 101a
-00097f e001
-000980 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x1A, 0x10, 0x02, 0x10, 0x02, 0x10, 0x1A, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F6
-000981 0000
-000982 8000
-000983 8000
-000984 b006
-000985 b006
-000986 8000
-000987 8000
-000988 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x06, 0xB0, 0x06, 0xB0, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00	; U+00F7
-000989 0000
-00098a e801
-00098b 3002
-00098c 5002
-00098d 9002
-00098e 1003
-00098f e005
-000990 0000                      .DB	0x00, 0x00, 0x01, 0xE8, 0x02, 0x30, 0x02, 0x50, 0x02, 0x90, 0x03, 0x10, 0x05, 0xE0, 0x00, 0x00	; U+00F8
-000991 0000
-000992 e003
-000993 1010
-000994 1008
-000995 1000
-000996 1000
-000997 f003
-000998 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x10, 0x10, 0x08, 0x10, 0x00, 0x10, 0x00, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00F9
-000999 0000
-00099a e003
-00099b 1000
-00099c 1000
-00099d 1008
-00099e 1010
-00099f f003
-0009a0 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x08, 0x10, 0x10, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00FA
-0009a1 0000
-0009a2 e003
-0009a3 1008
-0009a4 1010
-0009a5 1010
-0009a6 1008
-0009a7 f003
-0009a8 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x08, 0x10, 0x10, 0x10, 0x10, 0x10, 0x08, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00FB
-0009a9 0000
-0009aa e003
-0009ab 1018
-0009ac 1000
-0009ad 1000
-0009ae 1018
-0009af f003
-0009b0 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x18, 0x10, 0x00, 0x10, 0x00, 0x10, 0x18, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00FC
-0009b1 0000
-0009b2 e003
-0009b3 1200
-0009b4 1200
-0009b5 1208
-0009b6 1210
-0009b7 fc03
-0009b8 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x12, 0x00, 0x12, 0x08, 0x12, 0x10, 0x12, 0x03, 0xFC, 0x00, 0x00	; U+00FD
-0009b9 0000
-0009ba fe1f
-0009bb 1002
-0009bc 1002
-0009bd 1002
-0009be 1002
-0009bf e001
-0009c0 0000                      .DB	0x00, 0x00, 0x1F, 0xFE, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00FE
-0009c1 0000
-0009c2 e003
-0009c3 1218
-0009c4 1200
-0009c5 1200
-0009c6 1218
-0009c7 fc03
-0009c8 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x18, 0x12, 0x00, 0x12, 0x00, 0x12, 0x18, 0x12, 0x03, 0xFC, 0x00, 0x00	; U+00FF
+00097d e001
+00097e 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x12, 0x10, 0x0A, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F2
+00097f 0000
+000980 e001
+000981 1002
+000982 1002
+000983 100a
+000984 1012
+000985 e001
+000986 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x02, 0x10, 0x02, 0x10, 0x0A, 0x10, 0x12, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F3
+000987 0000
+000988 e001
+000989 100a
+00098a 1012
+00098b 1012
+00098c 100a
+00098d e001
+00098e 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x0A, 0x10, 0x12, 0x10, 0x12, 0x10, 0x0A, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F4
+00098f 0000
+000990 e009
+000991 1012
+000992 1012
+000993 100a
+000994 100a
+000995 e011
+000996 0000                      .DB	0x00, 0x00, 0x09, 0xE0, 0x12, 0x10, 0x12, 0x10, 0x0A, 0x10, 0x0A, 0x10, 0x11, 0xE0, 0x00, 0x00	; U+00F5
+000997 0000
+000998 e001
+000999 101a
+00099a 1002
+00099b 1002
+00099c 101a
+00099d e001
+00099e 0000                      .DB	0x00, 0x00, 0x01, 0xE0, 0x1A, 0x10, 0x02, 0x10, 0x02, 0x10, 0x1A, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00F6
+00099f 0000
+0009a0 8000
+0009a1 8000
+0009a2 b006
+0009a3 b006
+0009a4 8000
+0009a5 8000
+0009a6 0000                      .DB	0x00, 0x00, 0x00, 0x80, 0x00, 0x80, 0x06, 0xB0, 0x06, 0xB0, 0x00, 0x80, 0x00, 0x80, 0x00, 0x00	; U+00F7
+0009a7 0000
+0009a8 e801
+0009a9 3002
+0009aa 5002
+0009ab 9002
+0009ac 1003
+0009ad e005
+0009ae 0000                      .DB	0x00, 0x00, 0x01, 0xE8, 0x02, 0x30, 0x02, 0x50, 0x02, 0x90, 0x03, 0x10, 0x05, 0xE0, 0x00, 0x00	; U+00F8
+0009af 0000
+0009b0 e003
+0009b1 1010
+0009b2 1008
+0009b3 1000
+0009b4 1000
+0009b5 f003
+0009b6 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x10, 0x10, 0x08, 0x10, 0x00, 0x10, 0x00, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00F9
+0009b7 0000
+0009b8 e003
+0009b9 1000
+0009ba 1000
+0009bb 1008
+0009bc 1010
+0009bd f003
+0009be 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x10, 0x00, 0x10, 0x08, 0x10, 0x10, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00FA
+0009bf 0000
+0009c0 e003
+0009c1 1008
+0009c2 1010
+0009c3 1010
+0009c4 1008
+0009c5 f003
+0009c6 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x08, 0x10, 0x10, 0x10, 0x10, 0x10, 0x08, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00FB
+0009c7 0000
+0009c8 e003
+0009c9 1018
+0009ca 1000
+0009cb 1000
+0009cc 1018
+0009cd f003
+0009ce 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x18, 0x10, 0x00, 0x10, 0x00, 0x10, 0x18, 0x10, 0x03, 0xF0, 0x00, 0x00	; U+00FC
+0009cf 0000
+0009d0 e003
+0009d1 1200
+0009d2 1200
+0009d3 1208
+0009d4 1210
+0009d5 fc03
+0009d6 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x00, 0x12, 0x00, 0x12, 0x08, 0x12, 0x10, 0x12, 0x03, 0xFC, 0x00, 0x00	; U+00FD
+0009d7 0000
+0009d8 fe1f
+0009d9 1002
+0009da 1002
+0009db 1002
+0009dc 1002
+0009dd e001
+0009de 0000                      .DB	0x00, 0x00, 0x1F, 0xFE, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x02, 0x10, 0x01, 0xE0, 0x00, 0x00	; U+00FE
+0009df 0000
+0009e0 e003
+0009e1 1218
+0009e2 1200
+0009e3 1200
+0009e4 1218
+0009e5 fc03
+0009e6 0000                      .DB	0x00, 0x00, 0x03, 0xE0, 0x18, 0x12, 0x00, 0x12, 0x00, 0x12, 0x18, 0x12, 0x03, 0xFC, 0x00, 0x00	; U+00FF
                                  
                                  
                                  
@@ -4457,7 +4506,7 @@ counted separately from r26..r31 here.
 "ATmega32U4" register use summary:
 x  :   4 y  :   6 z  :   4 r0 :  12 r1 :   9 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  90 r17:  28 r18:  14 r19:   8 r20:   3 
+r13:   0 r14:   0 r15:   0 r16:  95 r17:  36 r18:  18 r19:  12 r20:   3 
 r21:  28 r22:  13 r23:   0 r24:   5 r25:   5 r26:  18 r27:  15 r28:   8 
 r29:   7 r30:   8 r31:   8 
 Registers used: 20 out of 35 (57.1%)
@@ -4467,27 +4516,27 @@ Registers used: 20 out of 35 (57.1%)
 andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   2 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   3 brlt  :   0 brmi  :   0 
-brne  :  11 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :  14 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   1 cbi   :   6 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :   5 cpse  :   0 dec   :  13 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   4 inc   :   1 jmp   :   0 
-ld    :   3 ldd   :   0 ldi   :  59 lds   :   0 lpm   :   6 lsl   :   3 
+cpi   :   5 cpse  :   0 dec   :  17 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   4 inc   :   2 jmp   :   0 
+ld    :   3 ldd   :   0 ldi   :  62 lds   :   0 lpm   :   6 lsl   :   3 
 lsr   :  15 mov   :   5 movw  :   1 mul   :   1 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   2 ori   :   0 out   :   9 pop   :  48 
-push  :  48 rcall :  33 ret   :  21 reti  :   0 rjmp  :  10 rol   :   0 
+neg   :   0 nop   :   0 or    :   2 ori   :   0 out   :   9 pop   :  53 
+push  :  53 rcall :  37 ret   :  22 reti  :   0 rjmp  :  11 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :  14 sbic  :   0 sbis  :   0 
-sbiw  :   1 sbr   :   0 sbrc  :   0 sbrs  :   6 sec   :   0 seh   :   0 
+sbiw  :   1 sbr   :   0 sbrc  :   1 sbrs  :   8 sec   :   0 seh   :   0 
 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   6 std   :   1 sts   :   0 
 sub   :   1 subi  :   1 swap  :   0 tst   :   0 wdr   :   0 
-Instructions used: 36 out of 113 (31.9%)
+Instructions used: 37 out of 113 (32.7%)
 
 "ATmega32U4" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x001392    712   4128   4840   32768  14.8%
+[.cseg] 0x000000 0x0013ce    772   4128   4900   32768  15.0%
 [.dseg] 0x000100 0x000100      0      0      0    2560   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
