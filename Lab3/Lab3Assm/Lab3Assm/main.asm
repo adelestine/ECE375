@@ -14,7 +14,9 @@
 ;***********************************************************
 .def	mpr = r16				; Multipurpose register is required for LCD Driver
 .def	cr = r17				; Carry register :)
-;.def	count = r18				; Register for counting up to 255 0 indexed
+.def	ilcnt = r18				; Counting registers for wait loop
+.def	olcnt = r19
+.def	waitcnt = r20
 .equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
 .equ	lcdH1 = 0x01
 .equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
@@ -129,9 +131,12 @@ BTN2MPR:
 ;		move. This should be carrying bytes from the low 
 ;		address of the LCD screen and carrying them up to
 ;		the highest values.
+;
+;		I have made the executive decision to stop this by
+;		pressing button 
 ;-----------------------------------------------------------
 MARQUEE:
-		
+
 		ret
 
 ;-----------------------------------------------------------
@@ -196,23 +201,26 @@ work backwards
 ROTCHAR:
 		push YH				; push vars to stack
 		push YL
-		push mpr
-
-
+		push mpr			; done
 
 		ldi YH, lcdENDH
 		ldi YL, lcdENDL		; Set Y to end of line 2
 		ld	mpr, Y			; pull last character
 		push mpr			; and stack it
 rotloop:
-		
-		brne rotloop
+		ld mpr, -Y			; dec Y, mpr <- m(Y)
+		std Y+1, mpr		; move letter up 1 in data mem
+		cpi YL, $00			; check if just moved first char
+		brne rotloop		; if not go again until done
+
+		pop mpr				; pop last character from stack
+		st Y, mpr			; place last character at first
+							; done with one rotation
 
 		pop mpr				; pop vars from stack
 		pop YL
-		pop YH
+		pop YH				; done
 		ret
-		*/
 ;-----------------------------------------------------------
 ; Func: Display Names
 ; Desc: Displayes names of project members by copying from 
