@@ -126,6 +126,53 @@ SUB16:
 ;-----------------------------------------------------------
 MUL24:
 ;* - Simply adopting MUL16 ideas to MUL24 will not give you steady results. You should come up with different ideas.
+/*
+Imagine we are multiplying two 24-bit numbers, ABC and DEF.
+A is the highest byte, C is the lowest byte. So A is referring
+to only the highest byte of ABC. Imagine that when multiplying
+C and F, the result is CFH:CFL where CFH and CFL are the high
+and low bytes respectively of the result of multiplying C and F.
+
+If you were to write out
+how to multiply these together with individual 8-bit multiplication,
+it might look something like this:
+
+				A	B	C	*
+				D	E	F
+===================================
+					CFH	CFL
+				CEH	CEL
+			CDH	CDL
+				BFH	BFL
+			BEH	BEL
+		BDH	BDL
+			AFH	AFL
+		AEH	AEL
++	ADH	ADL
+	5	4	3	2	1	0
+===================================
+
+This result does in fact take up 6 bytes, or 48-bits.
+Something to keep in mind here is that when adding each
+individual result to the total (such as CDL) there will
+be previous results already added to that byte. That means
+that we need to keep in mind carries. There will be no 
+carry coming out of the last byte, as two 24-bit numbers
+multiplied together (FFFFFF x FFFFFF) have a maximum
+possible value of FFFFFE000001, which is only 6 bytes!
+
+The way I will handle carries is every time I do addition,
+I will check the carry bit to see if it is set. If it is,
+I will move up where I am looking at by one byte, then add
+the carry. Since this is also addition, I will check the
+carry AGAIN! Repeat until no more carries. This means 
+I could carry up to 4 times, (the lowest byte will never
+carry since it is only added to once) so for reliabilities
+sake I will use a loop to check/add caries instead of just
+adding the carry to every possibly byte even if there is
+no carry.
+
+*/
 		; Execute the function here
 
 
