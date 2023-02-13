@@ -41,7 +41,10 @@
 INIT:							; The initialization routine
 
 		; Initialize Stack Pointer
-
+		ldi		mpr, low(RAMEND) 
+		out		SPL, mpr
+		ldi		mpr, high(RAMEND)
+		out		SPH, mpr
 		; TODO
 
 		clr		zero			; Set the zero register to zero, maintain
