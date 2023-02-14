@@ -41,7 +41,10 @@
 INIT:							; The initialization routine
 
 		; Initialize Stack Pointer
-
+		ldi		mpr, low(RAMEND) 
+		out		SPL, mpr
+		ldi		mpr, high(RAMEND)
+		out		SPH, mpr
 		; TODO
 
 		clr		zero			; Set the zero register to zero, maintain
@@ -68,6 +71,7 @@ MAIN:							; The Main program
 
 
 		; Call function to load MUL24 operands
+		rcall LOADMUL24
 		nop ; Check load MUL24 operands (Set Break point here #5)
 
 		; Call MUL24 function to display its results (calculate FFFFFF * FFFFFF)
@@ -123,8 +127,143 @@ SUB16:
 ;-----------------------------------------------------------
 MUL24:
 ;* - Simply adopting MUL16 ideas to MUL24 will not give you steady results. You should come up with different ideas.
-		; Execute the function here
+/*
+Imagine we are multiplying two 24-bit numbers, ABC and DEF.
+A is the highest byte, C is the lowest byte. So A is referring
+to only the highest byte of ABC. Imagine that when multiplying
+C and F, the result is CFH:CFL where CFH and CFL are the high
+and low bytes respectively of the result of multiplying C and F.
 
+If you were to write out
+how to multiply these together with individual 8-bit multiplication,
+it might look something like this:
+
+				A	B	C	*
+				D	E	F
+===================================
+					CFH	CFL
+				CEH	CEL
+			CDH	CDL
+				BFH	BFL
+			BEH	BEL
+		BDH	BDL
+			AFH	AFL
+		AEH	AEL
++	ADH	ADL
+	5	4	3	2	1	0
+===================================
+
+This result does in fact take up 6 bytes, or 48-bits.
+Something to keep in mind here is that when adding each
+individual result to the total (such as CDL) there will
+be previous results already added to that byte. That means
+that we need to keep in mind carries. There will be no 
+carry coming out of the last byte, as two 24-bit numbers
+multiplied together (FFFFFF x FFFFFF) have a maximum
+possible value of FFFFFE000001, which is only 6 bytes!
+
+The way I will handle carries is every time I do addition,
+I will check the carry bit to see if it is set. If it is,
+I will move up where I am looking at by one byte, then add
+the carry. Since this is also addition, I will check the
+carry AGAIN! Repeat until no more carries. This means 
+I could carry up to 4 times, (the lowest byte will never
+carry since it is only added to once) so for reliabilities
+sake I will use a loop to check/add caries instead of just
+adding the carry to every possibly byte even if there is
+no carry.
+
+*/
+		; Execute the function here
+		push XH		; Push literally everything because
+		push XL		; I have no idea what I will need :)
+		push YH
+		push YL
+		push ZH
+		push ZL
+		push mpr
+		push rlo
+		push rhi
+		push A
+		push B
+		push iloop
+		push oloop
+
+		pop oloop
+		pop iloop
+		pop B
+		pop A
+		pop rhi
+		pop rlo
+		pop mpr
+		pop ZL
+		pop ZH
+		pop YL
+		pop YH
+		pop XL
+		pop XH
+
+		ret						; End a function with RET
+
+;-----------------------------------------------------------
+; Func: LOADMUL24
+; Desc: Loads the numbers needed for the example MUL24
+;-----------------------------------------------------------
+LOADMUL24:
+		; Execute the function here
+		push YH	; push regs to stack
+		push YL
+		push ZH
+		push ZL
+		push mpr
+		push iloop
+		push oloop
+
+		; Uses OperandE1, OperandE2, OperandF1, and OperandF2
+		; Placing these into MUL24_OP1 and MUL24_OP2 respectively
+		ldi ZH, high(OperandE1)	; load OperandE1 location to Z
+		ldi ZL, low(OperandE1)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(MUL24_OP1)	; Load OP1 location into Y
+		ldi YL, low(MUL24_OP1)	; ($0118)
+				
+		ldi oloop, 3	; load A with 3 to loop 3 times.
+mulloadloop1:
+		lpm mpr, Z+	;load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement A to run loop 3 times
+		brne mulloadloop1
+		; since operand E2 is immediately after E1 in the program data
+		; we should be able to just increment to it :)
+		; Operand E is now loaded to MUL24_OP1
+		
+		ldi ZH, high(OperandF1)	; load OperandF1 location to Z
+		ldi ZL, low(OperandF1)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(MUL24_OP2)	; Load OP1 location into Y
+		ldi YL, low(MUL24_OP2)	; ($011B)
+
+		ldi oloop, 3	; load A with 3 to loop 3 times.
+mulloadloop2:
+		lpm mpr, Z+	;load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement A to run loop 3 times
+		brne mulloadloop2
+		; Both operands should be loaded into program mem now!
+
+		pop oloop	; pop regs from stack
+		pop iloop
+		pop mpr
+		pop ZL
+		pop ZH
+		pop YL
+		pop YH
 
 		ret						; End a function with RET
 
@@ -294,14 +433,26 @@ LAddrP:	.byte 4
 ; Below is an example of data memory allocation for ADD16.
 ; Consider using something similar for SUB16 and MUL24.
 .org	$0110				; data memory allocation for operands
-ADD16_OP1:
+ADD16_OP1:	;$0110
 		.byte 2				; allocate two bytes for first operand of ADD16
-ADD16_OP2:
+ADD16_OP2:	;$0112
 		.byte 2				; allocate two bytes for second operand of ADD16
+SUB16_OP1:	;$0114
+		.byte 2				; allocate two bytes for first operand of SUB16
+SUB16_OP2:	;$0116
+		.byte 2				; allocate two bytes for second operand of SUB16
+MUL24_OP1:	;$0118
+		.byte 3				; allocate three bytes for first operand of MUL24
+MUL24_OP2:	;$011B
+		.byte 3				; allocate three bytes for second operand of MUL24
+
 
 .org	$0120				; data memory allocation for results
 ADD16_Result:
 		.byte 3				; allocate three bytes for ADD16 result
+
+.org	$130
+.org	$140
 
 ;***********************************************************
 ;*	Additional Program Includes
