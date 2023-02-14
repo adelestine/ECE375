@@ -97,16 +97,69 @@ DONE:	rjmp	DONE			; Create an infinite while loop to signify the
 ;       out bit.
 ;-----------------------------------------------------------
 ADD16:
+		push mpr
+		push A
+		push XH
+		push YH
+		push ZH
+		push XL
+		push YL
+		push ZL
+
+		clr mpr
+		bclr 0 ; CLEAR THE CARRY FLAG!!! (just in case lamp)
 		; Load beginning address of first operand into X
 		ldi		XL, low(ADD16_OP1)	; Load low byte of address
 		ldi		XH, high(ADD16_OP1)	; Load high byte of address
-
 		; Load beginning address of second operand into Y
-
+		ldi		YL, low(ADD16_OP2)	; Load low byte of address
+		ldi		YH, high(ADD16_OP2)	; Load high byte of address
 		; Load beginning address of result into Z
-
+		ldi		ZL, low(ADD16_Result) ; points the end of Z
+		ldi		ZH, high(ADD16_Result)
 		; Execute the function
+		;2 16 bit numbers being added generates a max of 24 bit number
+		; ie 1111_1111_1111_1111
+		;   +1111_1111_1111_1111
+		;	____________________
+		;	1_1111_1111_1111_1110	
+		; can do 8 bits at a time
+		
+		
 
+		;add 2 lowest bytes
+		ld A, X+
+		add mpr, A
+		ld A, Y+
+		add mpr, A
+		;mpr now equals x + y & carry flag is included
+		;store this lower result in the lowest memory of the result
+		st Z+, mpr
+		clr mpr
+
+		ld A, X+
+		adc mpr, A
+		ld A, Y+
+		add mpr, A
+		;mpr now equals x + y & carry flag is included
+		;store this lower result in the lowest memory of the result
+		st Z+, mpr
+		clr mpr
+
+
+		;if c flag is set
+		brcs noCarry;
+		ldi mpr, $01;
+		st Z, mpr
+noCarry:
+		pop ZL
+		pop YL
+		pop XL
+		pop ZH
+		pop YH
+		pop XH
+		pop A
+		pop mpr
 		ret						; End a function with RET
 
 ;-----------------------------------------------------------
