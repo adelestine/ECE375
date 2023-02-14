@@ -211,17 +211,11 @@ no carry.
 ;-----------------------------------------------------------
 LOADMUL24:
 		; Execute the function here
-		push XH		; Push literally everything because
-		push XL		; I have no idea what I will need :)
-		push YH
+		push YH	; push regs to stack
 		push YL
 		push ZH
 		push ZL
 		push mpr
-		push rlo
-		push rhi
-		push A
-		push B
 		push iloop
 		push oloop
 
@@ -263,19 +257,13 @@ mulloadloop2:
 		brne mulloadloop2
 		; Both operands should be loaded into program mem now!
 
-		pop oloop
+		pop oloop	; pop regs from stack
 		pop iloop
-		pop B
-		pop A
-		pop rhi
-		pop rlo
 		pop mpr
 		pop ZL
 		pop ZH
 		pop YL
 		pop YH
-		pop XL
-		pop XH
 
 		ret						; End a function with RET
 
