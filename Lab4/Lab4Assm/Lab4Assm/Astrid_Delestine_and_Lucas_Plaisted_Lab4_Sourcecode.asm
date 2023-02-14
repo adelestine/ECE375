@@ -55,7 +55,7 @@ MAIN:							; The Main program
 
 		; Call function to load ADD16 operands
 		nop ; Check load ADD16 operands (Set Break point here #1)
-
+		rcall ADD16
 		; Call ADD16 function to display its results (calculate FCBA + FFFF)
 		nop ; Check ADD16 result (Set Break point here #2)
 
