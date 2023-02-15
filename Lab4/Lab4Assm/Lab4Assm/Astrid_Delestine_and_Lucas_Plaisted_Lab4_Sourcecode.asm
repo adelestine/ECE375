@@ -57,6 +57,7 @@ INIT:							; The initialization routine
 MAIN:							; The Main program
 
 		; Call function to load ADD16 operands
+		rcall LOADADD16
 		nop ; Check load ADD16 operands (Set Break point here #1)
 		rcall ADD16
 		; Call ADD16 function to display its results (calculate FCBA + FFFF)
@@ -64,6 +65,7 @@ MAIN:							; The Main program
 
 
 		; Call function to load SUB16 operands
+		rcall LOADSUB16
 		nop ; Check load SUB16 operands (Set Break point here #3)
 
 		; Call SUB16 function to display its results (calculate FCB9 - E420)
@@ -169,8 +171,33 @@ noCarry:
 ;-----------------------------------------------------------
 SUB16:
 		; Execute the function here
+		push mpr
+		push A
+		push XH
+		push YH
+		push ZH
+		push XL
+		push YL
+		push ZL
 
+		; Load beginning address of first operand into X
+		ldi		XL, low(SUB16_OP1)	; Load low byte of address
+		ldi		XH, high(SUB16_OP1)	; Load high byte of address
+		; Load beginning address of second operand into Y
+		ldi		YL, low(SUB16_OP2)	; Load low byte of address
+		ldi		YH, high(SUB16_OP2)	; Load high byte of address
+		; Load beginning address of result into Z
+		ldi		ZL, low(ADD16_Result) ; points the end of Z
+		ldi		ZH, high(ADD16_Result)
 
+		pop ZL
+		pop YL
+		pop XL
+		pop ZH
+		pop YH
+		pop XH
+		pop A
+		pop mpr
 		ret						; End a function with RET
 
 ;-----------------------------------------------------------
@@ -283,11 +310,11 @@ LOADMUL24:
 		ldi YH, high(MUL24_OP1)	; Load OP1 location into Y
 		ldi YL, low(MUL24_OP1)	; ($0118)
 				
-		ldi oloop, 3	; load A with 3 to loop 3 times.
+		ldi oloop, 3	; load oloop with 3 to loop 3 times.
 mulloadloop1:
 		lpm mpr, Z+	;load mpr from Z, inc Z
 		st Y+, mpr	; store mpr to Y, inc Y
-		dec oloop		; decrement A to run loop 3 times
+		dec oloop		; decrement oloop to run loop 3 times
 		brne mulloadloop1
 		; since operand E2 is immediately after E1 in the program data
 		; we should be able to just increment to it :)
@@ -302,12 +329,132 @@ mulloadloop1:
 		ldi YH, high(MUL24_OP2)	; Load OP1 location into Y
 		ldi YL, low(MUL24_OP2)	; ($011B)
 
-		ldi oloop, 3	; load A with 3 to loop 3 times.
+		ldi oloop, 3	; load oloop with 3 to loop 3 times.
 mulloadloop2:
-		lpm mpr, Z+	;load mpr from Z, inc Z
+		lpm mpr, Z+	; load mpr from Z, inc Z
 		st Y+, mpr	; store mpr to Y, inc Y
-		dec oloop		; decrement A to run loop 3 times
+		dec oloop		; decrement oloop to run loop 3 times
 		brne mulloadloop2
+		; Both operands should be loaded into program mem now!
+
+		pop oloop	; pop regs from stack
+		pop iloop
+		pop mpr
+		pop ZL
+		pop ZH
+		pop YL
+		pop YH
+
+		ret						; End a function with RET
+
+;-----------------------------------------------------------
+; Func: LOADADD16
+; Desc: Loads the numbers needed for the example ADD16
+;-----------------------------------------------------------
+LOADADD16:
+		; Execute the function here
+		push YH	; push regs to stack
+		push YL
+		push ZH
+		push ZL
+		push mpr
+		push iloop
+		push oloop
+
+		; Uses OperandA and OperandB
+		; Placing these into ADD16_OP1 and ADD16_OP2 respectively
+		ldi ZH, high(OperandA)	; load OperandA location to Z
+		ldi ZL, low(OperandA)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(ADD16_OP1)	; Load OP1 location into Y
+		ldi YL, low(ADD16_OP1)	; ($0110)
+				
+		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+addloadloop1:
+		lpm mpr, Z+	; load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement oloop to run loop 2 times
+		brne addloadloop1
+		; Operand A is now loaded to ADD16_OP1
+		
+		ldi ZH, high(OperandB)	; load OperandB location to Z
+		ldi ZL, low(OperandB)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(ADD16_OP2)	; Load OP2 location into Y
+		ldi YL, low(ADD16_OP2)	; ($0112)
+
+		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+addloadloop2:
+		lpm mpr, Z+	; load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement oloop to run loop 2 times
+		brne addloadloop2
+		; Both operands should be loaded into program mem now!
+
+		pop oloop	; pop regs from stack
+		pop iloop
+		pop mpr
+		pop ZL
+		pop ZH
+		pop YL
+		pop YH
+
+		ret						; End a function with RET
+
+;-----------------------------------------------------------
+; Func: LOADSUB16
+; Desc: Loads the numbers needed for the example SUB16
+;-----------------------------------------------------------
+LOADSUB16:
+		; Execute the function here
+		push YH	; push regs to stack
+		push YL
+		push ZH
+		push ZL
+		push mpr
+		push iloop
+		push oloop
+
+		; Uses OperandC and OperandD
+		; Placing these into SUB16_OP1 and SUB16_OP2 respectively
+		ldi ZH, high(OperandC)	; load OperandC location to Z
+		ldi ZL, low(OperandC)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(SUB16_OP1)	; Load OP1 location into Y
+		ldi YL, low(SUB16_OP1)	; ($0114)
+				
+		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+subloadloop1:
+		lpm mpr, Z+	; load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement oloop to run loop 2 times
+		brne subloadloop1
+		; Operand C is now loaded to ADD16_OP1
+		
+		ldi ZH, high(OperandD)	; load OperandD location to Z
+		ldi ZL, low(OperandD)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(SUB16_OP2)	; Load OP2 location into Y
+		ldi YL, low(SUB16_OP2)	; ($0116)
+
+		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+subloadloop2:
+		lpm mpr, Z+	; load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement oloop to run loop 2 times
+		brne subloadloop2
 		; Both operands should be loaded into program mem now!
 
 		pop oloop	; pop regs from stack
@@ -340,6 +487,67 @@ COMPOUND:
 
 		; Setup the MUL24 function with ADD16 result as both operands
 		; Perform multiplication to calculate ((G - H) + I)^2
+
+		ret						; End a function with RET
+;-----------------------------------------------------------
+; Func: LOADCOMPOUND
+; Desc: Loads the numbers needed for the compound, as well
+;		as clearing the result locations from previous
+;		functions first.
+;-----------------------------------------------------------
+LOADSUB16:
+		; Execute the function here
+		push YH	; push regs to stack
+		push YL
+		push ZH
+		push ZL
+		push mpr
+		push iloop
+		push oloop
+
+		; Uses OperandC and OperandD
+		; Placing these into SUB16_OP1 and SUB16_OP2 respectively
+		ldi ZH, high(OperandC)	; load OperandC location to Z
+		ldi ZL, low(OperandC)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(SUB16_OP1)	; Load OP1 location into Y
+		ldi YL, low(SUB16_OP1)	; ($0114)
+				
+		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+subloadloop1:
+		lpm mpr, Z+	; load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement oloop to run loop 2 times
+		brne subloadloop1
+		; Operand C is now loaded to ADD16_OP1
+		
+		ldi ZH, high(OperandD)	; load OperandD location to Z
+		ldi ZL, low(OperandD)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(SUB16_OP2)	; Load OP2 location into Y
+		ldi YL, low(SUB16_OP2)	; ($0116)
+
+		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+subloadloop2:
+		lpm mpr, Z+	; load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement oloop to run loop 2 times
+		brne subloadloop2
+		; Both operands should be loaded into program mem now!
+
+		pop oloop	; pop regs from stack
+		pop iloop
+		pop mpr
+		pop ZL
+		pop ZH
+		pop YL
+		pop YH
 
 		ret						; End a function with RET
 
