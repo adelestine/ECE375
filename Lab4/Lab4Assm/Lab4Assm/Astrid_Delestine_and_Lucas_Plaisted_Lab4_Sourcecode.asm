@@ -58,28 +58,38 @@ MAIN:							; The Main program
 
 		; Call function to load ADD16 operands
 		rcall LOADADD16
+		; Operands stored in $0110 and $0112
 		nop ; Check load ADD16 operands (Set Break point here #1)
 		rcall ADD16
 		; Call ADD16 function to display its results (calculate FCBA + FFFF)
+		; Result stored in $0120, should be $1FCB9
 		nop ; Check ADD16 result (Set Break point here #2)
 
 
 		; Call function to load SUB16 operands
 		rcall LOADSUB16
+		; Operands stored in $0114 and $0116
 		nop ; Check load SUB16 operands (Set Break point here #3)
 
 		; Call SUB16 function to display its results (calculate FCB9 - E420)
+		rcall SUB16
+		; Result stored in $0130, should be $1899
 		nop ; Check SUB16 result (Set Break point here #4)
 
 
 		; Call function to load MUL24 operands
 		rcall LOADMUL24
+		; Operands stored in $0118 and $011B
 		nop ; Check load MUL24 operands (Set Break point here #5)
 
 		; Call MUL24 function to display its results (calculate FFFFFF * FFFFFF)
+		rcall MUL24
+		; Result stored in $0140, should be $FFFFFE000001
 		nop ; Check MUL24 result (Set Break point here #6)
 
 		; Setup the COMPOUND function direct test
+		rcall LOADCOMPOUND
+		; Operands stored in $0114 (G = $FCBA), $0116 (H = $2022), and $0112 (I = $21BB)
 		nop ; Check load COMPOUND operands (Set Break point here #7)
 
 		; Call the COMPOUND function
@@ -173,6 +183,7 @@ SUB16:
 		; Execute the function here
 		push mpr
 		push A
+		push B
 		push XH
 		push YH
 		push ZH
@@ -187,8 +198,17 @@ SUB16:
 		ldi		YL, low(SUB16_OP2)	; Load low byte of address
 		ldi		YH, high(SUB16_OP2)	; Load high byte of address
 		; Load beginning address of result into Z
-		ldi		ZL, low(ADD16_Result) ; points the end of Z
-		ldi		ZH, high(ADD16_Result)
+		ldi		ZL, low(SUB16_Result) ; points the end of Z
+		ldi		ZH, high(SUB16_Result)
+
+		ld A, X+	; Load low byte of OP1 into A, X now points at high byte
+		ld B, Y+	; Load low byte of OP2 into B, Y now points at high byte
+		sub A, B	; Subtract low byte of OP2 from low byte of OP1
+		st Z+, A	; Store result into low byte of SUB16_Result, Z now points go high byte
+		ld A, X		; Load high byte of OP1 into A
+		ld B, Y		; Load high byte of OP2 into B
+		sbc A, B	; Subtract high byte of OP2 from low byte of OP1 with carry
+		st Z, A		; Store result to high byte of SUB16_Result
 
 		pop ZL
 		pop YL
@@ -196,6 +216,7 @@ SUB16:
 		pop ZH
 		pop YH
 		pop XH
+		pop B
 		pop A
 		pop mpr
 		ret						; End a function with RET
@@ -269,6 +290,104 @@ no carry.
 		push iloop
 		push oloop
 
+		; Load beginning address of MUL24 result to X
+		ldi		XL, low(MUL24_Result)
+		ldi		XH, high(MUL24_Result)
+		st X+, zero
+		st X+, zero
+		st X+, zero
+		st X, zero	; Clear result just in case!
+
+		; Load beginning address of first operand into Z
+		ldi		ZL, low(MUL24_OP1)	; Load low byte of address
+		ldi		ZH, high(MUL24_OP1)	; Load high byte of address
+		; Load beginning address of second operand into Y
+		ldi		YL, low(MUL24_OP2)	; Load low byte of address
+		ldi		YH, high(MUL24_OP2)	; Load high byte of address
+		; Load beginning address of result into X
+		ldi		XL, low(MUL24_Result) ; points the end of X
+		ldi		XH, high(MUL24_Result)
+
+/*
+				A	B	C	*		(X pointer)
+				D	E	F			(Y pointer)
+				2	1	0			offset
+===================================
+						CF
+					CE
+				CD
+					BF
+				BE
+			BD
+				AF
+			AE
+		AD
+	5	4	3	2	1	0	(Z offset)
+===================================
+*/
+		
+		ld A, Z		; Load C byte of OP1 to A
+					; A will hold the first op
+		ld B, Y		; Load F byte of OP1 to B
+					; B will hold the second op
+		mul A, B	; C*F
+		rcall ADDMUL2X	; Add to result
+;				A	B	C	*		(Z pointer)
+;				D	E	F			(Y pointer)
+;				2	1	0			offset
+		adiw XH:XL, 1	; Z offset = 1, changed so that ADDMUL2X
+						; adds to the correct place
+						; Need to do CE and BF
+;				A	B	C	*		(Z pointer)
+;				D	E	F			(Y pointer)
+;				2	1	0			offset
+		ldd B, Y+1		; Load E to B
+		mul A, B	;C*E
+		rcall ADDMUL2X	; Add to result
+		ldd A, Z+1	; A <- B
+		ld B, Y		; B <- F
+		mul A, B	; B*F
+		rcall ADDMUL2X
+		adiw XH:XL, 1	; X offset = 2
+						; Need to do CD, BE, and AF
+;				A	B	C	*		(Z pointer)
+;				D	E	F			(Y pointer)
+;				2	1	0			offset
+		ld A, Z		; A <- C
+		ldd B, Y+2	; B <- D
+		mul A, B	; C*D
+		rcall ADDMUL2X
+		ldd A, Z+1	; A <- B
+		ldd B, Y+1	; B <- E
+		mul A, B	; B*E
+		rcall ADDMUL2X
+		ldd A, Z+2	; A <-A
+		ld B, Y		; B <-F
+		mul A, B	; A*F
+		rcall ADDMUL2X
+		adiw XH:XL, 1	; X offset = 3
+						; Need to do BD and AE
+;				A	B	C	*		(Z pointer)
+;				D	E	F			(Y pointer)
+;				2	1	0			offset
+		ldd A, Z+1	; A <- B
+		ldd B, Y+2	; B <- D
+		mul A, B	; B*D
+		rcall ADDMUL2X
+		ldd A, Z+2	; A <- A (nice)
+		ldd B, Y+1	; B <- E
+		mul A, B	; A*E
+		rcall ADDMUL2X
+		adiw XH:XL, 1	; X offset = 4
+						; Need to do AD
+;				A	B	C	*		(Z pointer)
+;				D	E	F			(Y pointer)
+;				2	1	0			offset
+		ldd A, Z+2	; A <- A (nice)
+		ldd B, Y+2	; B <- D
+		mul A, B	; A*D
+		rcall ADDMUL2X
+		; done!
 		pop oloop
 		pop iloop
 		pop B
@@ -284,6 +403,44 @@ no carry.
 		pop XH
 
 		ret						; End a function with RET
+
+;-----------------------------------------------------------
+; Func: ADDMUL2X
+; Desc: Adds a partial multiplication result word to X, assuming
+;		that X is already pointing to where the low result
+;		byte should be placed
+;		AKA if result of the multiplication needs to be placed
+;		into the X starting at the second byte, then X had 
+;		better already be pointing to the second byte.
+;		Multiplication should already be done and sitting in
+;		rlo and rhi!
+;-----------------------------------------------------------
+ADDMUL2X:
+		push XL
+		push XH
+		push rlo
+		push rhi
+		push A
+
+		ld A, X		; Pull out low byte from X
+		add A, rlo	; Add rlo to low byte
+		st X+, A	; Place back into X, inc X
+		ld A, Z		; Pull out high byte from X
+		adc A, rlo	; Add rhi to high byte plus carry
+		; Carry until no longer carry
+addmulloop:
+		brcc addmulfinish ; Finish if carry no longer set
+		ld A, X		; Pull out current byte from X
+		adc A, zero	; Add carry to current byte
+		st X+, A	; Place back into X, inc X
+		rjmp addmulloop	; Return to begining of loop
+addmulfinish:
+		pop A
+		pop rhi
+		pop rlo
+		pop XH
+		pop XL
+		ret
 
 ;-----------------------------------------------------------
 ; Func: LOADMUL24
@@ -495,7 +652,7 @@ COMPOUND:
 ;		as clearing the result locations from previous
 ;		functions first.
 ;-----------------------------------------------------------
-LOADSUB16:
+LOADCOMPOUND:
 		; Execute the function here
 		push YH	; push regs to stack
 		push YL
@@ -504,28 +661,37 @@ LOADSUB16:
 		push mpr
 		push iloop
 		push oloop
+		
+		rcall CLRRES ; Clear result memory locations
 
-		; Uses OperandC and OperandD
-		; Placing these into SUB16_OP1 and SUB16_OP2 respectively
-		ldi ZH, high(OperandC)	; load OperandC location to Z
-		ldi ZL, low(OperandC)
+		; Uses OperandG, OperandH, and OperandI
+		; as ( ( G - H ) + I )^2
+		; Meaning SUB16 with G and H
+		; Then ADD16 with the result and I
+		; Then MUL24 where both operands are the result
+		; So G and H need to be loaded to SUB16_OP1 and SUB16_OP2 respectively
+		; "I" will be loaded to ADD16_OP2 due to where it visually is in the 
+		; equation, although it doesn't matter too much
+
+		ldi ZH, high(OperandG)	; load OperandG location to Z
+		ldi ZL, low(OperandG)
 		; Shift Z to prepare for program memory access:
 		lsl ZH
 		lsl ZL
 		adc ZH, zero ; shift carry from lower byte to upper byte
 		ldi YH, high(SUB16_OP1)	; Load OP1 location into Y
 		ldi YL, low(SUB16_OP1)	; ($0114)
-				
+		
 		ldi oloop, 2	; load oloop with 2 to loop 2 times.
-subloadloop1:
+comploadloop1:
 		lpm mpr, Z+	; load mpr from Z, inc Z
 		st Y+, mpr	; store mpr to Y, inc Y
 		dec oloop		; decrement oloop to run loop 2 times
-		brne subloadloop1
-		; Operand C is now loaded to ADD16_OP1
+		brne comploadloop1
+		; Operand G is now loaded to SUB16_OP1
 		
-		ldi ZH, high(OperandD)	; load OperandD location to Z
-		ldi ZL, low(OperandD)
+		ldi ZH, high(OperandH)	; load OperandD location to Z
+		ldi ZL, low(OperandH)
 		; Shift Z to prepare for program memory access:
 		lsl ZH
 		lsl ZL
@@ -534,12 +700,29 @@ subloadloop1:
 		ldi YL, low(SUB16_OP2)	; ($0116)
 
 		ldi oloop, 2	; load oloop with 2 to loop 2 times.
-subloadloop2:
+comploadloop2:
 		lpm mpr, Z+	; load mpr from Z, inc Z
 		st Y+, mpr	; store mpr to Y, inc Y
 		dec oloop		; decrement oloop to run loop 2 times
-		brne subloadloop2
-		; Both operands should be loaded into program mem now!
+		brne comploadloop2
+		; Operand H now loaded to SUB16_OP2
+
+		ldi ZH, high(OperandI)	; load OperandD location to Z
+		ldi ZL, low(OperandI)
+		; Shift Z to prepare for program memory access:
+		lsl ZH
+		lsl ZL
+		adc ZH, zero ; shift carry from lower byte to upper byte
+		ldi YH, high(ADD16_OP2)	; Load OP2 location into Y
+		ldi YL, low(ADD16_OP2)	; ($0112)
+
+		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+comploadloop3:
+		lpm mpr, Z+	; load mpr from Z, inc Z
+		st Y+, mpr	; store mpr to Y, inc Y
+		dec oloop		; decrement oloop to run loop 2 times
+		brne comploadloop3
+		; Operand I now loaded to ADD16_OP2
 
 		pop oloop	; pop regs from stack
 		pop iloop
@@ -550,6 +733,49 @@ subloadloop2:
 		pop YH
 
 		ret						; End a function with RET
+
+;-----------------------------------------------------------
+; Func: CLRRES
+; Desc: Clears the memory locations of the results for 
+;       ADD16, SUB16, and MUL24
+;-----------------------------------------------------------
+CLRRES:
+		push XL
+		push XH
+		push YL
+		push YH
+		push ZL
+		push ZH
+
+		; Load beginning address of ADD16 result to Z
+		ldi		XL, low(ADD16_Result)	; Load low byte of address
+		ldi		XH, high(ADD16_Result)	; Load high byte of address
+		; Load beginning address of SUB16 result to Y
+		ldi		YL, low(SUB16_Result)	; Load low byte of address
+		ldi		YH, high(SUB16_Result)	; Load high byte of address
+		; Load beginning address of MUL24 result to Z
+		ldi		ZL, low(MUL24_Result)
+		ldi		ZH, high(MUL24_Result)
+		
+		; Write zeros to all result locations
+		st X+, zero
+		st X+, zero
+		st X, zero	; Three bytes for ADD16 result
+		st Y+, zero
+		st Y, zero	; Two for SUB16
+		st Z+, zero
+		st Z+, zero
+		st Z+, zero
+		st Z, zero	; And FOUR for MUL24
+
+		pop ZH
+		pop ZL
+		pop YH
+		pop YL
+		pop XH
+		pop XL
+
+		ret						
 
 ;-----------------------------------------------------------
 ; Func: MUL16
@@ -711,9 +937,12 @@ MUL24_OP2:	;$011B
 .org	$0120				; data memory allocation for results
 ADD16_Result:
 		.byte 3				; allocate three bytes for ADD16 result
-
-.org	$130
-.org	$140
+.org	$0130
+SUB16_Result:
+		.byte 2				; allocate two bytes for SUB16 result
+.org	$0140
+MUL24_Result:
+		.byte 4				; allocate four bytes for MUL24 result
 
 ;***********************************************************
 ;*	Additional Program Includes
