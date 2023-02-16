@@ -160,7 +160,7 @@ ADD16:
 
 
 		;if c flag is set
-		brcs noCarry;
+		brcc noCarry;
 		ldi mpr, $01;
 		st Z, mpr
 noCarry:
