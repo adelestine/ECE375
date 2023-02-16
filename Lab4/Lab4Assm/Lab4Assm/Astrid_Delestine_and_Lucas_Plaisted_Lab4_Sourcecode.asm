@@ -2,7 +2,7 @@
 ;*	This is the skeleton file for Lab 4 of ECE 375
 ;*
 ;*	 Author: Astrid Delestine and Lucas Plastied 
-;*	   Date: Enter Date
+;*	   Date: 2/15/23
 ;*
 ;***********************************************************
 
