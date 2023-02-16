@@ -2,7 +2,7 @@
 ;*	This is the skeleton file for Lab 4 of ECE 375
 ;*
 ;*	 Author: Astrid Delestine and Lucas Plastied 
-;*	   Date: Enter Date
+;*	   Date: 2/16/2023
 ;*
 ;***********************************************************
 
@@ -14,7 +14,8 @@
 .def	mpr = r16				; Multipurpose register
 .def	rlo = r0				; Low byte of MUL result
 .def	rhi = r1				; High byte of MUL result
-.def	zero = r2				; Zero register, set to zero in INIT, useful for calculations
+.def	zero = r2				; Zero register, set to zero in INIT,
+								; useful for calculations
 .def	A = r3					; A variable
 .def	B = r4					; Another variable
 
@@ -47,9 +48,9 @@ INIT:							; The initialization routine
 		out		SPH, mpr
 		; TODO
 
-		clr		zero			; Set the zero register to zero, maintain
-										; these semantics, meaning, don't
-										; load anything else into it.
+		clr		zero			; Set the zero register to zero, 
+								; maintain these semantics, meaning, 
+								; don't load anything else into it.
 
 ;-----------------------------------------------------------
 ; Main Program
@@ -61,7 +62,8 @@ MAIN:							; The Main program
 		; Operands stored in $0110 and $0112
 		nop ; Check load ADD16 operands (Set Break point here #1)
 		rcall ADD16
-		; Call ADD16 function to display its results (calculate FCBA + FFFF)
+		; Call ADD16 function to display its results 
+		;(calculate FCBA + FFFF)
 		; Result stored in $0120, should be $1FCB9
 		nop ; Check ADD16 result (Set Break point here #2)
 
@@ -71,7 +73,8 @@ MAIN:							; The Main program
 		; Operands stored in $0114 and $0116
 		nop ; Check load SUB16 operands (Set Break point here #3)
 
-		; Call SUB16 function to display its results (calculate FCB9 - E420)
+		; Call SUB16 function to display its results 
+		;(calculate FCB9 - E420)
 		rcall SUB16
 		; Result stored in $0130, should be $1899
 		nop ; Check SUB16 result (Set Break point here #4)
@@ -82,14 +85,18 @@ MAIN:							; The Main program
 		; Operands stored in $0118 and $011B
 		nop ; Check load MUL24 operands (Set Break point here #5)
 
-		; Call MUL24 function to display its results (calculate FFFFFF * FFFFFF)
+		; Call MUL24 function to display its results 
+		;(calculate FFFFFF * FFFFFF)
 		rcall MUL24
 		; Result stored in $0140, should be $FFFFFE000001
 		nop ; Check MUL24 result (Set Break point here #6)
 
 		; Setup the COMPOUND function direct test
 		rcall LOADCOMPOUND
-		; Operands stored in $0114 (G = $FCBA), $0116 (H = $2022), and $0112 (I = $21BB)
+		; Operands stored in 
+		;$0114 (G = $FCBA), 
+		;$0116 (H = $2022), and 
+		;$0112 (I = $21BB)
 		nop ; Check load COMPOUND operands (Set Break point here #7)
 
 		; Call the COMPOUND function, ((G-H)+I)^2
@@ -97,7 +104,8 @@ MAIN:							; The Main program
 		; Result stored in $0140, should be $0000FCA8CEE9
 		nop ; Check COMPOUND result (Set Break point here #8)
 
-DONE:	rjmp	DONE			; Create an infinite while loop to signify the
+DONE:	rjmp	DONE			; Create an infinite while 
+								;loop to signify the
 								; end of the program.
 
 ;***********************************************************
@@ -203,13 +211,18 @@ SUB16:
 		ldi		ZL, low(SUB16_Result) ; points the end of Z
 		ldi		ZH, high(SUB16_Result)
 
-		ld A, X+	; Load low byte of OP1 into A, X now points at high byte
-		ld B, Y+	; Load low byte of OP2 into B, Y now points at high byte
+		ld A, X+	; Load low byte of OP1 into A, 
+					; X now points at high byte
+		ld B, Y+	; Load low byte of OP2 into B,
+					; Y now points at high byte
 		sub A, B	; Subtract low byte of OP2 from low byte of OP1
-		st Z+, A	; Store result into low byte of SUB16_Result, Z now points go high byte
+		st Z+, A	; Store result into low byte of SUB16_Result, 
+					; Z now points go high byte
 		ld A, X		; Load high byte of OP1 into A
 		ld B, Y		; Load high byte of OP2 into B
-		sbc A, B	; Subtract high byte of OP2 from low byte of OP1 with carry
+		sbc A, B	; Subtract high byte of OP2 from 
+					; low byte of OP1 with carry
+
 		st Z, A		; Store result to high byte of SUB16_Result
 
 		pop ZL
@@ -229,7 +242,8 @@ SUB16:
 ;       result.
 ;-----------------------------------------------------------
 MUL24:
-;* - Simply adopting MUL16 ideas to MUL24 will not give you steady results. You should come up with different ideas.
+; Simply adopting MUL16 ideas to MUL24 will not give you steady results. 
+;You should come up with different ideas.
 /*
 Imagine we are multiplying two 24-bit numbers, ABC and DEF.
 A is the highest byte, C is the lowest byte. So A is referring
@@ -699,9 +713,11 @@ LOADCOMPOUND:
 		; Meaning SUB16 with G and H
 		; Then ADD16 with the result and I
 		; Then MUL24 where both operands are the result
-		; So G and H need to be loaded to SUB16_OP1 and SUB16_OP2 respectively
-		; "I" will be loaded to ADD16_OP2 due to where it visually is in the 
-		; equation, although it doesn't matter too much
+		; So G and H need to be loaded to 
+		; SUB16_OP1 and SUB16_OP2 respectively
+		; "I" will be loaded to ADD16_OP2 due to where 
+		; it visually is in the equation, 
+		; although it doesn't matter too much
 
 		ldi ZH, high(OperandG)	; load OperandG location to Z
 		ldi ZL, low(OperandG)
@@ -877,7 +893,8 @@ MUL16_ILOOP:
 		brne	MUL16_OLOOP		; Loop if oLoop != 0
 		; End outer for loop
 
-		pop		iloop			; Restore all registers in reverves order
+		; Restore all registers in reverves order
+		pop		iloop			
 		pop		oloop
 		pop		ZL
 		pop		ZH
@@ -902,7 +919,7 @@ FUNC:							; Begin a function with a label
 
 		; Execute the function here
 
-		; Restore variable by popping them from the stack in reverse order
+		; Restore variable by popping them from the stack
 		ret						; End a function with RET
 
 
@@ -951,30 +968,30 @@ LAddrP:	.byte 4
 
 ; Below is an example of data memory allocation for ADD16.
 ; Consider using something similar for SUB16 and MUL24.
-.org	$0110				; data memory allocation for operands
+.org	$0110		; data memory allocation for operands
 ADD16_OP1:	;$0110
-		.byte 2				; allocate two bytes for first operand of ADD16
+		.byte 2		; allocate two bytes for first operand of ADD16
 ADD16_OP2:	;$0112
-		.byte 2				; allocate two bytes for second operand of ADD16
+		.byte 2		; allocate two bytes for second operand of ADD16
 SUB16_OP1:	;$0114
-		.byte 2				; allocate two bytes for first operand of SUB16
+		.byte 2		; allocate two bytes for first operand of SUB16
 SUB16_OP2:	;$0116
-		.byte 2				; allocate two bytes for second operand of SUB16
+		.byte 2		; allocate two bytes for second operand of SUB16
 MUL24_OP1:	;$0118
-		.byte 3				; allocate three bytes for first operand of MUL24
+		.byte 3		; allocate three bytes for first operand of MUL24
 MUL24_OP2:	;$011B
-		.byte 3				; allocate three bytes for second operand of MUL24
+		.byte 3		; allocate three bytes for second operand of MUL24
 
 
-.org	$0120				; data memory allocation for results
+.org	$0120		; data memory allocation for results
 ADD16_Result:
-		.byte 3				; allocate three bytes for ADD16 result
+		.byte 3		; allocate three bytes for ADD16 result
 .org	$0130
 SUB16_Result:
-		.byte 2				; allocate two bytes for SUB16 result
+		.byte 2		; allocate two bytes for SUB16 result
 .org	$0140
 MUL24_Result:
-		.byte 6				; allocate six bytes for MUL24 result
+		.byte 6		; allocate six bytes for MUL24 result
 
 ;***********************************************************
 ;*	Additional Program Includes

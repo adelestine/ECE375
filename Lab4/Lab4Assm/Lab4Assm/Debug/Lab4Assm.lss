@@ -1,10 +1,10 @@
 
-AVRASM ver. 2.2.8  C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm Wed Feb 15 19:25:03 2023
+AVRASM ver. 2.2.8  C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm Wed Feb 15 21:58:21 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
-C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
+C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
-C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
+C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
                                  
                                  ;***********************************************************
                                  
@@ -1227,8 +1227,8 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  
                                  ;*	This is the skeleton file for Lab 4 of ECE 375
                                  ;*
-                                 ;*	 Author: Enter your name
-                                 ;*	   Date: Enter Date
+                                 ;*	 Author: Astrid Delestine and Lucas Plastied 
+                                 ;*	   Date: 2/16/2023
                                  ;*
                                  ;***********************************************************
                                  
@@ -1283,7 +1283,8 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  .def	mpr = r16				; Multipurpose register
                                  .def	rlo = r0				; Low byte of MUL result
                                  .def	rhi = r1				; High byte of MUL result
-                                 .def	zero = r2				; Zero register, set to zero in INIT, useful for calculations
+                                 .def	zero = r2				; Zero register, set to zero in INIT,
+                                 								; useful for calculations
                                  .def	A = r3					; A variable
                                  .def	B = r4					; Another variable
                                  
@@ -1316,9 +1317,9 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
 000059 bf0e                      		out		SPH, mpr
                                  		; TODO
                                  
-00005a 2422                      		clr		zero			; Set the zero register to zero, maintain
-                                 										; these semantics, meaning, don't
-                                 										; load anything else into it.
+00005a 2422                      		clr		zero			; Set the zero register to zero, 
+                                 								; maintain these semantics, meaning, 
+                                 								; don't load anything else into it.
                                  
                                  ;-----------------------------------------------------------
                                  ; Main Program
@@ -1330,7 +1331,8 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		; Operands stored in $0110 and $0112
 00005c 0000                      		nop ; Check load ADD16 operands (Set Break point here #1)
 00005d d00e                      		rcall ADD16
-                                 		; Call ADD16 function to display its results (calculate FCBA + FFFF)
+                                 		; Call ADD16 function to display its results 
+                                 		;(calculate FCBA + FFFF)
                                  		; Result stored in $0120, should be $1FCB9
 00005e 0000                      		nop ; Check ADD16 result (Set Break point here #2)
                                  
@@ -1340,7 +1342,8 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		; Operands stored in $0114 and $0116
 000060 0000                      		nop ; Check load SUB16 operands (Set Break point here #3)
                                  
-                                 		; Call SUB16 function to display its results (calculate FCB9 - E420)
+                                 		; Call SUB16 function to display its results 
+                                 		;(calculate FCB9 - E420)
 000061 d032                      		rcall SUB16
                                  		; Result stored in $0130, should be $1899
 000062 0000                      		nop ; Check SUB16 result (Set Break point here #4)
@@ -1351,14 +1354,18 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		; Operands stored in $0118 and $011B
 000064 0000                      		nop ; Check load MUL24 operands (Set Break point here #5)
                                  
-                                 		; Call MUL24 function to display its results (calculate FFFFFF * FFFFFF)
+                                 		; Call MUL24 function to display its results 
+                                 		;(calculate FFFFFF * FFFFFF)
 000065 d04f                      		rcall MUL24
                                  		; Result stored in $0140, should be $FFFFFE000001
 000066 0000                      		nop ; Check MUL24 result (Set Break point here #6)
                                  
                                  		; Setup the COMPOUND function direct test
 000067 d140                      		rcall LOADCOMPOUND
-                                 		; Operands stored in $0114 (G = $FCBA), $0116 (H = $2022), and $0112 (I = $21BB)
+                                 		; Operands stored in 
+                                 		;$0114 (G = $FCBA), 
+                                 		;$0116 (H = $2022), and 
+                                 		;$0112 (I = $21BB)
 000068 0000                      		nop ; Check load COMPOUND operands (Set Break point here #7)
                                  
                                  		; Call the COMPOUND function, ((G-H)+I)^2
@@ -1366,7 +1373,8 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		; Result stored in $0140, should be $0000FCA8CEE9
 00006a 0000                      		nop ; Check COMPOUND result (Set Break point here #8)
                                  
-00006b cfff                      DONE:	rjmp	DONE			; Create an infinite while loop to signify the
+00006b cfff                      DONE:	rjmp	DONE			; Create an infinite while 
+                                 								;loop to signify the
                                  								; end of the program.
                                  
                                  ;***********************************************************
@@ -1472,13 +1480,18 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
 0000a1 e3e0                      		ldi		ZL, low(SUB16_Result) ; points the end of Z
 0000a2 e0f1                      		ldi		ZH, high(SUB16_Result)
                                  
-0000a3 903d                      		ld A, X+	; Load low byte of OP1 into A, X now points at high byte
-0000a4 9049                      		ld B, Y+	; Load low byte of OP2 into B, Y now points at high byte
+0000a3 903d                      		ld A, X+	; Load low byte of OP1 into A, 
+                                 					; X now points at high byte
+0000a4 9049                      		ld B, Y+	; Load low byte of OP2 into B,
+                                 					; Y now points at high byte
 0000a5 1834                      		sub A, B	; Subtract low byte of OP2 from low byte of OP1
-0000a6 9231                      		st Z+, A	; Store result into low byte of SUB16_Result, Z now points go high byte
+0000a6 9231                      		st Z+, A	; Store result into low byte of SUB16_Result, 
+                                 					; Z now points go high byte
 0000a7 903c                      		ld A, X		; Load high byte of OP1 into A
 0000a8 8048                      		ld B, Y		; Load high byte of OP2 into B
-0000a9 0834                      		sbc A, B	; Subtract high byte of OP2 from low byte of OP1 with carry
+0000a9 0834                      		sbc A, B	; Subtract high byte of OP2 from 
+                                 					; low byte of OP1 with carry
+                                 
 0000aa 8230                      		st Z, A		; Store result to high byte of SUB16_Result
                                  
 0000ab 91ef                      		pop ZL
@@ -1498,7 +1511,8 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;       result.
                                  ;-----------------------------------------------------------
                                  MUL24:
-                                 ;* - Simply adopting MUL16 ideas to MUL24 will not give you steady results. You should come up with different ideas.
+                                 ; Simply adopting MUL16 ideas to MUL24 will not give you steady results. 
+                                 ;You should come up with different ideas.
                                  /*
                                  Imagine we are multiplying two 24-bit numbers, ABC and DEF.
                                  A is the highest byte, C is the lowest byte. So A is referring
@@ -1968,9 +1982,11 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		; Meaning SUB16 with G and H
                                  		; Then ADD16 with the result and I
                                  		; Then MUL24 where both operands are the result
-                                 		; So G and H need to be loaded to SUB16_OP1 and SUB16_OP2 respectively
-                                 		; "I" will be loaded to ADD16_OP2 due to where it visually is in the 
-                                 		; equation, although it doesn't matter too much
+                                 		; So G and H need to be loaded to 
+                                 		; SUB16_OP1 and SUB16_OP2 respectively
+                                 		; "I" will be loaded to ADD16_OP2 due to where 
+                                 		; it visually is in the equation, 
+                                 		; although it doesn't matter too much
                                  
 0001b0 e0f2                      		ldi ZH, high(OperandG)	; load OperandG location to Z
 0001b1 e3ea                      		ldi ZL, low(OperandG)
@@ -2146,7 +2162,8 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
 000222 f751                      		brne	MUL16_OLOOP		; Loop if oLoop != 0
                                  		; End outer for loop
                                  
-000223 912f                      		pop		iloop			; Restore all registers in reverves order
+                                 		; Restore all registers in reverves order
+000223 912f                      		pop		iloop			
 000224 911f                      		pop		oloop
 000225 91ef                      		pop		ZL
 000226 91ff                      		pop		ZH
@@ -2171,7 +2188,7 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  
                                  		; Execute the function here
                                  
-                                 		; Restore variable by popping them from the stack in reverse order
+                                 		; Restore variable by popping them from the stack
 000231 9508                      		ret						; End a function with RET
                                  
                                  
@@ -2220,30 +2237,30 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  
                                  ; Below is an example of data memory allocation for ADD16.
                                  ; Consider using something similar for SUB16 and MUL24.
-                                 .org	$0110				; data memory allocation for operands
+                                 .org	$0110		; data memory allocation for operands
                                  ADD16_OP1:	;$0110
-000110                           		.byte 2				; allocate two bytes for first operand of ADD16
+000110                           		.byte 2		; allocate two bytes for first operand of ADD16
                                  ADD16_OP2:	;$0112
-000112                           		.byte 2				; allocate two bytes for second operand of ADD16
+000112                           		.byte 2		; allocate two bytes for second operand of ADD16
                                  SUB16_OP1:	;$0114
-000114                           		.byte 2				; allocate two bytes for first operand of SUB16
+000114                           		.byte 2		; allocate two bytes for first operand of SUB16
                                  SUB16_OP2:	;$0116
-000116                           		.byte 2				; allocate two bytes for second operand of SUB16
+000116                           		.byte 2		; allocate two bytes for second operand of SUB16
                                  MUL24_OP1:	;$0118
-000118                           		.byte 3				; allocate three bytes for first operand of MUL24
+000118                           		.byte 3		; allocate three bytes for first operand of MUL24
                                  MUL24_OP2:	;$011B
-00011b                           		.byte 3				; allocate three bytes for second operand of MUL24
+00011b                           		.byte 3		; allocate three bytes for second operand of MUL24
                                  
                                  
-                                 .org	$0120				; data memory allocation for results
+                                 .org	$0120		; data memory allocation for results
                                  ADD16_Result:
-000120                           		.byte 3				; allocate three bytes for ADD16 result
+000120                           		.byte 3		; allocate three bytes for ADD16 result
                                  .org	$0130
                                  SUB16_Result:
-000130                           		.byte 2				; allocate two bytes for SUB16 result
+000130                           		.byte 2		; allocate two bytes for SUB16 result
                                  .org	$0140
                                  MUL24_Result:
-000140                           		.byte 6				; allocate six bytes for MUL24 result
+000140                           		.byte 6		; allocate six bytes for MUL24 result
                                  
                                  ;***********************************************************
                                  ;*	Additional Program Includes

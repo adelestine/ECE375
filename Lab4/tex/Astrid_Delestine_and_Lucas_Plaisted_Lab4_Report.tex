@@ -21,10 +21,10 @@
     \vspace*{4cm}
     \begin{flushright}
     {\huge
-        ECE 375 Lab 3\\[1cm]
+        ECE 375 Lab 4\\[1cm]
     }
     {\large
-       Data Manipulation and the LCD
+    	Large Number Arithmetic
     }
     \end{flushright}
     \begin{flushleft}
@@ -46,7 +46,7 @@
 
 \section{Introduction}
 %This is the first Lab in the ECE 375 series and it covers the setup and compilation of an AVR Assembly Program. The student will learn how how to use the sample Basic Bump Bot assembly file and send the binaries to the AVR Microcontroller board. For the second part of the lab the student will be expected to download and compile the included C sample program and from it learn how to configure the I/O ports of the ATmega32U4 Microcontroller. The student will then write their own C program and upload it to the Microcontroller to verify that it runs as expected. The provided programs have been attached in the source code section of this report.
-This is the third lab in the ECE 375 series and it covers a basic introduction to the connected LCD panel, and introduces the idea of peripherals to the student. Additionally it also covers data manipulation, in the different data spaces. The students job for this lab is to use the given LCD Driver to do 3 different things, Firstly clear the display of any static or previous data, Secondly, statically print the names of the two team members to the LCD, and finally, have the LCD operate in a marquee fashion, rotating the text to the right. 
+This is the fourth lab in the ECE 375 series and it covers adding and subtracting words as well as multiplying words together. In this sense words designate 16 bit numbers. It is important to note that this assembely was written for the m128 chipset and not the regular atmetga32u4 chipset. This is due to the fact that we can operate a simulation tool when using the m128 chipset that is not avalabe when we use our regular chipset.
 
 \section{Design}
 To design the program for this lab, Lucas and I brainstormed exactly what needed to happen and how we wanted it to go. We needed to determine what the buttons were going to do, and so with the main guide's and the presentation slides, we planned to have four different buttons clear the display, set the display to static text, scroll through the display in a marquee fashion and halt the marquee function when needed. Below one can see a block diagram of what our original plan was.

@@ -1,18 +1,18 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.8</VERSION>
  <DEVICE>"ATmega128"</DEVICE>
- <WORKING_DIR>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Debug</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
   <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Debug\Lab4Assm.obj</FILE>
+  <FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Debug\Lab4Assm.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>Lab4Assm.hex</FILE>
@@ -22,57 +22,57 @@
   <FILE>Lab4Assm.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <INIT><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>41</LINE></INIT>
-  <MAIN><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>57</LINE></MAIN>
-  <LOADADD16><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>515</LINE></LOADADD16>
-  <ADD16><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>113</LINE></ADD16>
-  <LOADSUB16><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>575</LINE></LOADSUB16>
-  <SUB16><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>184</LINE></SUB16>
-  <LOADMUL24><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>453</LINE></LOADMUL24>
-  <MUL24><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>231</LINE></MUL24>
-  <LOADCOMPOUND><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>685</LINE></LOADCOMPOUND>
-  <COMPOUND><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>641</LINE></COMPOUND>
-  <DONE><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>100</LINE></DONE>
-  <ADD16_OP1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>955</LINE></ADD16_OP1>
-  <ADD16_OP2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>957</LINE></ADD16_OP2>
-  <ADD16_Result><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>970</LINE></ADD16_Result>
-  <noCarry><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>168</LINE></noCarry>
-  <SUB16_OP1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>959</LINE></SUB16_OP1>
-  <SUB16_OP2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>961</LINE></SUB16_OP2>
-  <SUB16_Result><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>973</LINE></SUB16_Result>
-  <MUL24_Result><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>976</LINE></MUL24_Result>
-  <MUL24_OP1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>963</LINE></MUL24_OP1>
-  <MUL24_OP2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>965</LINE></MUL24_OP2>
-  <ADDMUL2X><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>424</LINE></ADDMUL2X>
-  <addmulloop><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>436</LINE></addmulloop>
-  <addmulfinish><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>442</LINE></addmulfinish>
-  <OperandE1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>926</LINE></OperandE1>
-  <mulloadloop1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>475</LINE></mulloadloop1>
-  <OperandF1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>930</LINE></OperandF1>
-  <mulloadloop2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>494</LINE></mulloadloop2>
-  <OperandA><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>914</LINE></OperandA>
-  <addloadloop1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>537</LINE></addloadloop1>
-  <OperandB><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>916</LINE></OperandB>
-  <addloadloop2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>554</LINE></addloadloop2>
-  <OperandC><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>920</LINE></OperandC>
-  <subloadloop1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>597</LINE></subloadloop1>
-  <OperandD><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>922</LINE></OperandD>
-  <subloadloop2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>614</LINE></subloadloop2>
-  <CLRRES><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>772</LINE></CLRRES>
-  <OperandG><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>936</LINE></OperandG>
-  <comploadloop1><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>716</LINE></comploadloop1>
-  <OperandH><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>938</LINE></OperandH>
-  <comploadloop2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>733</LINE></comploadloop2>
-  <OperandI><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>940</LINE></OperandI>
-  <comploadloop3><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>750</LINE></comploadloop3>
-  <MUL16><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>822</LINE></MUL16>
-  <addrB><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>949</LINE></addrB>
-  <LAddrP><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>950</LINE></LAddrP>
-  <MUL16_OLOOP><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>849</LINE></MUL16_OLOOP>
-  <addrA><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>948</LINE></addrA>
-  <MUL16_ILOOP><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>856</LINE></MUL16_ILOOP>
-  <FUNC><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>900</LINE></FUNC>
-  <OperandE2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>928</LINE></OperandE2>
-  <OperandF2><FILE>C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>932</LINE></OperandF2>
+  <INIT><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>42</LINE></INIT>
+  <MAIN><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>58</LINE></MAIN>
+  <LOADADD16><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>529</LINE></LOADADD16>
+  <ADD16><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>121</LINE></ADD16>
+  <LOADSUB16><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>589</LINE></LOADSUB16>
+  <SUB16><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>192</LINE></SUB16>
+  <LOADMUL24><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>467</LINE></LOADMUL24>
+  <MUL24><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>244</LINE></MUL24>
+  <LOADCOMPOUND><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>699</LINE></LOADCOMPOUND>
+  <COMPOUND><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>655</LINE></COMPOUND>
+  <DONE><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>107</LINE></DONE>
+  <ADD16_OP1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>972</LINE></ADD16_OP1>
+  <ADD16_OP2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>974</LINE></ADD16_OP2>
+  <ADD16_Result><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>987</LINE></ADD16_Result>
+  <noCarry><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>176</LINE></noCarry>
+  <SUB16_OP1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>976</LINE></SUB16_OP1>
+  <SUB16_OP2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>978</LINE></SUB16_OP2>
+  <SUB16_Result><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>990</LINE></SUB16_Result>
+  <MUL24_Result><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>993</LINE></MUL24_Result>
+  <MUL24_OP1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>980</LINE></MUL24_OP1>
+  <MUL24_OP2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>982</LINE></MUL24_OP2>
+  <ADDMUL2X><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>438</LINE></ADDMUL2X>
+  <addmulloop><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>450</LINE></addmulloop>
+  <addmulfinish><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>456</LINE></addmulfinish>
+  <OperandE1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>943</LINE></OperandE1>
+  <mulloadloop1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>489</LINE></mulloadloop1>
+  <OperandF1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>947</LINE></OperandF1>
+  <mulloadloop2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>508</LINE></mulloadloop2>
+  <OperandA><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>931</LINE></OperandA>
+  <addloadloop1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>551</LINE></addloadloop1>
+  <OperandB><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>933</LINE></OperandB>
+  <addloadloop2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>568</LINE></addloadloop2>
+  <OperandC><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>937</LINE></OperandC>
+  <subloadloop1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>611</LINE></subloadloop1>
+  <OperandD><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>939</LINE></OperandD>
+  <subloadloop2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>628</LINE></subloadloop2>
+  <CLRRES><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>788</LINE></CLRRES>
+  <OperandG><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>953</LINE></OperandG>
+  <comploadloop1><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>732</LINE></comploadloop1>
+  <OperandH><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>955</LINE></OperandH>
+  <comploadloop2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>749</LINE></comploadloop2>
+  <OperandI><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>957</LINE></OperandI>
+  <comploadloop3><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>766</LINE></comploadloop3>
+  <MUL16><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>838</LINE></MUL16>
+  <addrB><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>966</LINE></addrB>
+  <LAddrP><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>967</LINE></LAddrP>
+  <MUL16_OLOOP><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>865</LINE></MUL16_OLOOP>
+  <addrA><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>965</LINE></addrA>
+  <MUL16_ILOOP><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>872</LINE></MUL16_ILOOP>
+  <FUNC><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>917</LINE></FUNC>
+  <OperandE2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>945</LINE></OperandE2>
+  <OperandF2><FILE>C:\Users\deles\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm</FILE><LINE>949</LINE></OperandF2>
  </LABELS>
 </ASSEMBLER_INFO>
