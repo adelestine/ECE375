@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm Wed Feb 15 18:28:19 2023
+AVRASM ver. 2.2.8  C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm Wed Feb 15 19:25:03 2023
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
 C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_Delestine_and_Lucas_Plaisted_Lab4_Sourcecode.asm(9): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m128def.inc'
@@ -1326,45 +1326,47 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  MAIN:							; The Main program
                                  
                                  		; Call function to load ADD16 operands
-00005b d0e2                      		rcall LOADADD16
+00005b d0e3                      		rcall LOADADD16
                                  		; Operands stored in $0110 and $0112
 00005c 0000                      		nop ; Check load ADD16 operands (Set Break point here #1)
-00005d d00d                      		rcall ADD16
+00005d d00e                      		rcall ADD16
                                  		; Call ADD16 function to display its results (calculate FCBA + FFFF)
                                  		; Result stored in $0120, should be $1FCB9
 00005e 0000                      		nop ; Check ADD16 result (Set Break point here #2)
                                  
                                  
                                  		; Call function to load SUB16 operands
-00005f d105                      		rcall LOADSUB16
+00005f d106                      		rcall LOADSUB16
                                  		; Operands stored in $0114 and $0116
 000060 0000                      		nop ; Check load SUB16 operands (Set Break point here #3)
                                  
                                  		; Call SUB16 function to display its results (calculate FCB9 - E420)
-000061 d031                      		rcall SUB16
+000061 d032                      		rcall SUB16
                                  		; Result stored in $0130, should be $1899
 000062 0000                      		nop ; Check SUB16 result (Set Break point here #4)
                                  
                                  
                                  		; Call function to load MUL24 operands
-000063 d0b3                      		rcall LOADMUL24
+000063 d0b4                      		rcall LOADMUL24
                                  		; Operands stored in $0118 and $011B
 000064 0000                      		nop ; Check load MUL24 operands (Set Break point here #5)
                                  
                                  		; Call MUL24 function to display its results (calculate FFFFFF * FFFFFF)
-000065 d04e                      		rcall MUL24
+000065 d04f                      		rcall MUL24
                                  		; Result stored in $0140, should be $FFFFFE000001
 000066 0000                      		nop ; Check MUL24 result (Set Break point here #6)
                                  
                                  		; Setup the COMPOUND function direct test
-000067 d125                      		rcall LOADCOMPOUND
+000067 d140                      		rcall LOADCOMPOUND
                                  		; Operands stored in $0114 (G = $FCBA), $0116 (H = $2022), and $0112 (I = $21BB)
 000068 0000                      		nop ; Check load COMPOUND operands (Set Break point here #7)
                                  
-                                 		; Call the COMPOUND function
-000069 0000                      		nop ; Check COMPOUND result (Set Break point here #8)
+                                 		; Call the COMPOUND function, ((G-H)+I)^2
+000069 d123                      		rcall COMPOUND
+                                 		; Result stored in $0140, should be $0000FCA8CEE9
+00006a 0000                      		nop ; Check COMPOUND result (Set Break point here #8)
                                  
-00006a cfff                      DONE:	rjmp	DONE			; Create an infinite while loop to signify the
+00006b cfff                      DONE:	rjmp	DONE			; Create an infinite while loop to signify the
                                  								; end of the program.
                                  
                                  ;***********************************************************
@@ -1378,26 +1380,26 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;       out bit.
                                  ;-----------------------------------------------------------
                                  ADD16:
-00006b 930f                      		push mpr
-00006c 923f                      		push A
-00006d 93bf                      		push XH
-00006e 93df                      		push YH
-00006f 93ff                      		push ZH
-000070 93af                      		push XL
-000071 93cf                      		push YL
-000072 93ef                      		push ZL
+00006c 930f                      		push mpr
+00006d 923f                      		push A
+00006e 93bf                      		push XH
+00006f 93df                      		push YH
+000070 93ff                      		push ZH
+000071 93af                      		push XL
+000072 93cf                      		push YL
+000073 93ef                      		push ZL
                                  
-000073 2700                      		clr mpr
-000074 9488                      		bclr 0 ; CLEAR THE CARRY FLAG!!! (just in case lamp)
+000074 2700                      		clr mpr
+000075 9488                      		bclr 0 ; CLEAR THE CARRY FLAG!!! (just in case lamp)
                                  		; Load beginning address of first operand into X
-000075 e1a0                      		ldi		XL, low(ADD16_OP1)	; Load low byte of address
-000076 e0b1                      		ldi		XH, high(ADD16_OP1)	; Load high byte of address
+000076 e1a0                      		ldi		XL, low(ADD16_OP1)	; Load low byte of address
+000077 e0b1                      		ldi		XH, high(ADD16_OP1)	; Load high byte of address
                                  		; Load beginning address of second operand into Y
-000077 e1c2                      		ldi		YL, low(ADD16_OP2)	; Load low byte of address
-000078 e0d1                      		ldi		YH, high(ADD16_OP2)	; Load high byte of address
+000078 e1c2                      		ldi		YL, low(ADD16_OP2)	; Load low byte of address
+000079 e0d1                      		ldi		YH, high(ADD16_OP2)	; Load high byte of address
                                  		; Load beginning address of result into Z
-000079 e2e0                      		ldi		ZL, low(ADD16_Result) ; points the end of Z
-00007a e0f1                      		ldi		ZH, high(ADD16_Result)
+00007a e2e0                      		ldi		ZL, low(ADD16_Result) ; points the end of Z
+00007b e0f1                      		ldi		ZH, high(ADD16_Result)
                                  		; Execute the function
                                  		;2 16 bit numbers being added generates a max of 24 bit number
                                  		; ie 1111_1111_1111_1111
@@ -1409,39 +1411,39 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		
                                  
                                  		;add 2 lowest bytes
-00007b 903d                      		ld A, X+
-00007c 0d03                      		add mpr, A
-00007d 9039                      		ld A, Y+
-00007e 0d03                      		add mpr, A
+00007c 903d                      		ld A, X+
+00007d 0d03                      		add mpr, A
+00007e 9039                      		ld A, Y+
+00007f 0d03                      		add mpr, A
                                  		;mpr now equals x + y & carry flag is included
                                  		;store this lower result in the lowest memory of the result
-00007f 9301                      		st Z+, mpr
-000080 2700                      		clr mpr
+000080 9301                      		st Z+, mpr
+000081 2700                      		clr mpr
                                  
-000081 903d                      		ld A, X+
-000082 1d03                      		adc mpr, A
-000083 9039                      		ld A, Y+
-000084 0d03                      		add mpr, A
+000082 903d                      		ld A, X+
+000083 1d03                      		adc mpr, A
+000084 9039                      		ld A, Y+
+000085 0d03                      		add mpr, A
                                  		;mpr now equals x + y & carry flag is included
                                  		;store this lower result in the lowest memory of the result
-000085 9301                      		st Z+, mpr
-000086 2700                      		clr mpr
+000086 9301                      		st Z+, mpr
+000087 2700                      		clr mpr
                                  
                                  
                                  		;if c flag is set
-000087 f010                      		brcs noCarry;
-000088 e001                      		ldi mpr, $01;
-000089 8300                      		st Z, mpr
+000088 f410                      		brcc noCarry;
+000089 e001                      		ldi mpr, $01;
+00008a 8300                      		st Z, mpr
                                  noCarry:
-00008a 91ef                      		pop ZL
-00008b 91cf                      		pop YL
-00008c 91af                      		pop XL
-00008d 91ff                      		pop ZH
-00008e 91df                      		pop YH
-00008f 91bf                      		pop XH
-000090 903f                      		pop A
-000091 910f                      		pop mpr
-000092 9508                      		ret						; End a function with RET
+00008b 91ef                      		pop ZL
+00008c 91cf                      		pop YL
+00008d 91af                      		pop XL
+00008e 91ff                      		pop ZH
+00008f 91df                      		pop YH
+000090 91bf                      		pop XH
+000091 903f                      		pop A
+000092 910f                      		pop mpr
+000093 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: SUB16
@@ -1450,45 +1452,45 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;-----------------------------------------------------------
                                  SUB16:
                                  		; Execute the function here
-000093 930f                      		push mpr
-000094 923f                      		push A
-000095 924f                      		push B
-000096 93bf                      		push XH
-000097 93df                      		push YH
-000098 93ff                      		push ZH
-000099 93af                      		push XL
-00009a 93cf                      		push YL
-00009b 93ef                      		push ZL
+000094 930f                      		push mpr
+000095 923f                      		push A
+000096 924f                      		push B
+000097 93bf                      		push XH
+000098 93df                      		push YH
+000099 93ff                      		push ZH
+00009a 93af                      		push XL
+00009b 93cf                      		push YL
+00009c 93ef                      		push ZL
                                  
                                  		; Load beginning address of first operand into X
-00009c e1a4                      		ldi		XL, low(SUB16_OP1)	; Load low byte of address
-00009d e0b1                      		ldi		XH, high(SUB16_OP1)	; Load high byte of address
+00009d e1a4                      		ldi		XL, low(SUB16_OP1)	; Load low byte of address
+00009e e0b1                      		ldi		XH, high(SUB16_OP1)	; Load high byte of address
                                  		; Load beginning address of second operand into Y
-00009e e1c6                      		ldi		YL, low(SUB16_OP2)	; Load low byte of address
-00009f e0d1                      		ldi		YH, high(SUB16_OP2)	; Load high byte of address
+00009f e1c6                      		ldi		YL, low(SUB16_OP2)	; Load low byte of address
+0000a0 e0d1                      		ldi		YH, high(SUB16_OP2)	; Load high byte of address
                                  		; Load beginning address of result into Z
-0000a0 e3e0                      		ldi		ZL, low(SUB16_Result) ; points the end of Z
-0000a1 e0f1                      		ldi		ZH, high(SUB16_Result)
+0000a1 e3e0                      		ldi		ZL, low(SUB16_Result) ; points the end of Z
+0000a2 e0f1                      		ldi		ZH, high(SUB16_Result)
                                  
-0000a2 903d                      		ld A, X+	; Load low byte of OP1 into A, X now points at high byte
-0000a3 9049                      		ld B, Y+	; Load low byte of OP2 into B, Y now points at high byte
-0000a4 1834                      		sub A, B	; Subtract low byte of OP2 from low byte of OP1
-0000a5 9231                      		st Z+, A	; Store result into low byte of SUB16_Result, Z now points go high byte
-0000a6 903c                      		ld A, X		; Load high byte of OP1 into A
-0000a7 8048                      		ld B, Y		; Load high byte of OP2 into B
-0000a8 0834                      		sbc A, B	; Subtract high byte of OP2 from low byte of OP1 with carry
-0000a9 8230                      		st Z, A		; Store result to high byte of SUB16_Result
+0000a3 903d                      		ld A, X+	; Load low byte of OP1 into A, X now points at high byte
+0000a4 9049                      		ld B, Y+	; Load low byte of OP2 into B, Y now points at high byte
+0000a5 1834                      		sub A, B	; Subtract low byte of OP2 from low byte of OP1
+0000a6 9231                      		st Z+, A	; Store result into low byte of SUB16_Result, Z now points go high byte
+0000a7 903c                      		ld A, X		; Load high byte of OP1 into A
+0000a8 8048                      		ld B, Y		; Load high byte of OP2 into B
+0000a9 0834                      		sbc A, B	; Subtract high byte of OP2 from low byte of OP1 with carry
+0000aa 8230                      		st Z, A		; Store result to high byte of SUB16_Result
                                  
-0000aa 91ef                      		pop ZL
-0000ab 91cf                      		pop YL
-0000ac 91af                      		pop XL
-0000ad 91ff                      		pop ZH
-0000ae 91df                      		pop YH
-0000af 91bf                      		pop XH
-0000b0 904f                      		pop B
-0000b1 903f                      		pop A
-0000b2 910f                      		pop mpr
-0000b3 9508                      		ret						; End a function with RET
+0000ab 91ef                      		pop ZL
+0000ac 91cf                      		pop YL
+0000ad 91af                      		pop XL
+0000ae 91ff                      		pop ZH
+0000af 91df                      		pop YH
+0000b0 91bf                      		pop XH
+0000b1 904f                      		pop B
+0000b2 903f                      		pop A
+0000b3 910f                      		pop mpr
+0000b4 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: MUL24
@@ -1545,40 +1547,42 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  
                                  */
                                  		; Execute the function here
-0000b4 93bf                      		push XH		; Push literally everything because
-0000b5 93af                      		push XL		; I have no idea what I will need :)
-0000b6 93df                      		push YH
-0000b7 93cf                      		push YL
-0000b8 93ff                      		push ZH
-0000b9 93ef                      		push ZL
-0000ba 930f                      		push mpr
-0000bb 920f                      		push rlo
-0000bc 921f                      		push rhi
-0000bd 923f                      		push A
-0000be 924f                      		push B
-0000bf 932f                      		push iloop
-0000c0 931f                      		push oloop
+0000b5 93bf                      		push XH		; Push literally everything because
+0000b6 93af                      		push XL		; I have no idea what I will need :)
+0000b7 93df                      		push YH
+0000b8 93cf                      		push YL
+0000b9 93ff                      		push ZH
+0000ba 93ef                      		push ZL
+0000bb 930f                      		push mpr
+0000bc 920f                      		push rlo
+0000bd 921f                      		push rhi
+0000be 923f                      		push A
+0000bf 924f                      		push B
+0000c0 932f                      		push iloop
+0000c1 931f                      		push oloop
                                  
                                  		; Load beginning address of MUL24 result to X
-0000c1 e4a0                      		ldi		XL, low(MUL24_Result)
-0000c2 e0b1                      		ldi		XH, high(MUL24_Result)
-0000c3 922d                      		st X+, zero
+0000c2 e4a0                      		ldi		XL, low(MUL24_Result)
+0000c3 e0b1                      		ldi		XH, high(MUL24_Result)
 0000c4 922d                      		st X+, zero
 0000c5 922d                      		st X+, zero
-0000c6 922c                      		st X, zero	; Clear result just in case!
+0000c6 922d                      		st X+, zero
+0000c7 922d                      		st X+, zero
+0000c8 922d                      		st X+, zero
+0000c9 922c                      		st X, zero	; Clear result just in case!
                                  
                                  		; Load beginning address of first operand into Z
-0000c7 e1e8                      		ldi		ZL, low(MUL24_OP1)	; Load low byte of address
-0000c8 e0f1                      		ldi		ZH, high(MUL24_OP1)	; Load high byte of address
+0000ca e1e8                      		ldi		ZL, low(MUL24_OP1)	; Load low byte of address
+0000cb e0f1                      		ldi		ZH, high(MUL24_OP1)	; Load high byte of address
                                  		; Load beginning address of second operand into Y
-0000c9 e1cb                      		ldi		YL, low(MUL24_OP2)	; Load low byte of address
-0000ca e0d1                      		ldi		YH, high(MUL24_OP2)	; Load high byte of address
+0000cc e1cb                      		ldi		YL, low(MUL24_OP2)	; Load low byte of address
+0000cd e0d1                      		ldi		YH, high(MUL24_OP2)	; Load high byte of address
                                  		; Load beginning address of result into X
-0000cb e4a0                      		ldi		XL, low(MUL24_Result) ; points the end of X
-0000cc e0b1                      		ldi		XH, high(MUL24_Result)
+0000ce e4a0                      		ldi		XL, low(MUL24_Result) ; points the end of X
+0000cf e0b1                      		ldi		XH, high(MUL24_Result)
                                  
                                  /*
-                                 				A	B	C	*		(X pointer)
+                                 				A	B	C	*		(Z pointer)
                                  				D	E	F			(Y pointer)
                                  				2	1	0			offset
                                  ===================================
@@ -1591,87 +1595,89 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  				AF
                                  			AE
                                  		AD
-                                 	5	4	3	2	1	0	(Z offset)
+                                 	5	4	3	2	1	0	(X offset)
                                  ===================================
                                  */
                                  		
-0000cd 8030                      		ld A, Z		; Load C byte of OP1 to A
+0000d0 8030                      		ld A, Z		; Load C byte of OP1 to A
                                  					; A will hold the first op
-0000ce 8048                      		ld B, Y		; Load F byte of OP1 to B
+0000d1 8048                      		ld B, Y		; Load F byte of OP1 to B
                                  					; B will hold the second op
-0000cf 9c34                      		mul A, B	; C*F
-0000d0 d031                      		rcall ADDMUL2X	; Add to result
+0000d2 9c34                      		mul A, B	; C*F
+0000d3 d032                      		rcall ADDMUL2X	; Add to result
                                  ;				A	B	C	*		(Z pointer)
                                  ;				D	E	F			(Y pointer)
                                  ;				2	1	0			offset
-0000d1 9611                      		adiw XH:XL, 1	; Z offset = 1, changed so that ADDMUL2X
+0000d4 9611                      		adiw XH:XL, 1	; X offset = 1, changed so that ADDMUL2X
                                  						; adds to the correct place
                                  						; Need to do CE and BF
                                  ;				A	B	C	*		(Z pointer)
                                  ;				D	E	F			(Y pointer)
                                  ;				2	1	0			offset
-0000d2 8049                      		ldd B, Y+1		; Load E to B
-0000d3 9c34                      		mul A, B	;C*E
-0000d4 d02d                      		rcall ADDMUL2X	; Add to result
-0000d5 8031                      		ldd A, Z+1	; A <- B
-0000d6 8048                      		ld B, Y		; B <- F
-0000d7 9c34                      		mul A, B	; B*F
-0000d8 d029                      		rcall ADDMUL2X
-0000d9 9611                      		adiw XH:XL, 1	; X offset = 2
+0000d5 8030                      		ld A, Z		; A <- C
+0000d6 8049                      		ldd B, Y+1	; B <- E
+0000d7 9c34                      		mul A, B	; C*E
+0000d8 d02d                      		rcall ADDMUL2X	; Add to result
+0000d9 8031                      		ldd A, Z+1	; A <- B
+0000da 8048                      		ld B, Y		; B <- F
+0000db 9c34                      		mul A, B	; B*F
+0000dc d029                      		rcall ADDMUL2X
+0000dd 9611                      		adiw XH:XL, 1	; X offset = 2
                                  						; Need to do CD, BE, and AF
                                  ;				A	B	C	*		(Z pointer)
                                  ;				D	E	F			(Y pointer)
                                  ;				2	1	0			offset
-0000da 8030                      		ld A, Z		; A <- C
-0000db 804a                      		ldd B, Y+2	; B <- D
-0000dc 9c34                      		mul A, B	; C*D
-0000dd d024                      		rcall ADDMUL2X
-0000de 8031                      		ldd A, Z+1	; A <- B
-0000df 8049                      		ldd B, Y+1	; B <- E
-0000e0 9c34                      		mul A, B	; B*E
-0000e1 d020                      		rcall ADDMUL2X
-0000e2 8032                      		ldd A, Z+2	; A <-A
-0000e3 8048                      		ld B, Y		; B <-F
-0000e4 9c34                      		mul A, B	; A*F
-0000e5 d01c                      		rcall ADDMUL2X
-0000e6 9611                      		adiw XH:XL, 1	; X offset = 3
+0000de 8030                      		ld A, Z		; A <- C
+0000df 804a                      		ldd B, Y+2	; B <- D
+0000e0 9c34                      		mul A, B	; C*D
+0000e1 d024                      		rcall ADDMUL2X
+0000e2 8031                      		ldd A, Z+1	; A <- B
+0000e3 8049                      		ldd B, Y+1	; B <- E
+0000e4 9c34                      		mul A, B	; B*E
+0000e5 d020                      		rcall ADDMUL2X
+0000e6 8032                      		ldd A, Z+2	; A <-A
+0000e7 8048                      		ld B, Y		; B <-F
+0000e8 9c34                      		mul A, B	; A*F
+0000e9 d01c                      		rcall ADDMUL2X
+0000ea 9611                      		adiw XH:XL, 1	; X offset = 3
                                  						; Need to do BD and AE
                                  ;				A	B	C	*		(Z pointer)
                                  ;				D	E	F			(Y pointer)
                                  ;				2	1	0			offset
-0000e7 8031                      		ldd A, Z+1	; A <- B
-0000e8 804a                      		ldd B, Y+2	; B <- D
-0000e9 9c34                      		mul A, B	; B*D
-0000ea d017                      		rcall ADDMUL2X
-0000eb 8032                      		ldd A, Z+2	; A <- A (nice)
-0000ec 8049                      		ldd B, Y+1	; B <- E
-0000ed 9c34                      		mul A, B	; A*E
-0000ee d013                      		rcall ADDMUL2X
-0000ef 9611                      		adiw XH:XL, 1	; X offset = 4
+0000eb 8031                      		ldd A, Z+1	; A <- B
+0000ec 804a                      		ldd B, Y+2	; B <- D
+0000ed 9c34                      		mul A, B	; B*D
+0000ee d017                      		rcall ADDMUL2X
+0000ef 8032                      		ldd A, Z+2	; A <- A (nice)
+0000f0 8049                      		ldd B, Y+1	; B <- E
+0000f1 9c34                      		mul A, B	; A*E
+0000f2 d013                      		rcall ADDMUL2X
+0000f3 9611                      		adiw XH:XL, 1	; X offset = 4
                                  						; Need to do AD
                                  ;				A	B	C	*		(Z pointer)
                                  ;				D	E	F			(Y pointer)
                                  ;				2	1	0			offset
-0000f0 8032                      		ldd A, Z+2	; A <- A (nice)
-0000f1 804a                      		ldd B, Y+2	; B <- D
-0000f2 9c34                      		mul A, B	; A*D
-0000f3 d00e                      		rcall ADDMUL2X
+0000f4 8032                      		ldd A, Z+2	; A <- A (nice)
+0000f5 804a                      		ldd B, Y+2	; B <- D
+0000f6 9c34                      		mul A, B	; A*D
+0000f7 d00e                      		rcall ADDMUL2X
                                  		; done!
-0000f4 911f                      		pop oloop
-0000f5 912f                      		pop iloop
-0000f6 904f                      		pop B
-0000f7 903f                      		pop A
-0000f8 901f                      		pop rhi
-0000f9 900f                      		pop rlo
-0000fa 910f                      		pop mpr
-0000fb 91ef                      		pop ZL
-0000fc 91ff                      		pop ZH
-0000fd 91cf                      		pop YL
-0000fe 91df                      		pop YH
-0000ff 91af                      		pop XL
-000100 91bf                      		pop XH
                                  
-000101 9508                      		ret						; End a function with RET
+0000f8 911f                      		pop oloop
+0000f9 912f                      		pop iloop
+0000fa 904f                      		pop B
+0000fb 903f                      		pop A
+0000fc 901f                      		pop rhi
+0000fd 900f                      		pop rlo
+0000fe 910f                      		pop mpr
+0000ff 91ef                      		pop ZL
+000100 91ff                      		pop ZH
+000101 91cf                      		pop YL
+000102 91df                      		pop YH
+000103 91af                      		pop XL
+000104 91bf                      		pop XH
+                                 
+000105 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: ADDMUL2X
@@ -1685,31 +1691,29 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;		rlo and rhi!
                                  ;-----------------------------------------------------------
                                  ADDMUL2X:
-000102 93af                      		push XL
-000103 93bf                      		push XH
-000104 920f                      		push rlo
-000105 921f                      		push rhi
-000106 923f                      		push A
+000106 93af                      		push XL
+000107 93bf                      		push XH
+000108 923f                      		push A
                                  
-000107 903c                      		ld A, X		; Pull out low byte from X
-000108 0c30                      		add A, rlo	; Add rlo to low byte
-000109 923d                      		st X+, A	; Place back into X, inc X
-00010a 8030                      		ld A, Z		; Pull out high byte from X
-00010b 1c30                      		adc A, rlo	; Add rhi to high byte plus carry
+000109 903c                      		ld A, X		; Pull out low byte from X to A
+00010a 0c30                      		add A, rlo	; Add rlo to A
+00010b 923d                      		st X+, A	; Place A back into X, inc X
+00010c 903c                      		ld A, X		; Pull out high byte from X to A
+00010d 1c31                      		adc A, rhi	; Add rhi to high byte plus carry
+00010e 923d                      		st X+, A	; Place A back into X, inc X
                                  		; Carry until no longer carry
                                  addmulloop:
-00010c f420                      		brcc addmulfinish ; Finish if carry no longer set
-00010d 903c                      		ld A, X		; Pull out current byte from X
-00010e 1c32                      		adc A, zero	; Add carry to current byte
-00010f 923d                      		st X+, A	; Place back into X, inc X
-000110 cffb                      		rjmp addmulloop	; Return to begining of loop
+00010f f420                      		brcc addmulfinish ; Finish if carry no longer set
+000110 903c                      		ld A, X		; Pull out current byte from X
+000111 1c32                      		adc A, zero	; Add carry to current byte
+000112 923d                      		st X+, A	; Place back into X, inc X
+000113 cffb                      		rjmp addmulloop	; Return to begining of loop
                                  addmulfinish:
-000111 903f                      		pop A
-000112 901f                      		pop rhi
-000113 900f                      		pop rlo
-000114 91bf                      		pop XH
-000115 91af                      		pop XL
-000116 9508                      		ret
+                                 
+000114 903f                      		pop A
+000115 91bf                      		pop XH
+000116 91af                      		pop XL
+000117 9508                      		ret
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: LOADMUL24
@@ -1717,61 +1721,61 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;-----------------------------------------------------------
                                  LOADMUL24:
                                  		; Execute the function here
-000117 93df                      		push YH	; push regs to stack
-000118 93cf                      		push YL
-000119 93ff                      		push ZH
-00011a 93ef                      		push ZL
-00011b 930f                      		push mpr
-00011c 932f                      		push iloop
-00011d 931f                      		push oloop
+000118 93df                      		push YH	; push regs to stack
+000119 93cf                      		push YL
+00011a 93ff                      		push ZH
+00011b 93ef                      		push ZL
+00011c 930f                      		push mpr
+00011d 932f                      		push iloop
+00011e 931f                      		push oloop
                                  
                                  		; Uses OperandE1, OperandE2, OperandF1, and OperandF2
                                  		; Placing these into MUL24_OP1 and MUL24_OP2 respectively
-00011e e0f2                      		ldi ZH, high(OperandE1)	; load OperandE1 location to Z
-00011f e1e9                      		ldi ZL, low(OperandE1)
+00011f e0f2                      		ldi ZH, high(OperandE1)	; load OperandE1 location to Z
+000120 e3e6                      		ldi ZL, low(OperandE1)
                                  		; Shift Z to prepare for program memory access:
-000120 0fff                      		lsl ZH
-000121 0fee                      		lsl ZL
-000122 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-000123 e0d1                      		ldi YH, high(MUL24_OP1)	; Load OP1 location into Y
-000124 e1c8                      		ldi YL, low(MUL24_OP1)	; ($0118)
+000121 0fff                      		lsl ZH
+000122 0fee                      		lsl ZL
+000123 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+000124 e0d1                      		ldi YH, high(MUL24_OP1)	; Load OP1 location into Y
+000125 e1c8                      		ldi YL, low(MUL24_OP1)	; ($0118)
                                  				
-000125 e013                      		ldi oloop, 3	; load oloop with 3 to loop 3 times.
+000126 e013                      		ldi oloop, 3	; load oloop with 3 to loop 3 times.
                                  mulloadloop1:
-000126 9105                      		lpm mpr, Z+	;load mpr from Z, inc Z
-000127 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-000128 951a                      		dec oloop		; decrement oloop to run loop 3 times
-000129 f7e1                      		brne mulloadloop1
+000127 9105                      		lpm mpr, Z+	;load mpr from Z, inc Z
+000128 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+000129 951a                      		dec oloop		; decrement oloop to run loop 3 times
+00012a f7e1                      		brne mulloadloop1
                                  		; since operand E2 is immediately after E1 in the program data
                                  		; we should be able to just increment to it :)
                                  		; Operand E is now loaded to MUL24_OP1
                                  		
-00012a e0f2                      		ldi ZH, high(OperandF1)	; load OperandF1 location to Z
-00012b e1eb                      		ldi ZL, low(OperandF1)
+00012b e0f2                      		ldi ZH, high(OperandF1)	; load OperandF1 location to Z
+00012c e3e8                      		ldi ZL, low(OperandF1)
                                  		; Shift Z to prepare for program memory access:
-00012c 0fff                      		lsl ZH
-00012d 0fee                      		lsl ZL
-00012e 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-00012f e0d1                      		ldi YH, high(MUL24_OP2)	; Load OP1 location into Y
-000130 e1cb                      		ldi YL, low(MUL24_OP2)	; ($011B)
+00012d 0fff                      		lsl ZH
+00012e 0fee                      		lsl ZL
+00012f 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+000130 e0d1                      		ldi YH, high(MUL24_OP2)	; Load OP1 location into Y
+000131 e1cb                      		ldi YL, low(MUL24_OP2)	; ($011B)
                                  
-000131 e013                      		ldi oloop, 3	; load oloop with 3 to loop 3 times.
+000132 e013                      		ldi oloop, 3	; load oloop with 3 to loop 3 times.
                                  mulloadloop2:
-000132 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-000133 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-000134 951a                      		dec oloop		; decrement oloop to run loop 3 times
-000135 f7e1                      		brne mulloadloop2
+000133 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+000134 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+000135 951a                      		dec oloop		; decrement oloop to run loop 3 times
+000136 f7e1                      		brne mulloadloop2
                                  		; Both operands should be loaded into program mem now!
                                  
-000136 911f                      		pop oloop	; pop regs from stack
-000137 912f                      		pop iloop
-000138 910f                      		pop mpr
-000139 91ef                      		pop ZL
-00013a 91ff                      		pop ZH
-00013b 91cf                      		pop YL
-00013c 91df                      		pop YH
+000137 911f                      		pop oloop	; pop regs from stack
+000138 912f                      		pop iloop
+000139 910f                      		pop mpr
+00013a 91ef                      		pop ZL
+00013b 91ff                      		pop ZH
+00013c 91cf                      		pop YL
+00013d 91df                      		pop YH
                                  
-00013d 9508                      		ret						; End a function with RET
+00013e 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: LOADADD16
@@ -1779,59 +1783,59 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;-----------------------------------------------------------
                                  LOADADD16:
                                  		; Execute the function here
-00013e 93df                      		push YH	; push regs to stack
-00013f 93cf                      		push YL
-000140 93ff                      		push ZH
-000141 93ef                      		push ZL
-000142 930f                      		push mpr
-000143 932f                      		push iloop
-000144 931f                      		push oloop
+00013f 93df                      		push YH	; push regs to stack
+000140 93cf                      		push YL
+000141 93ff                      		push ZH
+000142 93ef                      		push ZL
+000143 930f                      		push mpr
+000144 932f                      		push iloop
+000145 931f                      		push oloop
                                  
                                  		; Uses OperandA and OperandB
                                  		; Placing these into ADD16_OP1 and ADD16_OP2 respectively
-000145 e0f2                      		ldi ZH, high(OperandA)	; load OperandA location to Z
-000146 e1e5                      		ldi ZL, low(OperandA)
+000146 e0f2                      		ldi ZH, high(OperandA)	; load OperandA location to Z
+000147 e3e2                      		ldi ZL, low(OperandA)
                                  		; Shift Z to prepare for program memory access:
-000147 0fff                      		lsl ZH
-000148 0fee                      		lsl ZL
-000149 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-00014a e0d1                      		ldi YH, high(ADD16_OP1)	; Load OP1 location into Y
-00014b e1c0                      		ldi YL, low(ADD16_OP1)	; ($0110)
+000148 0fff                      		lsl ZH
+000149 0fee                      		lsl ZL
+00014a 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+00014b e0d1                      		ldi YH, high(ADD16_OP1)	; Load OP1 location into Y
+00014c e1c0                      		ldi YL, low(ADD16_OP1)	; ($0110)
                                  				
-00014c e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+00014d e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
                                  addloadloop1:
-00014d 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-00014e 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-00014f 951a                      		dec oloop		; decrement oloop to run loop 2 times
-000150 f7e1                      		brne addloadloop1
+00014e 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+00014f 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+000150 951a                      		dec oloop		; decrement oloop to run loop 2 times
+000151 f7e1                      		brne addloadloop1
                                  		; Operand A is now loaded to ADD16_OP1
                                  		
-000151 e0f2                      		ldi ZH, high(OperandB)	; load OperandB location to Z
-000152 e1e6                      		ldi ZL, low(OperandB)
+000152 e0f2                      		ldi ZH, high(OperandB)	; load OperandB location to Z
+000153 e3e3                      		ldi ZL, low(OperandB)
                                  		; Shift Z to prepare for program memory access:
-000153 0fff                      		lsl ZH
-000154 0fee                      		lsl ZL
-000155 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-000156 e0d1                      		ldi YH, high(ADD16_OP2)	; Load OP2 location into Y
-000157 e1c2                      		ldi YL, low(ADD16_OP2)	; ($0112)
+000154 0fff                      		lsl ZH
+000155 0fee                      		lsl ZL
+000156 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+000157 e0d1                      		ldi YH, high(ADD16_OP2)	; Load OP2 location into Y
+000158 e1c2                      		ldi YL, low(ADD16_OP2)	; ($0112)
                                  
-000158 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+000159 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
                                  addloadloop2:
-000159 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-00015a 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-00015b 951a                      		dec oloop		; decrement oloop to run loop 2 times
-00015c f7e1                      		brne addloadloop2
+00015a 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+00015b 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+00015c 951a                      		dec oloop		; decrement oloop to run loop 2 times
+00015d f7e1                      		brne addloadloop2
                                  		; Both operands should be loaded into program mem now!
                                  
-00015d 911f                      		pop oloop	; pop regs from stack
-00015e 912f                      		pop iloop
-00015f 910f                      		pop mpr
-000160 91ef                      		pop ZL
-000161 91ff                      		pop ZH
-000162 91cf                      		pop YL
-000163 91df                      		pop YH
+00015e 911f                      		pop oloop	; pop regs from stack
+00015f 912f                      		pop iloop
+000160 910f                      		pop mpr
+000161 91ef                      		pop ZL
+000162 91ff                      		pop ZH
+000163 91cf                      		pop YL
+000164 91df                      		pop YH
                                  
-000164 9508                      		ret						; End a function with RET
+000165 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: LOADSUB16
@@ -1839,59 +1843,59 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;-----------------------------------------------------------
                                  LOADSUB16:
                                  		; Execute the function here
-000165 93df                      		push YH	; push regs to stack
-000166 93cf                      		push YL
-000167 93ff                      		push ZH
-000168 93ef                      		push ZL
-000169 930f                      		push mpr
-00016a 932f                      		push iloop
-00016b 931f                      		push oloop
+000166 93df                      		push YH	; push regs to stack
+000167 93cf                      		push YL
+000168 93ff                      		push ZH
+000169 93ef                      		push ZL
+00016a 930f                      		push mpr
+00016b 932f                      		push iloop
+00016c 931f                      		push oloop
                                  
                                  		; Uses OperandC and OperandD
                                  		; Placing these into SUB16_OP1 and SUB16_OP2 respectively
-00016c e0f2                      		ldi ZH, high(OperandC)	; load OperandC location to Z
-00016d e1e7                      		ldi ZL, low(OperandC)
+00016d e0f2                      		ldi ZH, high(OperandC)	; load OperandC location to Z
+00016e e3e4                      		ldi ZL, low(OperandC)
                                  		; Shift Z to prepare for program memory access:
-00016e 0fff                      		lsl ZH
-00016f 0fee                      		lsl ZL
-000170 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-000171 e0d1                      		ldi YH, high(SUB16_OP1)	; Load OP1 location into Y
-000172 e1c4                      		ldi YL, low(SUB16_OP1)	; ($0114)
+00016f 0fff                      		lsl ZH
+000170 0fee                      		lsl ZL
+000171 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+000172 e0d1                      		ldi YH, high(SUB16_OP1)	; Load OP1 location into Y
+000173 e1c4                      		ldi YL, low(SUB16_OP1)	; ($0114)
                                  				
-000173 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+000174 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
                                  subloadloop1:
-000174 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-000175 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-000176 951a                      		dec oloop		; decrement oloop to run loop 2 times
-000177 f7e1                      		brne subloadloop1
+000175 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+000176 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+000177 951a                      		dec oloop		; decrement oloop to run loop 2 times
+000178 f7e1                      		brne subloadloop1
                                  		; Operand C is now loaded to ADD16_OP1
                                  		
-000178 e0f2                      		ldi ZH, high(OperandD)	; load OperandD location to Z
-000179 e1e8                      		ldi ZL, low(OperandD)
+000179 e0f2                      		ldi ZH, high(OperandD)	; load OperandD location to Z
+00017a e3e5                      		ldi ZL, low(OperandD)
                                  		; Shift Z to prepare for program memory access:
-00017a 0fff                      		lsl ZH
-00017b 0fee                      		lsl ZL
-00017c 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-00017d e0d1                      		ldi YH, high(SUB16_OP2)	; Load OP2 location into Y
-00017e e1c6                      		ldi YL, low(SUB16_OP2)	; ($0116)
+00017b 0fff                      		lsl ZH
+00017c 0fee                      		lsl ZL
+00017d 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+00017e e0d1                      		ldi YH, high(SUB16_OP2)	; Load OP2 location into Y
+00017f e1c6                      		ldi YL, low(SUB16_OP2)	; ($0116)
                                  
-00017f e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+000180 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
                                  subloadloop2:
-000180 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-000181 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-000182 951a                      		dec oloop		; decrement oloop to run loop 2 times
-000183 f7e1                      		brne subloadloop2
+000181 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+000182 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+000183 951a                      		dec oloop		; decrement oloop to run loop 2 times
+000184 f7e1                      		brne subloadloop2
                                  		; Both operands should be loaded into program mem now!
                                  
-000184 911f                      		pop oloop	; pop regs from stack
-000185 912f                      		pop iloop
-000186 910f                      		pop mpr
-000187 91ef                      		pop ZL
-000188 91ff                      		pop ZH
-000189 91cf                      		pop YL
-00018a 91df                      		pop YH
+000185 911f                      		pop oloop	; pop regs from stack
+000186 912f                      		pop iloop
+000187 910f                      		pop mpr
+000188 91ef                      		pop ZL
+000189 91ff                      		pop ZH
+00018a 91cf                      		pop YL
+00018b 91df                      		pop YH
                                  
-00018b 9508                      		ret						; End a function with RET
+00018c 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: COMPOUND
@@ -1906,15 +1910,41 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  COMPOUND:
                                  
                                  		; Setup SUB16 with operands G and H
-                                 		; Perform subtraction to calculate G - H
-                                 
+                                 		; Already done in LOADCOMPOUND
+                                 		; Perform subtraction to calculate G - H:
+00018d df06                      		rcall SUB16
                                  		; Setup the ADD16 function with SUB16 result and operand I
-                                 		; Perform addition next to calculate (G - H) + I
-                                 
-                                 		; Setup the MUL24 function with ADD16 result as both operands
-                                 		; Perform multiplication to calculate ((G - H) + I)^2
-                                 
-00018c 9508                      		ret						; End a function with RET
+                                 		; Operand I already loaded to ADD16_OP2 by LOADCOMPOUND
+                                 		; Just load SUB16_Result into ADD16_OP1:
+00018e e3a0                      		ldi XL, low(SUB16_Result)
+00018f e0b1                      		ldi XH, high(SUB16_Result)
+000190 e1c0                      		ldi YL, low(ADD16_OP1)
+000191 e0d1                      		ldi YH, high(ADD16_OP1)
+000192 910d                      		ld mpr, X+
+000193 9309                      		st Y+, mpr
+000194 910c                      		ld mpr, X
+000195 8308                      		st Y, mpr
+                                 		; Perform addition next to calculate (G - H) + I:
+000196 ded5                      		rcall ADD16
+                                 		; Setup the MUL24 function with ADD16 result as both operands:
+000197 e2a0                      		ldi XL, low(ADD16_Result)
+000198 e0b1                      		ldi XH, high(ADD16_Result)
+000199 e1c8                      		ldi YL, low(MUL24_OP1)
+00019a e0d1                      		ldi YH, high(MUL24_OP1)
+00019b e1eb                      		ldi ZL, low(MUL24_OP2)
+00019c e0f1                      		ldi ZH, high(MUL24_OP2)
+00019d 910d                      		ld mpr, X+
+00019e 9309                      		st Y+, mpr
+00019f 9301                      		st Z+, mpr
+0001a0 910d                      		ld mpr, X+
+0001a1 9309                      		st Y+, mpr
+0001a2 9301                      		st Z+, mpr
+0001a3 910c                      		ld mpr, X
+0001a4 8308                      		st Y, mpr
+0001a5 8300                      		st Z, mpr
+                                 		; Perform multiplication to calculate ((G - H) + I)^2:
+0001a6 df0e                      		rcall MUL24
+0001a7 9508                      		ret						; End a function with RET
                                  ;-----------------------------------------------------------
                                  ; Func: LOADCOMPOUND
                                  ; Desc: Loads the numbers needed for the compound, as well
@@ -1923,15 +1953,15 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;-----------------------------------------------------------
                                  LOADCOMPOUND:
                                  		; Execute the function here
-00018d 93df                      		push YH	; push regs to stack
-00018e 93cf                      		push YL
-00018f 93ff                      		push ZH
-000190 93ef                      		push ZL
-000191 930f                      		push mpr
-000192 932f                      		push iloop
-000193 931f                      		push oloop
+0001a8 93df                      		push YH	; push regs to stack
+0001a9 93cf                      		push YL
+0001aa 93ff                      		push ZH
+0001ab 93ef                      		push ZL
+0001ac 930f                      		push mpr
+0001ad 932f                      		push iloop
+0001ae 931f                      		push oloop
                                  		
-000194 d02c                      		rcall CLRRES ; Clear result memory locations
+0001af d02c                      		rcall CLRRES ; Clear result memory locations
                                  
                                  		; Uses OperandG, OperandH, and OperandI
                                  		; as ( ( G - H ) + I )^2
@@ -1942,66 +1972,66 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		; "I" will be loaded to ADD16_OP2 due to where it visually is in the 
                                  		; equation, although it doesn't matter too much
                                  
-000195 e0f2                      		ldi ZH, high(OperandG)	; load OperandG location to Z
-000196 e1ed                      		ldi ZL, low(OperandG)
+0001b0 e0f2                      		ldi ZH, high(OperandG)	; load OperandG location to Z
+0001b1 e3ea                      		ldi ZL, low(OperandG)
                                  		; Shift Z to prepare for program memory access:
-000197 0fff                      		lsl ZH
-000198 0fee                      		lsl ZL
-000199 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-00019a e0d1                      		ldi YH, high(SUB16_OP1)	; Load OP1 location into Y
-00019b e1c4                      		ldi YL, low(SUB16_OP1)	; ($0114)
+0001b2 0fff                      		lsl ZH
+0001b3 0fee                      		lsl ZL
+0001b4 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+0001b5 e0d1                      		ldi YH, high(SUB16_OP1)	; Load OP1 location into Y
+0001b6 e1c4                      		ldi YL, low(SUB16_OP1)	; ($0114)
                                  		
-00019c e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+0001b7 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
                                  comploadloop1:
-00019d 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-00019e 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-00019f 951a                      		dec oloop		; decrement oloop to run loop 2 times
-0001a0 f7e1                      		brne comploadloop1
+0001b8 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+0001b9 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+0001ba 951a                      		dec oloop		; decrement oloop to run loop 2 times
+0001bb f7e1                      		brne comploadloop1
                                  		; Operand G is now loaded to SUB16_OP1
                                  		
-0001a1 e0f2                      		ldi ZH, high(OperandH)	; load OperandD location to Z
-0001a2 e1ee                      		ldi ZL, low(OperandH)
+0001bc e0f2                      		ldi ZH, high(OperandH)	; load OperandD location to Z
+0001bd e3eb                      		ldi ZL, low(OperandH)
                                  		; Shift Z to prepare for program memory access:
-0001a3 0fff                      		lsl ZH
-0001a4 0fee                      		lsl ZL
-0001a5 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-0001a6 e0d1                      		ldi YH, high(SUB16_OP2)	; Load OP2 location into Y
-0001a7 e1c6                      		ldi YL, low(SUB16_OP2)	; ($0116)
+0001be 0fff                      		lsl ZH
+0001bf 0fee                      		lsl ZL
+0001c0 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+0001c1 e0d1                      		ldi YH, high(SUB16_OP2)	; Load OP2 location into Y
+0001c2 e1c6                      		ldi YL, low(SUB16_OP2)	; ($0116)
                                  
-0001a8 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+0001c3 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
                                  comploadloop2:
-0001a9 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-0001aa 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-0001ab 951a                      		dec oloop		; decrement oloop to run loop 2 times
-0001ac f7e1                      		brne comploadloop2
+0001c4 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+0001c5 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+0001c6 951a                      		dec oloop		; decrement oloop to run loop 2 times
+0001c7 f7e1                      		brne comploadloop2
                                  		; Operand H now loaded to SUB16_OP2
                                  
-0001ad e0f2                      		ldi ZH, high(OperandI)	; load OperandD location to Z
-0001ae e1ef                      		ldi ZL, low(OperandI)
+0001c8 e0f2                      		ldi ZH, high(OperandI)	; load OperandD location to Z
+0001c9 e3ec                      		ldi ZL, low(OperandI)
                                  		; Shift Z to prepare for program memory access:
-0001af 0fff                      		lsl ZH
-0001b0 0fee                      		lsl ZL
-0001b1 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
-0001b2 e0d1                      		ldi YH, high(ADD16_OP2)	; Load OP2 location into Y
-0001b3 e1c2                      		ldi YL, low(ADD16_OP2)	; ($0112)
+0001ca 0fff                      		lsl ZH
+0001cb 0fee                      		lsl ZL
+0001cc 1df2                      		adc ZH, zero ; shift carry from lower byte to upper byte
+0001cd e0d1                      		ldi YH, high(ADD16_OP2)	; Load OP2 location into Y
+0001ce e1c2                      		ldi YL, low(ADD16_OP2)	; ($0112)
                                  
-0001b4 e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
+0001cf e012                      		ldi oloop, 2	; load oloop with 2 to loop 2 times.
                                  comploadloop3:
-0001b5 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
-0001b6 9309                      		st Y+, mpr	; store mpr to Y, inc Y
-0001b7 951a                      		dec oloop		; decrement oloop to run loop 2 times
-0001b8 f7e1                      		brne comploadloop3
+0001d0 9105                      		lpm mpr, Z+	; load mpr from Z, inc Z
+0001d1 9309                      		st Y+, mpr	; store mpr to Y, inc Y
+0001d2 951a                      		dec oloop		; decrement oloop to run loop 2 times
+0001d3 f7e1                      		brne comploadloop3
                                  		; Operand I now loaded to ADD16_OP2
                                  
-0001b9 911f                      		pop oloop	; pop regs from stack
-0001ba 912f                      		pop iloop
-0001bb 910f                      		pop mpr
-0001bc 91ef                      		pop ZL
-0001bd 91ff                      		pop ZH
-0001be 91cf                      		pop YL
-0001bf 91df                      		pop YH
+0001d4 911f                      		pop oloop	; pop regs from stack
+0001d5 912f                      		pop iloop
+0001d6 910f                      		pop mpr
+0001d7 91ef                      		pop ZL
+0001d8 91ff                      		pop ZH
+0001d9 91cf                      		pop YL
+0001da 91df                      		pop YH
                                  
-0001c0 9508                      		ret						; End a function with RET
+0001db 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: CLRRES
@@ -2009,42 +2039,44 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;       ADD16, SUB16, and MUL24
                                  ;-----------------------------------------------------------
                                  CLRRES:
-0001c1 93af                      		push XL
-0001c2 93bf                      		push XH
-0001c3 93cf                      		push YL
-0001c4 93df                      		push YH
-0001c5 93ef                      		push ZL
-0001c6 93ff                      		push ZH
+0001dc 93af                      		push XL
+0001dd 93bf                      		push XH
+0001de 93cf                      		push YL
+0001df 93df                      		push YH
+0001e0 93ef                      		push ZL
+0001e1 93ff                      		push ZH
                                  
                                  		; Load beginning address of ADD16 result to Z
-0001c7 e2a0                      		ldi		XL, low(ADD16_Result)	; Load low byte of address
-0001c8 e0b1                      		ldi		XH, high(ADD16_Result)	; Load high byte of address
+0001e2 e2a0                      		ldi		XL, low(ADD16_Result)	; Load low byte of address
+0001e3 e0b1                      		ldi		XH, high(ADD16_Result)	; Load high byte of address
                                  		; Load beginning address of SUB16 result to Y
-0001c9 e3c0                      		ldi		YL, low(SUB16_Result)	; Load low byte of address
-0001ca e0d1                      		ldi		YH, high(SUB16_Result)	; Load high byte of address
+0001e4 e3c0                      		ldi		YL, low(SUB16_Result)	; Load low byte of address
+0001e5 e0d1                      		ldi		YH, high(SUB16_Result)	; Load high byte of address
                                  		; Load beginning address of MUL24 result to Z
-0001cb e4e0                      		ldi		ZL, low(MUL24_Result)
-0001cc e0f1                      		ldi		ZH, high(MUL24_Result)
+0001e6 e4e0                      		ldi		ZL, low(MUL24_Result)
+0001e7 e0f1                      		ldi		ZH, high(MUL24_Result)
                                  		
                                  		; Write zeros to all result locations
-0001cd 922d                      		st X+, zero
-0001ce 922d                      		st X+, zero
-0001cf 922c                      		st X, zero	; Three bytes for ADD16 result
-0001d0 9229                      		st Y+, zero
-0001d1 8228                      		st Y, zero	; Two for SUB16
-0001d2 9221                      		st Z+, zero
-0001d3 9221                      		st Z+, zero
-0001d4 9221                      		st Z+, zero
-0001d5 8220                      		st Z, zero	; And FOUR for MUL24
+0001e8 922d                      		st X+, zero
+0001e9 922d                      		st X+, zero
+0001ea 922c                      		st X, zero	; Three bytes for ADD16 result
+0001eb 9229                      		st Y+, zero
+0001ec 8228                      		st Y, zero	; Two for SUB16
+0001ed 9221                      		st Z+, zero
+0001ee 9221                      		st Z+, zero
+0001ef 9221                      		st Z+, zero
+0001f0 9221                      		st Z+, zero
+0001f1 9221                      		st Z+, zero
+0001f2 8220                      		st Z, zero	; And SIX for MUL24
                                  
-0001d6 91ff                      		pop ZH
-0001d7 91ef                      		pop ZL
-0001d8 91df                      		pop YH
-0001d9 91cf                      		pop YL
-0001da 91bf                      		pop XH
-0001db 91af                      		pop XL
+0001f3 91ff                      		pop ZH
+0001f4 91ef                      		pop ZL
+0001f5 91df                      		pop YH
+0001f6 91cf                      		pop YL
+0001f7 91bf                      		pop XH
+0001f8 91af                      		pop XL
                                  
-0001dc 9508                      		ret						
+0001f9 9508                      		ret						
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: MUL16
@@ -2057,77 +2089,77 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;       calling this function.
                                  ;-----------------------------------------------------------
                                  MUL16:
-0001dd 923f                      		push 	A				; Save A register
-0001de 924f                      		push	B				; Save B register
-0001df 921f                      		push	rhi				; Save rhi register
-0001e0 920f                      		push	rlo				; Save rlo register
-0001e1 922f                      		push	zero			; Save zero register
-0001e2 93bf                      		push	XH				; Save X-ptr
-0001e3 93af                      		push	XL
-0001e4 93df                      		push	YH				; Save Y-ptr
-0001e5 93cf                      		push	YL
-0001e6 93ff                      		push	ZH				; Save Z-ptr
-0001e7 93ef                      		push	ZL
-0001e8 931f                      		push	oloop			; Save counters
-0001e9 932f                      		push	iloop
+0001fa 923f                      		push 	A				; Save A register
+0001fb 924f                      		push	B				; Save B register
+0001fc 921f                      		push	rhi				; Save rhi register
+0001fd 920f                      		push	rlo				; Save rlo register
+0001fe 922f                      		push	zero			; Save zero register
+0001ff 93bf                      		push	XH				; Save X-ptr
+000200 93af                      		push	XL
+000201 93df                      		push	YH				; Save Y-ptr
+000202 93cf                      		push	YL
+000203 93ff                      		push	ZH				; Save Z-ptr
+000204 93ef                      		push	ZL
+000205 931f                      		push	oloop			; Save counters
+000206 932f                      		push	iloop
                                  
-0001ea 2422                      		clr		zero			; Maintain zero semantics
+000207 2422                      		clr		zero			; Maintain zero semantics
                                  
                                  		; Set Y to beginning address of B
-0001eb e0c2                      		ldi		YL, low(addrB)	; Load low byte
-0001ec e0d1                      		ldi		YH, high(addrB)	; Load high byte
+000208 e0c2                      		ldi		YL, low(addrB)	; Load low byte
+000209 e0d1                      		ldi		YH, high(addrB)	; Load high byte
                                  
                                  		; Set Z to begginning address of resulting Product
-0001ed e0e4                      		ldi		ZL, low(LAddrP)	; Load low byte
-0001ee e0f1                      		ldi		ZH, high(LAddrP); Load high byte
+00020a e0e4                      		ldi		ZL, low(LAddrP)	; Load low byte
+00020b e0f1                      		ldi		ZH, high(LAddrP); Load high byte
                                  
                                  		; Begin outer for loop
-0001ef e012                      		ldi		oloop, 2		; Load counter
+00020c e012                      		ldi		oloop, 2		; Load counter
                                  MUL16_OLOOP:
                                  		; Set X to beginning address of A
-0001f0 e0a0                      		ldi		XL, low(addrA)	; Load low byte
-0001f1 e0b1                      		ldi		XH, high(addrA)	; Load high byte
+00020d e0a0                      		ldi		XL, low(addrA)	; Load low byte
+00020e e0b1                      		ldi		XH, high(addrA)	; Load high byte
                                  
                                  		; Begin inner for loop
-0001f2 e022                      		ldi		iloop, 2		; Load counter
+00020f e022                      		ldi		iloop, 2		; Load counter
                                  MUL16_ILOOP:
-0001f3 903d                      		ld		A, X+			; Get byte of A operand
-0001f4 8048                      		ld		B, Y			; Get byte of B operand
-0001f5 9c34                      		mul		A,B				; Multiply A and B
-0001f6 9031                      		ld		A, Z+			; Get a result byte from memory
-0001f7 9041                      		ld		B, Z+			; Get the next result byte from memory
-0001f8 0c03                      		add		rlo, A			; rlo <= rlo + A
-0001f9 1c14                      		adc		rhi, B			; rhi <= rhi + B + carry
-0001fa 8030                      		ld		A, Z			; Get a third byte from the result
-0001fb 1c32                      		adc		A, zero			; Add carry to A
-0001fc 8230                      		st		Z, A			; Store third byte to memory
-0001fd 9212                      		st		-Z, rhi			; Store second byte to memory
-0001fe 9202                      		st		-Z, rlo			; Store first byte to memory
-0001ff 9631                      		adiw	ZH:ZL, 1		; Z <= Z + 1
-000200 952a                      		dec		iloop			; Decrement counter
-000201 f789                      		brne	MUL16_ILOOP		; Loop if iLoop != 0
+000210 903d                      		ld		A, X+			; Get byte of A operand
+000211 8048                      		ld		B, Y			; Get byte of B operand
+000212 9c34                      		mul		A,B				; Multiply A and B
+000213 9031                      		ld		A, Z+			; Get a result byte from memory
+000214 9041                      		ld		B, Z+			; Get the next result byte from memory
+000215 0c03                      		add		rlo, A			; rlo <= rlo + A
+000216 1c14                      		adc		rhi, B			; rhi <= rhi + B + carry
+000217 8030                      		ld		A, Z			; Get a third byte from the result
+000218 1c32                      		adc		A, zero			; Add carry to A
+000219 8230                      		st		Z, A			; Store third byte to memory
+00021a 9212                      		st		-Z, rhi			; Store second byte to memory
+00021b 9202                      		st		-Z, rlo			; Store first byte to memory
+00021c 9631                      		adiw	ZH:ZL, 1		; Z <= Z + 1
+00021d 952a                      		dec		iloop			; Decrement counter
+00021e f789                      		brne	MUL16_ILOOP		; Loop if iLoop != 0
                                  		; End inner for loop
                                  
-000202 9731                      		sbiw	ZH:ZL, 1		; Z <= Z - 1
-000203 9621                      		adiw	YH:YL, 1		; Y <= Y + 1
-000204 951a                      		dec		oloop			; Decrement counter
-000205 f751                      		brne	MUL16_OLOOP		; Loop if oLoop != 0
+00021f 9731                      		sbiw	ZH:ZL, 1		; Z <= Z - 1
+000220 9621                      		adiw	YH:YL, 1		; Y <= Y + 1
+000221 951a                      		dec		oloop			; Decrement counter
+000222 f751                      		brne	MUL16_OLOOP		; Loop if oLoop != 0
                                  		; End outer for loop
                                  
-000206 912f                      		pop		iloop			; Restore all registers in reverves order
-000207 911f                      		pop		oloop
-000208 91ef                      		pop		ZL
-000209 91ff                      		pop		ZH
-00020a 91cf                      		pop		YL
-00020b 91df                      		pop		YH
-00020c 91af                      		pop		XL
-00020d 91bf                      		pop		XH
-00020e 902f                      		pop		zero
-00020f 900f                      		pop		rlo
-000210 901f                      		pop		rhi
-000211 904f                      		pop		B
-000212 903f                      		pop		A
-000213 9508                      		ret						; End a function with RET
+000223 912f                      		pop		iloop			; Restore all registers in reverves order
+000224 911f                      		pop		oloop
+000225 91ef                      		pop		ZL
+000226 91ff                      		pop		ZH
+000227 91cf                      		pop		YL
+000228 91df                      		pop		YH
+000229 91af                      		pop		XL
+00022a 91bf                      		pop		XH
+00022b 902f                      		pop		zero
+00022c 900f                      		pop		rlo
+00022d 901f                      		pop		rhi
+00022e 904f                      		pop		B
+00022f 903f                      		pop		A
+000230 9508                      		ret						; End a function with RET
                                  
                                  ;-----------------------------------------------------------
                                  ; Func: Template function header
@@ -2140,7 +2172,7 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  		; Execute the function here
                                  
                                  		; Restore variable by popping them from the stack in reverse order
-000214 9508                      		ret						; End a function with RET
+000231 9508                      		ret						; End a function with RET
                                  
                                  
                                  ;***********************************************************
@@ -2149,33 +2181,33 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
                                  ;***********************************************************
                                  ; ADD16 operands
                                  OperandA:
-000215 fcba                      	.DW 0xFCBA
+000232 fcba                      	.DW 0xFCBA
                                  OperandB:
-000216 ffff                      	.DW 0xFFFF
+000233 ffff                      	.DW 0xFFFF
                                  
                                  ; SUB16 operands
                                  OperandC:
-000217 fcb9                      	.DW 0XFCB9
+000234 fcb9                      	.DW 0XFCB9
                                  OperandD:
-000218 e420                      	.DW 0XE420
+000235 e420                      	.DW 0XE420
                                  
                                  ; MUL24 operands
                                  OperandE1:
-000219 ffff                      	.DW	0XFFFF
+000236 ffff                      	.DW	0XFFFF
                                  OperandE2:
-00021a 00ff                      	.DW	0X00FF
+000237 00ff                      	.DW	0X00FF
                                  OperandF1:
-00021b ffff                      	.DW	0XFFFF
+000238 ffff                      	.DW	0XFFFF
                                  OperandF2:
-00021c 00ff                      	.DW	0X00FF
+000239 00ff                      	.DW	0X00FF
                                  
                                  ; Compoud operands
                                  OperandG:
-00021d fcba                      	.DW	0xFCBA				; test value for operand G
+00023a fcba                      	.DW	0xFCBA				; test value for operand G
                                  OperandH:
-00021e 2022                      	.DW	0x2022				; test value for operand H
+00023b 2022                      	.DW	0x2022				; test value for operand H
                                  OperandI:
-00021f 21bb                      	.DW	0x21BB				; test value for operand I
+00023c 21bb                      	.DW	0x21BB				; test value for operand I
                                  
                                  ;***********************************************************
                                  ;*	Data Memory Allocation
@@ -2211,7 +2243,7 @@ C:\Users\Lucas Plaisted\Documents\GitHub\ECE375\Lab4\Lab4Assm\Lab4Assm\Astrid_De
 000130                           		.byte 2				; allocate two bytes for SUB16 result
                                  .org	$0140
                                  MUL24_Result:
-000140                           		.byte 4				; allocate four bytes for MUL24 result
+000140                           		.byte 6				; allocate six bytes for MUL24 result
                                  
                                  ;***********************************************************
                                  ;*	Additional Program Includes
@@ -2234,17 +2266,17 @@ counted separately from r26..r31 here.
 .dseg memory usage only counts static data declared with .byte
 
 "ATmega128" register use summary:
-x  :  16 y  :  25 z  :  33 r0 :  10 r1 :   8 r2 :  28 r3 :  56 r4 :  32 
+x  :  25 y  :  30 z  :  38 r0 :   7 r1 :   7 r2 :  32 r3 :  58 r4 :  32 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  47 r17:  32 r18:  14 r19:   0 r20:   0 
-r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:  22 r27:  22 r28:  33 
-r29:  33 r30:  43 r31:  52 
+r13:   0 r14:   0 r15:   0 r16:  60 r17:  32 r18:  14 r19:   0 r20:   0 
+r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:  24 r27:  24 r28:  35 
+r29:  35 r30:  44 r31:  53 
 Registers used: 17 out of 35 (48.6%)
 
 "ATmega128" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :  14 add   :   5 adiw  :   6 and   :   0 
 andi  :   0 asr   :   0 bclr  :   1 bld   :   0 brbc  :   0 brbs  :   0 
-brcc  :   1 brcs  :   1 break :   0 breq  :   0 brge  :   0 brhc  :   0 
+brcc  :   2 brcs  :   0 break :   0 breq  :   0 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :  11 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
@@ -2252,23 +2284,23 @@ clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   5 cls   :   0
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
 cpi   :   0 cpse  :   0 dec   :  11 elpm  :   0 eor   :   0 fmul  :   0 
 fmuls :   0 fmulsu:   0 icall :   0 ijmp  :   0 in    :   0 inc   :   0 
-jmp   :   0 ld    :  21 ldd   :  12 ldi   :  82 lds   :   0 lpm   :   9 
+jmp   :   0 ld    :  27 ldd   :  12 ldi   :  92 lds   :   0 lpm   :   9 
 lsl   :  18 lsr   :   0 mov   :   0 movw  :   0 mul   :  10 muls  :   0 
 mulsu :   0 neg   :   0 nop   :   8 or    :   0 ori   :   0 out   :   2 
-pop   :  82 push  :  82 rcall :  17 ret   :  12 reti  :   0 rjmp  :   3 
+pop   :  80 push  :  80 rcall :  21 ret   :  12 reti  :   0 rjmp  :   3 
 rol   :   0 ror   :   0 sbc   :   1 sbci  :   0 sbi   :   0 sbic  :   0 
 sbis  :   0 sbiw  :   1 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 
 seh   :   0 sei   :   0 sen   :   0 ser   :   0 ses   :   0 set   :   0 
-sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :  32 std   :   0 
+sev   :   0 sez   :   0 sleep :   0 spm   :   0 st    :  45 std   :   0 
 sts   :   0 sub   :   1 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
 
-Instructions used: 26 out of 114 (22.8%)
+Instructions used: 25 out of 114 (21.9%)
 
 "ATmega128" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x000440    896     22    918  131072   0.7%
-[.dseg] 0x000100 0x000144      0     31     31    4096   0.8%
+[.cseg] 0x000000 0x00047a    954     22    976  131072   0.7%
+[.dseg] 0x000100 0x000146      0     33     33    4096   0.8%
 [.eseg] 0x000000 0x000000      0      0      0    4096   0.0%
 
 Assembly complete, 0 errors, 0 warnings

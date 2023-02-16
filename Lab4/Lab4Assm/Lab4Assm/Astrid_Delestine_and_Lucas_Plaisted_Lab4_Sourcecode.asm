@@ -92,7 +92,9 @@ MAIN:							; The Main program
 		; Operands stored in $0114 (G = $FCBA), $0116 (H = $2022), and $0112 (I = $21BB)
 		nop ; Check load COMPOUND operands (Set Break point here #7)
 
-		; Call the COMPOUND function
+		; Call the COMPOUND function, ((G-H)+I)^2
+		rcall COMPOUND
+		; Result stored in $0140, should be $0000FCA8CEE9
 		nop ; Check COMPOUND result (Set Break point here #8)
 
 DONE:	rjmp	DONE			; Create an infinite while loop to signify the
@@ -296,6 +298,8 @@ no carry.
 		st X+, zero
 		st X+, zero
 		st X+, zero
+		st X+, zero
+		st X+, zero
 		st X, zero	; Clear result just in case!
 
 		; Load beginning address of first operand into Z
@@ -309,7 +313,7 @@ no carry.
 		ldi		XH, high(MUL24_Result)
 
 /*
-				A	B	C	*		(X pointer)
+				A	B	C	*		(Z pointer)
 				D	E	F			(Y pointer)
 				2	1	0			offset
 ===================================
@@ -322,7 +326,7 @@ no carry.
 				AF
 			AE
 		AD
-	5	4	3	2	1	0	(Z offset)
+	5	4	3	2	1	0	(X offset)
 ===================================
 */
 		
@@ -335,14 +339,15 @@ no carry.
 ;				A	B	C	*		(Z pointer)
 ;				D	E	F			(Y pointer)
 ;				2	1	0			offset
-		adiw XH:XL, 1	; Z offset = 1, changed so that ADDMUL2X
+		adiw XH:XL, 1	; X offset = 1, changed so that ADDMUL2X
 						; adds to the correct place
 						; Need to do CE and BF
 ;				A	B	C	*		(Z pointer)
 ;				D	E	F			(Y pointer)
 ;				2	1	0			offset
-		ldd B, Y+1		; Load E to B
-		mul A, B	;C*E
+		ld A, Z		; A <- C
+		ldd B, Y+1	; B <- E
+		mul A, B	; C*E
 		rcall ADDMUL2X	; Add to result
 		ldd A, Z+1	; A <- B
 		ld B, Y		; B <- F
@@ -388,6 +393,7 @@ no carry.
 		mul A, B	; A*D
 		rcall ADDMUL2X
 		; done!
+
 		pop oloop
 		pop iloop
 		pop B
@@ -418,15 +424,14 @@ no carry.
 ADDMUL2X:
 		push XL
 		push XH
-		push rlo
-		push rhi
 		push A
 
-		ld A, X		; Pull out low byte from X
-		add A, rlo	; Add rlo to low byte
-		st X+, A	; Place back into X, inc X
-		ld A, Z		; Pull out high byte from X
-		adc A, rlo	; Add rhi to high byte plus carry
+		ld A, X		; Pull out low byte from X to A
+		add A, rlo	; Add rlo to A
+		st X+, A	; Place A back into X, inc X
+		ld A, X		; Pull out high byte from X to A
+		adc A, rhi	; Add rhi to high byte plus carry
+		st X+, A	; Place A back into X, inc X
 		; Carry until no longer carry
 addmulloop:
 		brcc addmulfinish ; Finish if carry no longer set
@@ -435,9 +440,8 @@ addmulloop:
 		st X+, A	; Place back into X, inc X
 		rjmp addmulloop	; Return to begining of loop
 addmulfinish:
+
 		pop A
-		pop rhi
-		pop rlo
 		pop XH
 		pop XL
 		ret
@@ -637,14 +641,40 @@ subloadloop2:
 COMPOUND:
 
 		; Setup SUB16 with operands G and H
-		; Perform subtraction to calculate G - H
-
+		; Already done in LOADCOMPOUND
+		; Perform subtraction to calculate G - H:
+		rcall SUB16
 		; Setup the ADD16 function with SUB16 result and operand I
-		; Perform addition next to calculate (G - H) + I
-
-		; Setup the MUL24 function with ADD16 result as both operands
-		; Perform multiplication to calculate ((G - H) + I)^2
-
+		; Operand I already loaded to ADD16_OP2 by LOADCOMPOUND
+		; Just load SUB16_Result into ADD16_OP1:
+		ldi XL, low(SUB16_Result)
+		ldi XH, high(SUB16_Result)
+		ldi YL, low(ADD16_OP1)
+		ldi YH, high(ADD16_OP1)
+		ld mpr, X+
+		st Y+, mpr
+		ld mpr, X
+		st Y, mpr
+		; Perform addition next to calculate (G - H) + I:
+		rcall ADD16
+		; Setup the MUL24 function with ADD16 result as both operands:
+		ldi XL, low(ADD16_Result)
+		ldi XH, high(ADD16_Result)
+		ldi YL, low(MUL24_OP1)
+		ldi YH, high(MUL24_OP1)
+		ldi ZL, low(MUL24_OP2)
+		ldi ZH, high(MUL24_OP2)
+		ld mpr, X+
+		st Y+, mpr
+		st Z+, mpr
+		ld mpr, X+
+		st Y+, mpr
+		st Z+, mpr
+		ld mpr, X
+		st Y, mpr
+		st Z, mpr
+		; Perform multiplication to calculate ((G - H) + I)^2:
+		rcall MUL24
 		ret						; End a function with RET
 ;-----------------------------------------------------------
 ; Func: LOADCOMPOUND
@@ -766,7 +796,9 @@ CLRRES:
 		st Z+, zero
 		st Z+, zero
 		st Z+, zero
-		st Z, zero	; And FOUR for MUL24
+		st Z+, zero
+		st Z+, zero
+		st Z, zero	; And SIX for MUL24
 
 		pop ZH
 		pop ZL
@@ -942,7 +974,7 @@ SUB16_Result:
 		.byte 2				; allocate two bytes for SUB16 result
 .org	$0140
 MUL24_Result:
-		.byte 4				; allocate four bytes for MUL24 result
+		.byte 6				; allocate six bytes for MUL24 result
 
 ;***********************************************************
 ;*	Additional Program Includes
