@@ -46,46 +46,58 @@
 
 \section{Introduction}
 %This is the first Lab in the ECE 375 series and it covers the setup and compilation of an AVR Assembly Program. The student will learn how how to use the sample Basic Bump Bot assembly file and send the binaries to the AVR Microcontroller board. For the second part of the lab the student will be expected to download and compile the included C sample program and from it learn how to configure the I/O ports of the ATmega32U4 Microcontroller. The student will then write their own C program and upload it to the Microcontroller to verify that it runs as expected. The provided programs have been attached in the source code section of this report.
-This is the fourth lab in the ECE 375 series and it covers adding and subtracting words as well as multiplying words together. In this sense words designate 16 bit numbers. It is important to note that this assembely was written for the m128 chipset and not the regular atmetga32u4 chipset. This is due to the fact that we can operate a simulation tool when using the m128 chipset that is not avalabe when we use our regular chipset.
+This is the fourth lab in the ECE 375 series and it covers adding and subtracting words as well as multiplying words together. In this sense words designate 16 bit numbers. It is important to note that this assembly was written for the m128 chipset and not the regular atmetga32u4 chipset. This is due to the fact that we can operate a simulation tool when using the m128 chipset that is not available when we use our regular chipset. The student will write their assembly to do these expected operations with large numbers and is given the expected inputs and can calculate the outputs.
 
 \section{Design}
-To design the program for this lab, Lucas and I brainstormed exactly what needed to happen and how we wanted it to go. We needed to determine what the buttons were going to do, and so with the main guide's and the presentation slides, we planned to have four different buttons clear the display, set the display to static text, scroll through the display in a marquee fashion and halt the marquee function when needed. Below one can see a block diagram of what our original plan was.
+This lab Lucas and I collaborated and built out ideas for multi-byte addition, subtraction, and multiplication. It was quite interesting to see our ideas collide and how different approaches can be taken to the same problem. Addition can be considered very trivial, however subtraction becomes a little more difficult as the programmer has to consider negative values and if they are possible with this code. In the handout it clearly states that in this lab we will only be dealing with a more simple unsigned subtraction so the result can be held in two 8 bit registers. Next the multiplication of two 24 bit numbers. This will be more difficult than the previous two problems. In this case we decided to solve the problem linearly and not worry about looping or recursion. Finally we move on to the compound function, which uses each of the previously implemented methods to solve the problem of \(((G-H)+I)^2\). 
 
 \begin{figure}[h]
-	%\includegraphics[width=12cm, height=10cm]{BlockDiagramLab3.jpg}
+	\includegraphics[width=12cm, height=10cm]{BlockDiagram L4.jpg}
 	\centering
 \end{figure}
 	
 \section{Assembly Overview}
-As for the Assembly program an overview can be seen below
+As for the Assembly program an overview can be seen below. It is also important to note that for each of the subroutines all the registers used are pushed and popped to and from the stack unless otherwise stated.
 
 \subsection{Internal Register Definitions and Constants}
-The multipurpose register was setup as r16. a wait counter register was setup at r17. For the timer function an inner counter and outer counter register were setup as r18 and r19 respectively. Several different values of importance were also named such as the LCD memory locations for the first line, the second line, and the end of the second line. 
+The multipurpose register was setup as r16. At r0 and r1 any multiplication output will be set, such that the outputs of any multiplication operation are automatically assigned to them. A default zero register is set to r2. Two other generic variable registers are defined as r3 and r4. Finally two registers named oloop and iloop are used for counting within the assembly itself.
 
 \subsection{Initialization Routine}
-Firstly the stack pointer is initialized, next the LCD display is initialized via an rcall. Finally the port D is initialized to have all inputs. 
+Firstly the stack pointer is initialized, then the register defined above as the zero register is cleared.
 
 \subsection{Main Routine}
-The main routine is quite simple, First a function is called BTN2MPR, then using the output of this function, expected to be saved to mpr, we can compare particular bits to see if buttons have been pressed. If a button, say button d5 is pressed, then an rcall is made to DISPNAMES. This will continue to loop until the end of time. 
+The main operations that happen in the main routine are those that are initialized below and are called in this order. Firstly the adding operations take place, those being LOADADD16 and ADD16. Next the functions associated with the subtraction operation are called, those being LOADSUB16 and SUB16. Next the functions referencing the MUL24 operation are called. In order they are called LOADMUL24 and MUL24. Finally the compound function set is called, being LOADCOMPOUND and COMPOUND. Once all of these functions have been called the main method loops at the done flag, determining the program to be complete.
 
 
 \subsection{Subroutines}
-	\subsection{MARQUEE}
-	The marquee function will shift letters from their current locations to the right and if they go off the screen they will loop around. This will happen at a stock rate of 1 movement per quarter second. This can be adjusted. Marquee will continue until button 6 is pressed. First the function loads the display with all the characters then it goes into its main loop, rotating the characters back and forth, and making sure to write to the LCD in between each moment. Some added functionality of this subroutine is that we can speed up or slow down the marquee if necessary. Once button 6 has been pressed the loop will end and the function returns to the main or wherever called it. 
+	\subsection{ADD16}
+	This subroutine adds two 16 bit numbers together. It does this by taking each X Y and Z registers and setting them to operator 1 operator 2 and the location to save the result respectively. Next, using the A variable register as an intermediary the two inputs were added together and saved into the Z register location. Finally if the carry flag is set at the end of the whole operation then we can assume the most significant bit needs to be set to 1, so it is done. 
 	
-	\subsection{ROTCHAR}
-	ROTCHAR rotates all charters right through the memory where the LCD pulls from. It does not write to the display it only edits the memory locations. It preforms this action by pushing the variables it is going to use to the stack for safe keeping, then it loads the LCD Ends into the Y pointer. It then pulls the last character and saves it into mpr and pushes it to the stack. Mpr is then loaded with the pre-decremented location of Y, causing the letter before last to be saved into mpr. it is then moved up by 1 in memory, and this will continue until the first character is moved, then the loop breaks and the first character is set to the character previously pushed to the stack. Finally all variables are popped back to their previous locations and the program counter returns to where it was before.  
+	\subsection{SUB16}
+  	This subroutine takes two different inputs and subtracts the first from the second. The X Y and Z registers are initialized at the beginning of this subroutine first, the same way that they are in the add subroutine. In the actual operation part of this subroutine A and B registers are loaded with the lower values of X and Y and subtracted from each other. This is then preformed again to account for the second word. Due to the fact that we do not need to worry about signage these are each saved directly to the location pointed to by Z 
 
 
-	\subsubsection{BTN2MPR}
-	Places the 4 button inputs into the higher 4 bits of mpr. These buttons are active low. To confirm that it is only the 4 top most bits being saved into mpr an and filter is applied before returning to the main function. 
+	\subsubsection{MUL24}
+	 
 	
-	\subsubsection{DISPNAMES}
-	This subroutine is quite simple, it first pushes all the variables it is going to use onto the stack. Then it loads the string locations into the Z pointer, it also loads the LCD locations into the Y pointer. Then using mpr it copies data from the Z pointer to the LCD location 1 letter at a time, until both the top and the bottom buffers have been filled. then it calls the lcd write function, and finally pops all the saved variables off the stack before returning back to the previous function. 
+	\subsubsection{ADDMUL2x}
 	
-	\subsubsection{Wait}
-	The Wait subroutine controls the wait intervals while another function is preforming an action. Due to each clock cycle taking a measurable amount of time, we can calculate how many times we need to loop for. This function used the olcnt and ilcnt to have two nested loops, running the dec command until they equal zero, thus waiting the requested amount of time. \textbf{The original program was changed by modifying the Wtime constant value by shifting the bit back by 1 space inside of the HitRight subroutine and the HitLeft subroutine. This effectively doubles the wait time. See Lines 167, 201}
-
+	
+	\subsubsection{LOADMUL24}
+	
+	\subsubsection{LOADADD16}
+	
+	\subsubsection{LOADSUB16}
+	
+	\subsubsection{COMPOUND}
+	
+	\subsubsection{LOADCOMPOUND}
+	
+	\subsubsection{CLRRES}
+	
+	\subsubsection{MUL16}
+	
+	\subsubsection{FUNC}
 
 \section{Testing}
 Tested each button
