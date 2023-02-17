@@ -1,7 +1,8 @@
 
 Lab1/Lab1/.vs
-Lab4/Lab4Assm/Lab4Assm/Debug/Lab4Assm.tmp
-Lab4/Lab4Assm/Lab4Assm/Debug/Lab4Assm.obj
-Lab4/Lab4Assm/Lab4Assm/Debug/Lab4Assm.map
-Lab4/Lab4Assm/Lab4Assm/Debug/Lab4Assm.lss
-Lab4/Lab4Assm/Lab4Assm/Debug/Lab4Assm.hex
+*.tmp
+*.obj
+*.map
+*.lss
+*.hex
+.atsuo
