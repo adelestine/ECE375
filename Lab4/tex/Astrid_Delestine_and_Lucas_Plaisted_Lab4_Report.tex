@@ -76,40 +76,39 @@ The main operations that happen in the main routine are those that are initializ
 	\subsection{SUB16}
   	This subroutine takes two different inputs and subtracts the first from the second. The X Y and Z registers are initialized at the beginning of this subroutine first, the same way that they are in the add subroutine. In the actual operation part of this subroutine A and B registers are loaded with the lower values of X and Y and subtracted from each other. This is then preformed again to account for the second word. Due to the fact that we do not need to worry about signage these are each saved directly to the location pointed to by Z 
 
-
 	\subsubsection{MUL24}
+	This subroutine takes 4 different data locations and multiplies 24 bits by 24 bits, resulting in a 48 bit number. It must be built differently to the MUL16 operation. Every time addition occurs  we need to check for the carry bit and pass it forward if necessary. This will continue until there is no carry bit to pass upward. In reality this can only ever happen up to 4 times. In this subroutine the first operand is loaded into the Z pointer. Then the second operand is loaded into the Y pointer, finally the result is loaded into the X register. For each of these, they load the start of each because they will increment throughout the method. The data in Y an Z are multiplied and the result is stored in r0 and r1. ADDMUL2x is then called. This fixes the carry bit problem of multiplying by 24 bits and as long as we call ADDMUL2x after our multiplication then everything will work out. 
 	 
 	
 	\subsubsection{ADDMUL2x}
-	
-	
-	\subsubsection{LOADMUL24}
-	
-	\subsubsection{LOADADD16}
-	
-	\subsubsection{LOADSUB16}
+	This subroutine adds a partial multiplication result to the location x is pointing to. This presumes that x is already pointing to the location where the low result of the current multiplication needs to go. Essentially it takes the multiplication outputs and cycles the carry bit up until it cannot anymore. It utilized a loop moving the carry byte in and out of X when necessary.
 	
 	\subsubsection{COMPOUND}
-	
-	\subsubsection{LOADCOMPOUND}
+	Preforms the operation \(((G-H)+I)^2\) Using multiplication, addition and subtraction.
 	
 	\subsubsection{CLRRES}
+	Clears the result memory locations for each ADD16 SUB16 and MUL24. Makes heavy use of the zero register
+	
+	\subsubsection{LOADMUL24, LOADADD16, LOADSUB16, \& LOADCOMPOUND}
+	These subroutines have all been combined as they all do essentially the same operation, they just differ in the data they point to. They load all of the numbers used in each subroutine called above from data memory into program memory so that they are more easily accessible. 
 	
 	\subsubsection{MUL16}
+	A pre-supplied basis subroutine that multiplies 2 16 bit numbers together. 
 	
 	\subsubsection{FUNC}
+	A pre-supplied boiler plate function template that each subroutine is based off of.
 
 \section{Testing}
-Tested each button
+Tested Each input value and compared to external calculations.
 \begin{table}[h]
 	\centering
 	\begin{tabular}{|l|l|l|ll}
 		\cline{1-3}
 		Case & Expected & Actual meet expected &  &  \\ \cline{1-3}
-	D4 Pressed	&Clears the Display&	\checkmark  &  \\ \cline{1-3}
-	D5 Pressed	&Shows 2 lines of text, Each name&	\checkmark	&  \\ \cline{1-3}
-	D6 Held after D7 is Pressed	&Cancels Marquee&	\checkmark  &  \\ \cline{1-3}
-	D7 Pressed	&Begins Marquee&	\checkmark	&  \\ \cline{1-3}
+	\( \$FCBA + \$FFFF \) 	&\$01FCB9&	\checkmark  &  \\ \cline{1-3}
+	\( \$FCB9 - \$E420 \)	&\$1899&	\checkmark	&  \\ \cline{1-3}
+	\( \$00FFFFFF * \$00FFFFFF \)	&\$FFFFFE000001&	\checkmark  &  \\ \cline{1-3}
+	\(((\$FCBA-\$2022)+\$21BB)^2\)	&\$FCA8CEE9&	\checkmark	&  \\ \cline{1-3}
 	
 %		&          &                      &  &  \\ \cline{1-3}
 	\end{tabular}
@@ -121,34 +120,62 @@ Tested each button
     \item
     Although we dealt with unsigned numbers in this lab, the ATmega32 micro-controller also has some features which are important for performing signed arithmetic. What does the V flag in the status register indicate? Give an example (in binary) of two 8-bit values that will cause the V flag to be set when they are added together.
     
+    The V flag is the 2's complement overflow indicator, this would be useful when two negative values are being added or subtracted for example 0b1000\_0000 - 0b1000\_0000. This result would no longer fit in the 2's complement space, and so the V flag would be thrown
+    
+    
     \item 
     In the skeleton file for this lab, the .BYTE directive was used to allocate some data memory locations for MUL16’s input operands and result. What are some benefits of using this directive to organize your data memory, rather than just declaring some address constants using the .EQU directive?
+    
+    Using the .BYTE directive allows you to not only assume the space is empty but also it allows you to pre-allocate a size of the space that .equ does not.
+    
+    
     \item 
     In computing, there are traditionally two ways for a microprocessor to listen to other devices and communicate: polling and interrupts. Give a concise overview/description of each method, and give a few examples of situations
     where you would want to choose one method over the other.    
+    
+    Polling is essentially when the computer is constantly asking a device for its status. This might be good when plotting a data stream that is constantly flowing into the computer. Interrupts allow the computer to work on other tasks and if a button or certain signal is received, it stops whatever it is doing, goes and runs the triggered task, and returns to whatever it was doing prior. This would be very good for a mouse and keyboard. 
+    
     \item
 	Describe the function of each bit in the following ATmega32U4 I/O registers: EICRA, EICRB, and EIMSK. Do not just give a brief summary of these registers; give specific details for each bit of each register, such as its possible values and what function or setting results from each of those values. Also, do not just directly paste your answer from the datasheet, but instead try	to describe these details in your own words.
+	
+	in EICRA bits 0 and 1 determine if the signal is detected on a rising edge, falling edge, any edge, or a low level. These control the first 4 interrupts in a fashion such that interrupt 0 is the 0th and 1st bits, interrupt 1 is the 2nd and 3rd bits, and so on. EICRB is very similar except it only handles external interrupt 6, on its 4th and 5th bits. all of its other bits are reserved. EIMSK is an interrupt mask, to enable an interrupt it must be enabled here, the interrupt is associated with its bit, ie bit 6 masks for interrupt 6. This is active high.
+	
+	
     
 	\item 
 	The ATmega32U4 microcontroller uses interrupt vectors to execute particular instructions when an interrupt occurs. What is an interrupt vector? List the interrupt vector (address) for each of the following ATmega32U4 interrupts: Timer/Counter0 Overflow, External Interrupt 6, and Analog Comparator.
 	
-	
+	The atmega32u4 has 43 different reset and interrupt vectors an interrupt vector is a trigger that allows a certain function to be run. Timer/Counter0:\$002E External Interrupt 6:\$000E and Analog Comparator:\$0038
 	
 	
 	\item 
-	Microcontrollers often provide several different ways of configuring interrupt triggering, such as level detection and edge detection. Suppose the signal shown in Figure 1 was connected to a microcontroller pin that was configured
-	as an input and had the ability to trigger an interrupt based on certain signal conditions. List the cycles (or range of cycles) for which an external interrupt would be triggered if that pin’s sense control was configured for: (a) rising
-	edge detection, (b) falling edge detection, (c) low level detection, and (d) high level detection. Note: There should be no overlap in your answers, i.e., only one type of interrupt condition can be detected during a given cycle.
+	Microcontrollers often provide several different ways of configuring interrupt triggering, such as level detection and edge detection. Suppose the signal shown in Figure 1 was connected to a microcontroller pin that was configured as an input and had the ability to trigger an interrupt based on certain signal conditions. List the cycles (or range of cycles) for which an external interrupt would be triggered if that pin’s sense control was configured for: (a) rising edge detection, (b) falling edge detection, (c) low level detection, and (d) high level detection. Note: There should be no overlap in your answers, i.e., only one type of interrupt condition can be detected during a given cycle.
 	
+	\begin{enumerate}
+		\item 
+		rising edge detection: 7,14
+		
+		\item 
+		falling edge detection: 2,11
+		
+		
+		\item 
+		low level detection: 3 $\rightarrow$ 6, 12 $\rightarrow$ 13
+		
+		\item
+		high level detection: 1, 8 $\rightarrow$ 10, 15
+	\end{enumerate}
 	
 
 \end{enumerate}
 
 \section{Difficulties}
-This lab was not too difficult, however determining exactly how the marquee needed to work was definitely a challenge. After sorting out the bugs, it was extremely exciting to see text show up on the display.  
+This lab was more challenging than the last, however it did not require us to learn anything outside of lecture. This is a good thing, due to the fact that we re only expected to know exactly what we are taught.
 
 \section{Conclusion}
-This lab really helped teach just how peripherals can work, and how the ATMEGA32U4 handles certain peripherals. Several parts were challenging however these stimulating moments allowed the student to learn and understand what they needed to do at the same time. 
+This lab cemented the ideas of logical operands and allowed the student to understand how computers operate with large numbers, especially larger numbers than they might be able to handle naively. Additionally the pencil and paper method described in the handout was not how I was taught how to do multiplication, so the solution may be more or less difficult depending on the students type of education.
+
+\pagebreak
 
 \section{Source Code}%
 \lstinputlisting
