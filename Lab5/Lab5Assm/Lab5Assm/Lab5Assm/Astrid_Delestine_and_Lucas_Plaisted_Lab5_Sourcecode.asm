@@ -1,7 +1,7 @@
 ;***********************************************************
 ;*	This is the skeleton file for Lab 5 of ECE 375
 ;*
-;*	 Author: Enter your name
+;*	 Author: Astrid Delestine & Lucas Plaisted
 ;*	   Date: Enter Date
 ;*
 ;***********************************************************
@@ -28,6 +28,7 @@
 		rjmp 	INIT			; Reset interrupt
 
 		; Set up interrupt vectors for any interrupts being used
+		
 
 		; This is just an example:
 ;.org	$002E					; Analog Comparator IV
@@ -53,6 +54,7 @@ INIT:							; The initialization routine
 
 		; Turn on interrupts
 			; NOTE: This must be the last thing to do in the INIT function
+		sei ; Turn on interrupts
 
 ;***********************************************************
 ;*	Main Program
