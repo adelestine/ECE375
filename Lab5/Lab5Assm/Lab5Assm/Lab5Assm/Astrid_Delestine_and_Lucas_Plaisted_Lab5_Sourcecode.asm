@@ -8,13 +8,22 @@
 
 .include "m32U4def.inc"			; Include definition file
 
-;***********************************************************
-;*	Internal Register Definitions and Constants
-;***********************************************************
-.def	mpr = r16				; Multipurpose register
+;************************************************************
+;* Variable and Constant Declarations
+;************************************************************
+.def	mpr = r16				; Multi-Purpose Register
+.def	waitcnt = r17				; Wait Loop Counter
+.def	ilcnt = r18				; Inner Loop Counter
+.def	olcnt = r19				; Outer Loop Counter
 
-.equ	WskrR = 0				; Right Whisker Input Bit
-.equ	WskrL = 1				; Left Whisker Input Bit
+.equ	WTime = 100				; Time to wait in wait loop
+
+.equ	WskrR = 4				; Right Whisker Input Bit
+.equ	WskrL = 5				; Left Whisker Input Bit
+.equ	EngEnR = 5				; Right Engine Enable Bit
+.equ	EngEnL = 6				; Left Engine Enable Bit
+.equ	EngDirR = 4				; Right Engine Direction Bit
+.equ	EngDirL = 7				; Left Engine Direction Bit
 
 ;***********************************************************
 ;*	Start of Code Segment
