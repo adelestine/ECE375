@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.2.1)  23 FEB 2023 06:00
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.2.1)  23 FEB 2023 06:14
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -287,7 +287,7 @@ File: Block Diagram L5.jpg Graphic file (type jpg)
 Package pdftex.def Info: Block Diagram L5.jpg  used on input line 55.
 (pdftex.def)             Requested size: 341.4261pt x 284.53154pt.
 
-[1 <./Block Diagram L5.jpg>]
+[1 <./Block Diagram L5.jpg>] [2]
 LaTeX Font Info:    Trying to load font information for U+msa on input line 95.
 
 
@@ -300,7 +300,7 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 95.
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-[2] [3] [4]
+[3] [4]
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
@@ -330,7 +330,7 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 49.
 
 [6] [7] [8] [9] [10] [11] [12]
-Overfull \hbox (21.2151pt too wide) in paragraph at lines 405--407
+Overfull \hbox (21.2151pt too wide) in paragraph at lines 408--410
 [][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
@@ -338,7 +338,7 @@ Overfull \hbox (21.2151pt too wide) in paragraph at lines 405--407
 Here is how much of TeX's memory you used:
  6186 strings out of 476404
  89305 string characters out of 2789525
- 1927324 words of memory out of 3000000
+ 1928324 words of memory out of 3000000
  26473 multiletter control sequences out of 15000+600000
  519810 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
@@ -356,7 +356,7 @@ MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/deles/AppData/Local/
 Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/deles/AppDa
 ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb>
 Output written on Astrid_Delestine_and_Lucas_Plaisted_Lab5_Report.pdf (15 pages
-, 199962 bytes).
+, 200425 bytes).
 PDF statistics:
  104 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)

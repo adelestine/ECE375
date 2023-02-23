@@ -64,25 +64,25 @@ The multipurpose register was setup as r16. At r0 and r1 any multiplication outp
 
 \subsection{Interrupt Vectors}
 Vectors setup are;
-Hit right on interrupt 0,
-Hit left on interrupt 1,
-and Clear counters on interrupt 3.
+hit right on interrupt 0,
+hit left on interrupt 1,
+and clear counters on interrupt 3.
 
 
 
 \subsection{Initialization Routine}
-Firstly the stack pointer is initialized
+Firstly the stack pointer is initialized then ports B and D are initialized for output and input respectively. The LCD is then initialized in its own subroutines as we set it to turn its backlight on and clear any remaining text on the screen. Then we set it such that it displays clear delimiters for each of our button presses. Next we load up the interrupt control for falling edge detection, and configure the interrupt mask for just the 3 interrupts we had setup earlier. Finally we run the sei command to set the interrupt flag in SREG so that the interrupts can work at all.
 
 \subsection{Main Routine}
-
+The main routine is very simple due to the fact that most operations are handled outside of the main routine by interrupts. 
 
 
 \subsection{Subroutines}
 	\subsection{ClearCounters}
-	This subroutine adds two 16 bit numbers together. It does this by taking each X Y and Z registers and setting them to operator 1 operator 2 and the location to save the result respectively. Next, using the A variable register as an intermediary the two inputs were added together and saved into the Z register location. Finally if the carry flag is set at the end of the whole operation then we can assume the most significant bit needs to be set to 1, so it is done. 
+	This subroutine clears the counters for each button press, then clears the LCD of any overflowing numbers, and resets it back to its initial state. This is done by loading all 16 characters into the data memory that the display looks at for its characters.  
 	
 	\subsection{toLCD}
-  	This subroutine takes two different inputs and subtracts the first from the second. The X Y and Z registers are initialized at the beginning of this subroutine first, the same way that they are in the add subroutine. In the actual operation part of this subroutine A and B registers are loaded with the lower values of X and Y and subtracted from each other. This is then preformed again to account for the second word. Due to the fact that we do not need to worry about signage these are each saved directly to the location pointed to by Z 
+	The toLCD subroutine is quite simple with regards to what we have already completed. It sets the first four bits of each row to the characters in data memory then uses the built in Bin2ASCII command to take the mpr register and print it to the LCD display. It then enables the LCD to write the characters to the screen.
 
 	\subsubsection{HitRight}
 	This subroutine takes 4 different data locations and multiplies 24 bits by 24 bits, resulting in a 48 bit number. It must be built differently to the MUL16 operation. Every time addition occurs  we need to check for the carry bit and pass it forward if necessary. This will continue until there is no carry bit to pass upward. In reality this can only ever happen up to 4 times. In this subroutine the first operand is loaded into the Z pointer. Then the second operand is loaded into the Y pointer, finally the result is loaded into the X register. For each of these, they load the start of each because they will increment throughout the method. The data in Y an Z are multiplied and the result is stored in r0 and r1. ADDMUL2x is then called. This fixes the carry bit problem of multiplying by 24 bits and as long as we call ADDMUL2x after our multiplication then everything will work out. 

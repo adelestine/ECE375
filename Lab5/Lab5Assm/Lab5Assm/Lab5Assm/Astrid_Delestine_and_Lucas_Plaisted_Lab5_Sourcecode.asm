@@ -200,7 +200,7 @@ CCl2: ; While ilcnt != zero 2
 
 		rcall LCDWrite
 
-		ldi mpr , 0b0000_0111
+		ldi mpr , 0b0000_1011
 		out EIFR, mpr
 
 		pop ilcnt
@@ -322,7 +322,7 @@ HitRight:
 		inc		hrcnt;
 		rcall	toLCD;
 		;fix debounce
-		ldi mpr , 0b0000_0111
+		ldi mpr , 0b0000_1011
 		out EIFR, mpr
 		ret				; Return from subroutine
 
@@ -361,7 +361,7 @@ HitLeft:
 		inc		hlcnt	;
 		rcall	toLCD;
 				;fix debounce
-		ldi mpr , 0b0000_0111
+		ldi mpr , 0b0000_1011
 		out EIFR, mpr
 		ret				; Return from subroutine
 
