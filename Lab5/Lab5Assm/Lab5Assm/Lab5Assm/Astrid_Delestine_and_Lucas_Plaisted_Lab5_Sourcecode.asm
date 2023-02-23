@@ -319,7 +319,7 @@ HitRight:
 		inc		hrcnt;
 		rcall	toLCD;
 		;fix debounce
-		ldi mpr , 0b0000_0001
+		ldi mpr , 0b0000_0011
 		out EIFR, mpr
 		ret				; Return from subroutine
 
@@ -358,7 +358,7 @@ HitLeft:
 		inc		hlcnt	;
 		rcall	toLCD;
 				;fix debounce
-		ldi mpr , 0b0000_0010
+		ldi mpr , 0b0000_0011
 		out EIFR, mpr
 		ret				; Return from subroutine
 
