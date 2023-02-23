@@ -15,6 +15,8 @@
 .def	waitcnt = r17				; Wait Loop Counter
 .def	ilcnt = r18				; Inner Loop Counter
 .def	olcnt = r19				; Outer Loop Counter
+.def	hlcnt = r15				; Hit Left Counter
+.def	hrcnt = r14				; Hit Right Counter
 
 .equ	WTime = 100				; Time to wait in wait loop
 
@@ -53,6 +55,7 @@
 ;.org	$002E					; Analog Comparator IV
 ;		rcall	HandleAC		; Call function to handle interrupt
 ;		reti					; Return from interrupt
+.org 
 
 .org	$0056					; End of Interrupt Vectors
 
@@ -78,6 +81,11 @@ INIT:
 		ldi		mpr, $FF		; Initialize Port D Data Register
 		out		PORTD, mpr		; so all Port D inputs are Tri-State
 
+		clr		hrcnt			; sets hlcnt and hrcnt to zero by doing an xor
+		clr		hlcnt			; operation with themself
+
+
+
 
 		; Initialize external interrupts
 			; Set the Interrupt Sense Control to falling edge
@@ -93,7 +101,8 @@ INIT:
 ;***********************************************************
 MAIN:							; The Main program
 
-		; TODO
+		ldi		mpr, MovFwd		; Load Move Forward Command
+		out		PORTB, mpr
 
 		rjmp	MAIN			; Create an infinite while loop to signify the
 								; end of the program.
@@ -140,7 +149,8 @@ HitRight:
 		out		SREG, mpr	;
 		pop		waitcnt		; Restore wait register
 		pop		mpr		; Restore mpr
-		ret				; Return from subroutine
+		inc		hrcnt;
+		reti				; Return from subroutine
 
 ;----------------------------------------------------------------
 ; Sub:	HitLeft
@@ -173,7 +183,8 @@ HitLeft:
 		out		SREG, mpr	;
 		pop		waitcnt		; Restore wait register
 		pop		mpr		; Restore mpr
-		ret				; Return from subroutine
+		inc		hlcnt	;
+		reti				; Return from subroutine
 
 ;----------------------------------------------------------------
 ; Sub:	Wait
