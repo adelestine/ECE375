@@ -17,8 +17,9 @@
 .def	olcnt = r19				; Outer Loop Counter
 .def	hlcnt = r15				; Hit Left Counter
 .def	hrcnt = r14				; Hit Right Counter
+;.def	count = r20				; needed for LCD binToASCII
 
-.equ	WTime = 100				; Time to wait in wait loop
+.equ	WTime = 50				; Time to wait in wait loop
 
 .equ	WskrR = 4				; Right Whisker Input Bit
 .equ	WskrL = 5				; Left Whisker Input Bit
@@ -26,6 +27,20 @@
 .equ	EngEnL = 6				; Left Engine Enable Bit
 .equ	EngDirR = 4				; Right Engine Direction Bit
 .equ	EngDirL = 7				; Left Engine Direction Bit
+
+;//TAKEN FROM LAB3
+
+.equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
+.equ	lcdH1 = 0x01
+.equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
+.equ	lcdH2 = 0x01			; lcdH2 means the high part of line 2's location
+.equ	lcdENDH = 0x01			; as it sounds, the last space in data mem
+.equ	lcdENDL = 0x1F			; for storing lcd text
+
+;//END TAKEN FROM LAB3
+
+.equ	strSize = 4;
+
 
 ;/////////////////////////////////////////////////////////////
 ;These macros are the values to make the TekBot Move.
@@ -55,7 +70,17 @@
 ;.org	$002E					; Analog Comparator IV
 ;		rcall	HandleAC		; Call function to handle interrupt
 ;		reti					; Return from interrupt
-.org 
+.org	$0002 ;INT0
+		rcall	HitRight		;RIGHT WHISKER
+		reti
+.org	$0004 ;INT1
+		rcall	HitLeft		;LEFT WHISKER
+		reti
+;.org	$0006 ;INT2
+.org	$0008 ;INT3
+		rcall	ClearCounters		;CLEAR COUNTERS
+		reti
+;.org	$000E ;INT6
 
 .org	$0056					; End of Interrupt Vectors
 
@@ -81,20 +106,28 @@ INIT:
 		ldi		mpr, $FF		; Initialize Port D Data Register
 		out		PORTD, mpr		; so all Port D inputs are Tri-State
 
-		clr		hrcnt			; sets hlcnt and hrcnt to zero by doing an xor
-		clr		hlcnt			; operation with themself
 
 
+	;init the LCD
+		rcall LCDInit
+		rcall LCDBacklightOn
+		rcall LCDClr
+		rcall toLCD
+
+		rcall ClearCounters
 
 
-		; Initialize external interrupts
-			; Set the Interrupt Sense Control to falling edge
+	; Initialize external interrupts
+		; Set the Interrupt Sense Control to falling edge
+		ldi mpr, 0b10001010
+		sts EICRA, mpr;
 
-		; Configure the External Interrupt Mask
-
-		; Turn on interrupts
-			; NOTE: This must be the last thing to do in the INIT function
-		sei ; Turn on interrupts
+	; Configure the External Interrupt Mask
+		ldi mpr, 0b0000_1011 ; x0xx_0000 ; all disabled
+		out EIMSK, mpr;
+	; Turn on interrupts
+		; NOTE: This must be the last thing to do in the INIT function
+	sei ; Turn on interrupts
 
 ;***********************************************************
 ;*	Main Program
@@ -117,6 +150,134 @@ MAIN:							; The Main program
 ;	interrupt, and maybe a wait function
 ;------------------------------------------------------------
 
+;-----------------------------------------------------------
+; Func: Template function header
+; Desc: Cut and paste this and fill in the info at the
+;		beginning of your functions
+;-----------------------------------------------------------
+ClearCounters:							; Begin a function with a label
+
+		; Save variable by pushing them to the stack
+
+		; Execute the function here
+		clr		hrcnt			; sets hlcnt and hrcnt to zero by doing an xor
+		clr		hlcnt			; operation with themself
+
+		push ZL				; Save vars to stack
+		push ZH
+		push XL
+		push XH
+		push mpr
+		push ilcnt
+
+		ldi  ZL , low(STRING_BEG<<1)	; Sets ZL to the low bits  
+			 					; of the first string location
+		ldi  ZH , high(STRING_BEG<<1)	; Sets ZH to the first 
+								; of the first string location
+		ldi  XH , lcdH1
+		ldi  XL , lcdL1
+		ldi  ilcnt , 16
+
+CCl1: ; While ilcnt != zero 1
+		lpm  mpr, Z+
+		st   X+ , mpr
+		dec  ilcnt
+		brne CCl1
+
+		ldi	ZL, low(STRING2_BEG<<1)
+		ldi ZH, high(STRING2_BEG<<1)
+		;z is already pointing at the second string due to how memory is stored
+		ldi  XH , lcdH2
+		ldi  XL , lcdL2
+		ldi  ilcnt , 16
+
+CCl2: ; While ilcnt != zero 2
+		lpm  mpr, Z+
+		st   X+ , mpr
+		dec  ilcnt
+		brne CCl2
+
+		rcall LCDWrite
+
+		pop ilcnt
+		pop mpr
+		pop XH
+		pop XL
+		pop ZH
+		pop ZL					; Pop vars off of stack
+		; Restore variable by popping them from the stack in reverse order
+
+		ret						; End a function with RET
+
+
+;-----------------------------------------------------------
+; Func: toLCD
+; Desc: Takes various info and pushes it to the LCD
+;		*HL#:0 
+;		*HR#:0
+;-----------------------------------------------------------
+toLCD:
+		push ZL				; Save vars to stack
+		push ZH
+		push XL
+		push XH
+		push mpr
+		push ilcnt
+
+		; Sets ZL to the low bits of the first string location
+		ldi  ZL , low(STRING_BEG<<1)
+		ldi  ZH , high(STRING_BEG<<1)
+		;points to the data location where LCD draws from
+		ldi  XH , lcdH1
+		ldi  XL , lcdL1
+		ldi  ilcnt , 4
+
+Line1Loop: ; While ilcnt != zero
+		lpm  mpr, Z+
+		st   X+ , mpr
+		dec  ilcnt
+		brne Line1Loop
+		//end loop
+
+		mov mpr, hlcnt; copies the counter to mpr
+
+		rcall Bin2ASCII; Takes a value in MPR and outputs the ascii equivilant to XH:XL
+		;convineintly X is currently pointing where I would like this number to go
+
+
+		ldi	ZL, low(STRING2_BEG<<1)
+		ldi ZH, high(STRING2_BEG<<1)
+
+		ldi  XH , lcdH2
+		ldi  XL , lcdL2
+		ldi  ilcnt , 4
+
+Line2Loop: ; While ilcnt != zero 2
+		lpm  mpr, Z+
+		st   X+ , mpr
+		dec  ilcnt
+		brne Line2Loop
+
+
+		mov mpr, hrcnt;
+		rcall Bin2ASCII
+
+		rcall LCDWrite
+
+
+
+
+
+
+		pop ilcnt
+		pop mpr
+		pop XH
+		pop XL
+		pop ZH
+		pop ZL					; Pop vars off of stack
+
+
+		ret
 ;----------------------------------------------------------------
 ; Sub:	HitRight
 ; Desc:	Handles functionality of the TekBot when the right whisker
@@ -149,8 +310,13 @@ HitRight:
 		out		SREG, mpr	;
 		pop		waitcnt		; Restore wait register
 		pop		mpr		; Restore mpr
+
 		inc		hrcnt;
-		reti				; Return from subroutine
+		rcall	toLCD;
+		;fix debounce
+		ldi mpr , 0b0000_0001
+		out EIFR, mpr
+		ret				; Return from subroutine
 
 ;----------------------------------------------------------------
 ; Sub:	HitLeft
@@ -183,8 +349,13 @@ HitLeft:
 		out		SREG, mpr	;
 		pop		waitcnt		; Restore wait register
 		pop		mpr		; Restore mpr
+
 		inc		hlcnt	;
-		reti				; Return from subroutine
+		rcall	toLCD;
+				;fix debounce
+		ldi mpr , 0b0000_0010
+		out EIFR, mpr
+		ret				; Return from subroutine
 
 ;----------------------------------------------------------------
 ; Sub:	Wait
@@ -235,8 +406,16 @@ FUNC:							; Begin a function with a label
 ;***********************************************************
 
 ; Enter any stored data you might need here
+;.org 
+STRING_BEG:
+.DB		"HL#:0           "		; Declaring data in ProgMem
+STRING2_BEG:
+.DB		"HR#:0           "
+STRING_END:
+
 
 ;***********************************************************
 ;*	Additional Program Includes
 ;***********************************************************
-; There are no additional file includes for this program
+.include "LCDDriver.asm"		; Include the LCD Driver
+
