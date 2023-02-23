@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.2.1)  23 FEB 2023 04:14
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.2.1)  23 FEB 2023 04:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -293,23 +293,13 @@ LaTeX Font Info:    Trying to load font information for U+msb on input line 52.
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
+<Block Diagram L5.jpg, id=7, 963.6pt x 722.7pt>
+File: Block Diagram L5.jpg Graphic file (type jpg)
+<use Block Diagram L5.jpg>
+Package pdftex.def Info: Block Diagram L5.jpg  used on input line 55.
+(pdftex.def)             Requested size: 341.4261pt x 284.53154pt.
 
-LaTeX Warning: File `BlockDiagram L4.jpg' not found on input line 55.
-
-
-! Package pdftex.def Error: File `BlockDiagram L4.jpg' not found: using draft s
-etting.
-
-See the pdftex.def package documentation for explanation.
-Type  H <return>  for immediate help.
- ...                                              
-                                                  
-l.55 ...th=12cm, height=10cm]{BlockDiagram L4.jpg}
-                                                  
-Try typing  <return>  to proceed.
-If that doesn't work, type  X <return>  to quit.
-
-[1] [2]
+[1 <./Block Diagram L5.jpg>] [2]
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
@@ -324,30 +314,11 @@ File: lstlang2.sty 2020/03/24 1.8d listings language file
 File: lstlang3.sty 2020/03/24 1.8d listings language file
 )
 (../Lab5Assm/Lab5Assm/Lab5Assm/Astrid_Delestine_and_Lucas_Plaisted_Lab5_sourcec
-ode.asm
-Overfull \hbox (21.2151pt too wide) in paragraph at lines 33--34
-[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (56.46504pt too wide) in paragraph at lines 35--36
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (63.51503pt too wide) in paragraph at lines 36--37
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (21.2151pt too wide) in paragraph at lines 37--38
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-[6]
+ode.asm [6]
 LaTeX Font Info:    Trying to load font information for OML+cmr on input line 4
 9.
- (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/base\omlcmr.fd
+
+(C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/base\omlcmr.fd
 File: omlcmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <12> not available
@@ -361,48 +332,18 @@ File: omscmr.fd 2022/07/10 v2.5l Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 49.
 
-[7] [8]
-Overfull \hbox (49.41505pt too wide) in paragraph at lines 140--141
-[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (49.41505pt too wide) in paragraph at lines 163--164
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-[9]
-Overfull \hbox (56.46504pt too wide) in paragraph at lines 189--190
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (21.2151pt too wide) in paragraph at lines 208--210
-[][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-[10]
-Overfull \hbox (112.86494pt too wide) in paragraph at lines 244--245
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-
-Overfull \hbox (77.615pt too wide) in paragraph at lines 245--248
-[][][][][][][][][][][][][][][][][][][][][][][][][][][][][][] 
- []
-
-[11] [12] [13]
-Overfull \hbox (21.2151pt too wide) in paragraph at lines 400--402
+[7] [8] [9] [10] [11] [12] [13]
+Overfull \hbox (21.2151pt too wide) in paragraph at lines 405--407
 [][][][][][][][][][][][][][][][][][][][][][][][][][][] 
  []
 
 [14]) [15] (Astrid_Delestine_and_Lucas_Plaisted_Lab5_Report.aux) ) 
 Here is how much of TeX's memory you used:
- 6227 strings out of 476404
- 90143 string characters out of 2789525
- 1926324 words of memory out of 3000000
- 26500 multiletter control sequences out of 15000+600000
- 519979 words of font info for 60 fonts, out of 8000000 for 9000
+ 6187 strings out of 476404
+ 89320 string characters out of 2789525
+ 1927324 words of memory out of 3000000
+ 26474 multiletter control sequences out of 15000+600000
+ 519810 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  57i,11n,62p,1042b,2145s stack positions out of 10000i,1000n,20000p,200000b,80000s
  <C:\Users\de
@@ -416,13 +357,11 @@ pe1/public/amsfonts/cm/cmr17.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/
 fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/deles/AppData/Local/Programs/
 MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Users/deles/AppData/Local/
 Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmti12.pfb><C:/Users/deles/AppDa
-ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt12.pfb><C:/Users/de
-les/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pf
-b>
+ta/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/symbols/msam10.pfb>
 Output written on Astrid_Delestine_and_Lucas_Plaisted_Lab5_Report.pdf (16 pages
-, 176301 bytes).
+, 205793 bytes).
 PDF statistics:
- 111 PDF objects out of 1000 (max. 8388607)
+ 107 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

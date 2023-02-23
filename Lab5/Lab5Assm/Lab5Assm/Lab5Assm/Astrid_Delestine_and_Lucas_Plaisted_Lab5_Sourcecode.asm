@@ -2,7 +2,7 @@
 ;*	This is the skeleton file for Lab 5 of ECE 375
 ;*
 ;*	 Author: Astrid Delestine & Lucas Plaisted
-;*	   Date: Enter Date
+;*	   Date: 2/23/2023
 ;*
 ;***********************************************************
 
@@ -30,12 +30,12 @@
 
 ;//TAKEN FROM LAB3
 
-.equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
+.equ	lcdL1 = 0x00	; Make LCD Data Memory locations constants
 .equ	lcdH1 = 0x01
-.equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
-.equ	lcdH2 = 0x01			; lcdH2 means the high part of line 2's location
-.equ	lcdENDH = 0x01			; as it sounds, the last space in data mem
-.equ	lcdENDL = 0x1F			; for storing lcd text
+.equ	lcdL2 = 0x10	; lcdL1 means the low part of line 1's location
+.equ	lcdH2 = 0x01 ; lcdH2 means the high part of line 2's location
+.equ	lcdENDH = 0x01	; as it sounds, the last space in data mem
+.equ	lcdENDL = 0x1F		; for storing lcd text
 
 ;//END TAKEN FROM LAB3
 
@@ -137,8 +137,8 @@ MAIN:							; The Main program
 		ldi		mpr, MovFwd		; Load Move Forward Command
 		out		PORTB, mpr
 
-		rjmp	MAIN			; Create an infinite while loop to signify the
-								; end of the program.
+		rjmp	MAIN			; Create an infinite while loop to 
+								; signify the end of the program.
 
 ;***********************************************************
 ;*	Functions and Subroutines
@@ -160,8 +160,8 @@ ClearCounters:							; Begin a function with a label
 		; Save variable by pushing them to the stack
 
 		; Execute the function here
-		clr		hrcnt			; sets hlcnt and hrcnt to zero by doing an xor
-		clr		hlcnt			; operation with themself
+		clr		hrcnt			; sets hlcnt and hrcnt to zero by 
+		clr		hlcnt			; doing an xor operation with itself
 
 		push ZL				; Save vars to stack
 		push ZH
@@ -186,7 +186,8 @@ CCl1: ; While ilcnt != zero 1
 
 		ldi	ZL, low(STRING2_BEG<<1)
 		ldi ZH, high(STRING2_BEG<<1)
-		;z is already pointing at the second string due to how memory is stored
+		;z is already pointing at the second 
+		;string due to how memory is stored
 		ldi  XH , lcdH2
 		ldi  XL , lcdL2
 		ldi  ilcnt , 16
@@ -205,7 +206,8 @@ CCl2: ; While ilcnt != zero 2
 		pop XL
 		pop ZH
 		pop ZL					; Pop vars off of stack
-		; Restore variable by popping them from the stack in reverse order
+		; Restore variable by popping them from the stack
+		; in reverse order
 
 		ret						; End a function with RET
 
@@ -241,8 +243,11 @@ Line1Loop: ; While ilcnt != zero
 
 		mov mpr, hlcnt; copies the counter to mpr
 
-		rcall Bin2ASCII; Takes a value in MPR and outputs the ascii equivilant to XH:XL
-		;convineintly X is currently pointing where I would like this number to go
+		rcall Bin2ASCII
+		; Takes a value in MPR and outputs  
+		; the ascii equivilant to XH:XL
+		; convineintly X is currently pointing where 
+		; I would like this number to go
 
 
 		ldi	ZL, low(STRING2_BEG<<1)
