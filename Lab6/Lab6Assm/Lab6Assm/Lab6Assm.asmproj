@@ -15,7 +15,7 @@
     <Name>Lab6Assm</Name>
     <RootNamespace>Lab6Assm</RootNamespace>
     <ToolchainFlavour>Native</ToolchainFlavour>
-    <EntryFile>$(MSBuildProjectDirectory)\main.asm</EntryFile>
+    <EntryFile>$(MSBuildProjectDirectory)\Astrid_Delestine_and_Lucas_Plaisted_Lab6_Sourcecode.asm</EntryFile>
     <KeepTimersRunning>true</KeepTimersRunning>
     <OverrideVtor>false</OverrideVtor>
     <CacheFlash>true</CacheFlash>
@@ -66,7 +66,7 @@
     </ToolchainSettings>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="main.asm">
+    <Compile Include="Astrid_Delestine_and_Lucas_Plaisted_Lab6_Sourcecode.asm">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
