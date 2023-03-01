@@ -55,8 +55,7 @@ INIT:
 			out		DDRD, mpr		; for input
 			ldi		mpr, $FF		; Initialize Port D Data Register
 			out		PORTD, mpr		; so all Port D inputs are Tri-State
-		; Configure External Interrupts, if needed
-			; Should not need any
+
 		; Configure 16-bit Timer/Counter 1A and 1B
 			; TCCRIA Bits:
 				; 7:6 - Timer/CounterA compare mode, 10 = non-inverting mode
@@ -75,16 +74,11 @@ INIT:
 			sts TCCR1B, mpr
 			; Fast PWM, 8-bit mode, no prescaling
 				; In inverting Compare Output mode output is cleared on compare match and set at TOP
-				;
-
-		; Set TekBot to Move Forward (1<<EngDirR|1<<EngDirL) on Port B
-			ldi mpr, $F0
-			out PINB, mpr
+		
 		; Set initial speeed, display on Port B pins 3:0
 			ldi speeed, $0F
 			rcall WRITESPD
-		; Enable global interrupts (if any are used)
-			; Not used
+
 		ldi waitcnt, 5	; Set wait timer to be 100ms
 
 ;***********************************************************
@@ -99,6 +93,8 @@ MAIN:
 		rcall DECSPD
 		sbrs mpr, 4
 		rcall INCSPD
+
+		ldi mpr, $00
 
 		rjmp	MAIN			; return to top of MAIN
 
@@ -115,18 +111,16 @@ MAIN:
 INCSPD:
 		; Push to stack
 		push mpr
-
+		cpi speeed, 15	; check if we are at max speed
+		breq INCSKIP	; Don't incremend
 		inc speeed		; increase the speeed
-		sbrc speeed, 5	; Skip next command if bit 5 is cleared
-						; If bit 5 is set then we are 16+, 15 is max
-		ldi speeed, 15	; If we are over 15, set speeed to 15
 		rcall WRITESPD
 INCHOLD:				; Don't leave until we let go of the button
 		rcall Wait		; Wait 50ms, debouncing
 		in mpr, PIND	; Grab current button value
 		sbrs mpr, 4		; Check if button is still held
 		rjmp INCHOLD	; Stay in loop if held
-		; Pop from stack
+INCSKIP:
 		pop mpr
 		ret						; End a function with RET
 
@@ -154,10 +148,11 @@ DECSKIP:
 
 ;-----------------------------------------------------------
 ; Func:	MAXSPD
-; Desc:	Increases the "speeed" 
+; Desc:	Increases the "speeed" to max (15)
 ;-----------------------------------------------------------
 MAXSPD:
 		push mpr
+
 		ldi speeed, 15
 		rcall WRITESPD
 MAXHOLD:				; Don't leave until we let go of the button
@@ -165,6 +160,7 @@ MAXHOLD:				; Don't leave until we let go of the button
 		in mpr, PIND	; Grab current button value
 		sbrs mpr, 7		; Check if button is still held
 		rjmp MAXHOLD	; Stay in loop if held
+
 		pop mpr
 		ret						; End a function with RET
 
@@ -175,19 +171,25 @@ MAXHOLD:				; Don't leave until we let go of the button
 ;-----------------------------------------------------------
 WRITESPD:
 		push mpr
+		push R0
+		push R1
+
 		ldi mpr, 17		; 255/15 = 17
-		mul speeed, mpr	; speeed*17 = pulse width
+		mul speeed, mpr	; speeed*17 = pulse width, result in R0
 		clr mpr			; set mpr to 0
-		sts OCR1AH, mpr	; write to high byte of both compares
+		sts OCR1AH, mpr	; write to high byte of compare A
 		mov mpr, R0		; place output into mpr. Max 255 = 1 reg
-		sts OCR1AL, mpr	; write to low byte of both compares
+		sts OCR1AL, mpr	; write to low byte of compare B
 		clr mpr
-		sts OCR1BH, mpr	; only done because requried
-		mov mpr, R0		; place output into mpr. Max 255 = 1 reg
-		sts OCR1BL, mpr	; write to low byte of both compares
+		sts OCR1BH, mpr	; clear high of compare B
+		mov mpr, R0		; copy output to mpr again
+		sts OCR1BL, mpr	; write to low byte of compare B
 		ldi mpr, 0b10010000
 		add mpr, speeed
-		out PINB, mpr
+		out PORTB, mpr
+
+		pop R1
+		pop R0
 		pop mpr
 		ret
 
