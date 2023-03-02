@@ -46,12 +46,14 @@
 
 \section{Introduction}
 %This is the first Lab in the ECE 375 series and it covers the setup and compilation of an AVR Assembly Program. The student will learn how how to use the sample Basic Bump Bot assembly file and send the binaries to the AVR Microcontroller board. For the second part of the lab the student will be expected to download and compile the included C sample program and from it learn how to configure the I/O ports of the ATmega32U4 Microcontroller. The student will then write their own C program and upload it to the Microcontroller to verify that it runs as expected. The provided programs have been attached in the source code section of this report.
+In this lab the student is expected to learn how to configure the 16 bit Timer/Counter on the ATMEGA32U4 to generate pulse width modulation signals. This is then applied to the LED'S on the bump bot script, to show how speed could be modified on the motors.
 
 
 \section{Design}
+The design for this Lab was created to fulfill the requirements of this lab. External button inputs will be used to increment and decrement the speed at which the PWM signal operates. This is done by offsetting the Timer/Counter 1.
 
 \begin{figure}[h]
-	\includegraphics[width=12cm, height=10cm]{Block Diagram L5.jpg}
+	\includegraphics[width=12cm, height=10cm]{Block Diagram L6.jpg}
 	\centering
 \end{figure}
 	
@@ -59,33 +61,30 @@
 As for the Assembly program an overview can be seen below. 
 
 \subsection{Internal Register Definitions and Constants}
-
+The standard mpr and waitcnt registers are assigned to registers 16 and 17 respectively, as are ilcnt and olcnt to 18 and 19. Additionally a register named speeed is set to r20. This register will control the speed at which out PWM signal operates.
 
 \subsection{Interrupt Vectors}
-
-
-
-
+no interrupt vectors were included in this assignment. 
 \subsection{Initialization Routine}
-
+The init routine first setup the stack pointer, then the IO ports B and D are configured fro output and input respectively. Next the 16 bit timer/counter 1 is initialized, this is done through the modification of TCCR1A and TCCR1B. The initial speed is then set by calling the writespd command. Finally the wait counter register is initialized to 100 ms, done by setting it to 5.
 
 \subsection{Main Routine}
-
+The main subroutine just polls the buttons for input, testing to see if any of them are pressed, and if they are, triggering the expected input. This main routine then loops. 
 
 
 \subsection{Subroutines}
 	\subsection{INCSPD}
-	
-	
+	This subroutine first checks to see if the max speed has not already been reached, then if not it increments the speed counter. After incrementing the speeed register the WRITESPD subroutine is called. This function will then continue checking to see if the button is being held, and will increment if the button is held, this will handle any bouncing of the button input.
 	\subsection{DECSPD}
-	
+	This subroutine works the same way that the INCSPD subroutine does, except for the fact that it decrements the speeed register instead of incrementing it.
 
 	\subsubsection{MAXSPD}
-
+	This subroutine sets the max speed for the PWM. To do this it sets the speeed register to 15, the max value. 
+	The hold part of the function is then operated, this part fixes any denouncing. 
 	 
 	
 	\subsubsection{WRITESPD}
-
+	The writespd subroutine sets the high byte and the low byte of the speeed register multiplied by 17, this will result in a max value of 255, as the r0 register is moved to mpr. Mpr is then copied to the high and low sides of OCR1A and OCR1B. 
 	
 	\subsubsection{Wait}
 	The standard wait function.
@@ -99,10 +98,10 @@ Tested Each button press and compared to external calculations.
 	\begin{tabular}{|l|l|l|ll}
 		\cline{1-3}
 		Case & Expected & Actual meet expected &  &  \\ \cline{1-3}
-	d4	&an increment on the LCD, and the bump bot right hit function to be called&	\checkmark  &  \\ \cline{1-3}
-	d5	&an increment on the LCD, and the bump bot left hit function to be called&	\checkmark	&  \\ \cline{1-3}
-	d6	&The two numbers listed on the screen reset&	\checkmark  &  \\ \cline{1-3}
-	d7	&nothing&	\checkmark	&  \\ \cline{1-3}
+	d4	&speed increments&	\checkmark  &  \\ \cline{1-3}
+	d5	&speed decrements&	\checkmark	&  \\ \cline{1-3}
+	d6	&nothing&	\checkmark  &  \\ \cline{1-3}
+	d7	&the max speed for the PWM is set&	\checkmark	&  \\ \cline{1-3}
 	
 %		&          &                      &  &  \\ \cline{1-3}
 	\end{tabular}
@@ -114,6 +113,8 @@ Tested Each button press and compared to external calculations.
     \item
     In this lab, you used the Fast PWM mode of 16-bit Timer/Counter, which is only one of many possible ways to implement variable speed on a Tek-Bot. Suppose instead that you used Normal mode, and had it generate an interrupt for every overflow. In the overflow ISR, you manually toggled both Motor Enable pins of the TekBot, and wrote a new value into the Timer/Counter’s register. (If you used the correct sequence of values, you would be manually performing PWM.) Give a detailed assessment (in 1-2 paragraphs) of the advantages and disadvantages of this new approach, in comparison to the PWM approach used in this lab.
     
+    Some of the advantages of this approach would be having a more granular understanding and control of the signal, the signal would have to be manually interpreted and whenever it overflows, that overflow would need to be handled. This could be considered either a good thing or a bad thing, however with regards to how this timer was setup in this lab, having more understanding might have been easier to program. While it may be easier to program a more direct approach, using the method taken in this lab results in a clearer end product, in the form of code. In the end however they both function in an externally similar way.
+    
     
     \item 
     the previous question outlined a way of using a single 16-bit Timer/Counter in Normal mode to implement variable speed. How would you accomplish the same task (variable TekBot speed) using in CTC mode? Provide a rough-draft sketch of the Timer/Counter-related parts of your design, using either a flow chart or some pseudocode (but not actual assembly code)
@@ -124,9 +125,7 @@ Tested Each button press and compared to external calculations.
     	\centering
     \end{figure}
    
-    
-
-    
+   
     \item 
 	In the next lab, you will be utilizing Timer/Counter1, which can make use of several 16 bit timer registers. The datasheet describes a particular manner in which these registers must be manipulated. To illustrate the process,
 	write a snippet of assembly code that configures OCR1A with a value of 0x1234. For the sake of simplicity, you may assume that no interrupts are triggered during your code’s operation.
@@ -153,10 +152,10 @@ Tested Each button press and compared to external calculations.
 \end{enumerate}
 
 \section{Difficulties}
-This Lab challenged the thinking power of implementation of ideas we have learned in lecture. It was not too difficult however did require refrenceing both the AVR manual and the atmega32u4 datasheet.
+This Lab was only diffucult due to the fact that there was a lot of reading and direct understanding of the AVR manual. Besides that the lab was quite simple to understand.
 
 \section{Conclusion}
-In conclusion, this lab introduced and allowed the student to understand many more aspects of how to program a function using interrupts and modify an existing program to work with an LCD in conjunction with those interrupts. This lab proves that the student is learning how to modify certain code structures and is becoming more fluent in the AVR programming scheme
+In conclusion, this lab allowed the student to experiment with using the 16 bit timer/counter and gain a better understanding for how dimming LEDs work and how motor speed control can work. Additionally the student learned how to find specific item in the AVR manual in a faster and clearer way. While this may not have been an intended goal of the lab, it was a useful outcome.
 
 \pagebreak
 

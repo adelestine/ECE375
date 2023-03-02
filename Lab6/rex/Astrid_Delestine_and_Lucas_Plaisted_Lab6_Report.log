@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.2.1)  1 MAR 2023 16:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (MiKTeX 22.12) (preloaded format=pdflatex 2023.2.1)  2 MAR 2023 00:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -281,38 +281,39 @@ File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
  [1
 
 {C:/Users/deles/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}]
-<Block Diagram L5.jpg, id=7, 963.6pt x 722.7pt>
-File: Block Diagram L5.jpg Graphic file (type jpg)
-<use Block Diagram L5.jpg>
-Package pdftex.def Info: Block Diagram L5.jpg  used on input line 54.
+<Block Diagram L6.jpg, id=7, 963.6pt x 722.7pt>
+File: Block Diagram L6.jpg Graphic file (type jpg)
+<use Block Diagram L6.jpg>
+Package pdftex.def Info: Block Diagram L6.jpg  used on input line 56.
 (pdftex.def)             Requested size: 341.4261pt x 284.53154pt.
 
-[1 <./Block Diagram L5.jpg>]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 99.
+[1 <./Block Diagram L6.jpg>]
+LaTeX Font Info:    Trying to load font information for U+msa on input line 98.
 
 
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 99.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 98.
 
 
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-Overfull \hbox (85.05367pt too wide) in paragraph at lines 99--109
- [][] 
- []
-
-<q2Drawing.png, id=12, 963.6pt x 722.7pt>
-File: q2Drawing.png Graphic file (type png)
-<use q2Drawing.png>
-Package pdftex.def Info: q2Drawing.png  used on input line 123.
-(pdftex.def)             Requested size: 341.4261pt x 284.53154pt.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[2] [3 <./q2Drawing.png>] [4]
+[2]
+<q2Drawing.png, id=15, 963.6pt x 722.7pt>
+File: q2Drawing.png Graphic file (type png)
+<use q2Drawing.png>
+Package pdftex.def Info: q2Drawing.png  used on input line 124.
+(pdftex.def)             Requested size: 341.4261pt x 284.53154pt.
+
+
+LaTeX Warning: `h' float specifier changed to `ht'.
+
+[3] [4 <./q2Drawing.png>]
 (C:\Users\deles\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2020/03/24 1.8d listings language file
 )
@@ -366,10 +367,10 @@ Here is how much of TeX's memory you used:
  26409 multiletter control sequences out of 15000+600000
  519810 words of font info for 59 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 57i,11n,62p,705b,2145s stack positions out of 10000i,1000n,20000p,200000b,80000s
+ 57i,11n,62p,707b,2145s stack positions out of 10000i,1000n,20000p,200000b,80000s
  <C:\Users\del
-es\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk> <C:\Use
-rs\deles\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcti1200.pk><C
+es\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcti1200.pk> <C:\Use
+rs\deles\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tcrm1200.pk><C
 :/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx
 12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
 s/cm/cmr12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public
@@ -377,7 +378,7 @@ s/cm/cmr12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/fonts/type1/public
 1/public/amsfonts/cm/cmti12.pfb><C:/Users/deles/AppData/Local/Programs/MiKTeX/f
 onts/type1/public/amsfonts/symbols/msam10.pfb>
 Output written on Astrid_Delestine_and_Lucas_Plaisted_Lab6_Report.pdf (11 pages
-, 203186 bytes).
+, 195103 bytes).
 PDF statistics:
  78 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
