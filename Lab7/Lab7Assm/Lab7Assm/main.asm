@@ -69,14 +69,30 @@ INIT:
 
 /*	I/O Ports
 	;USART1
-		; Need to set USCR1A, B, and C
-		; USCR1A is a SREG
-		; A: 
-		; B: x00xxx00
-			
-		; C: xxxxxxxx
-		; x's are bits that need to be set
-		; 0's are status bits, no setting, only reading
+		Need to set USCR1B and C
+		B: x00xxx00 -> 0b0_00_1_1_0_00
+			2:	 USCZ12
+			3:	 TXEN1: Transmitter enable
+			4:	 RXEN1: Receiver enable
+			7:	 RXCIE1: Receive complete interrupt enable flag,
+						 enable if using interrupts
+		C: xxxxxxxx	-> 0b00_00_1_11_0
+			0:	 UPOL1: Clock Polarity
+			2-1: USCZ11 and USCZ10
+			3:	 USBS1 stop bit select
+			5-4: UPM1 parity mode
+			7-6: UMSEL1 USART mode select
+		x's are bits that need to be set
+		0's are status bits, no setting, only reading
+	USCZ1:	011 for 8 bit
+	UMSEL1:	00 for asynchronous
+	UMP1:	00 for disbled
+	USBS1:	1 for 2-bit
+	USPOL1:	0 for rising edge
+
+	USCR1A: 0b
+	USCR1B: 0b
+	USCR1C: 0b
 */
 		; Set baudrate at 2400bps, double data rate
 		; Asynchronous Double Speed mode eq:
@@ -90,15 +106,42 @@ INIT:
 			out UBRRH1, mpr
 			ldi mpr, 0b10100001
 			out UBRRL1, mpr
-		;Enable receiver and transmitter
-			ldi r16, (1<<RXEN1)|(1<<TXEN1)	; from data sheet
-			out UCSR1B,r16					; from data sheet
-		;Set frame format: 8 data bits, 2 stop bits
-			ldi r16, (1<<USBS1)|(3<<UCSZ10)	; from data sheet
-			out UCSRnC,r16					; from data sheet
-	;TIMER/COUNTER1
-		;Set Normal mode
 
+			ldi mpr, 0b0_00_1_1_0_00
+			out UCSR1B, mpr
+			ldi mpr, 0b00_00_1_11_0
+			out UCSR1C, mpr	
+				
+	;TIMER/COUNTER1
+		;Set Normal mode, WGM13:0 = 0b000
+/*
+TIMER MATH
+	Need 1.5sec delay
+	Max count of 2^16-1 = 65,535
+	65,535/1.5 = 43690 counts/sec ideal, lower is okay
+	CPU @ 8MHz = 8*10^6 counts/sec
+	8*10^6/prescale <= 43690
+	prescale >= 8*10^6/43690
+	prescale >= 183
+	prescale should be 256 :)
+	WGM1 = 100
+*/
+	; Configure 16-bit Timer/Counter 1A and 1B
+			; TCCRIA Bits:
+				; 7:6 - Timer/CounterA compare mode, 00 = disabled
+				; 5:4 - Timer/CounterB compare mode, 00 = disabled
+				; 3:2 - Timer/CounterC compare mode, 00 = disabled
+				; 1:0 - Wave gen mode low half, 00 for normal mode
+			ldi mpr, 0b00_00_00_00
+			sts TCCR1A, mpr
+			; TCCRIB Bits:
+				; 7:5 - not relevant, 0's
+				; 4:3 - Wave gen mode high half, 00 for normal
+				; 2:0 - Clock selection, 001 = no prescale
+			ldi mpr, 0b000_00_001
+			sts TCCR1B, mpr
+			; Fast PWM, 8-bit mode, no prescaling
+				; In inverting Compare Output mode output is cleared on compare match and set at TOP
 	;Other
 
 
