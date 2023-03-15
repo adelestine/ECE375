@@ -20,10 +20,15 @@
 ;*  Internal Register Definitions and Constants
 ;***********************************************************
 .def    mpr = r16               ; Multi-Purpose Register
+.def	ilcnt = r18				
+.def	olcnt = r19
 
 ; Use this signal code between two boards for their game ready
 .equ    SendReady = 0b11111111
-
+.equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
+.equ	lcdH1 = 0x01
+.equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
+.equ	lcdH2 = 0x01			; lcdH2 means the high part of line 2's location
 ;***********************************************************
 ;*  Start of Code Segment
 ;***********************************************************
@@ -89,13 +94,10 @@ INIT:
 	UMP1:	00 for disbled
 	USBS1:	1 for 2-bit
 	USPOL1:	0 for rising edge
-
-	USCR1A: 0b
-	USCR1B: 0b
-	USCR1C: 0b
 */
 		; Set baudrate at 2400bps, double data rate
 		; Asynchronous Double Speed mode eq:
+
 /*	UBRR1 = fOSC/(8*BAUD)
 		fOSC is just the system clock, so 8MHz
 		BAUD is 2400
@@ -124,7 +126,17 @@ TIMER MATH
 	prescale >= 8*10^6/43690
 	prescale >= 183
 	prescale should be 256 :)
-	WGM1 = 100
+	WGM1 = 0b100
+	at 256 prescale how much we counting?
+	x/(8MHz/256) = 1.5s
+	x = 1.5s(8Mhz/256) = 46,875
+	so we need to load 65535-46875 = 18660
+	into the counter in order to have it count for the
+	correct amount of time
+	
+	In two 8-bit numbers, that value is
+	High: 0b01001000
+	Low:  0b11100100
 */
 	; Configure 16-bit Timer/Counter 1A and 1B
 			; TCCRIA Bits:
@@ -137,12 +149,21 @@ TIMER MATH
 			; TCCRIB Bits:
 				; 7:5 - not relevant, 0's
 				; 4:3 - Wave gen mode high half, 00 for normal
-				; 2:0 - Clock selection, 001 = no prescale
-			ldi mpr, 0b000_00_001
+				; 2:0 - Clock selection, 100 = 256 prescale
+			ldi mpr, 0b000_00_100
 			sts TCCR1B, mpr
-			; Fast PWM, 8-bit mode, no prescaling
-				; In inverting Compare Output mode output is cleared on compare match and set at TOP
-	;Other
+
+	; Load text data from program mem to data mem for easy access
+	ldi YH, high(STRING1)
+	ldi YL, low(STRING1)
+	lsl YH		; shift for program mem access
+	lsl YL
+	clr mpr
+	adc YH, mpr ; shift carry from lower byte to upper byte
+	ldi ZH, high(DATAMEMBEG)
+	ldi ZL, low(DATAMEMBEG)
+	
+	ldi ilcnt, 
 
 
 ;***********************************************************
@@ -166,9 +187,46 @@ MAIN:
 ; An example of storing a string. Note the labels before and
 ; after the .DB directive; these can help to access the data
 ;-----------------------------------------------------------
-STRING_START:
-    .DB		"Welcome!"		; Declaring data in ProgMem
-STRING_END:
+STRING1:
+.DB		"Welcome!        "
+STRING2:
+.DB		"Please press PD7"
+STRING3:
+.DB		"Ready. Waiting  "
+STRING4:
+.DB		"for the opponent"
+STRING5:
+.DB		"Game start      "
+STRING6:
+.DB		"Rock            "
+STRING7:
+.DB		"Paper           "
+STRING8:
+.DB		"Scissor         "
+STRING9:
+.DB		"You won!        "
+STRING10:
+.DB		"You lost        "
+STRING11:
+.DB		"Draw            "
+
+;***********************************************************
+;*	Data Memory Allocation
+;***********************************************************
+.dseg
+.org	$0100				; data memory allocation for MUL16 example
+DATAMEMBEG:
+welcome:	.byte 2
+press:		.byte 2
+ready:		.byte 2
+for:		.byte 2
+start:		.byte 2
+rock:		.byte 2
+paper		.byte 2
+scissor:	.byte 2
+win:		.byte 2
+lose:		.byte 2
+draw:		.byte 2 
 
 ;***********************************************************
 ;*	Additional Program Includes
