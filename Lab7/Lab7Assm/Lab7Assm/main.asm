@@ -194,9 +194,11 @@ MAIN:
 MAIN2:
 	sbic PIND, 7
 	rjmp MAIN2
-	clr mpr /*
+	clr mpr
+	clr olcnt
+	lds olcnt, UCSR1A
 	;check to see if buffer is empty
-	sbic USCR1A, UDRE1 ; skips next instuctuon if no data in USART
+	sbic olcnt, 5 ; skips next instuctuon if no data in USART
 	rcall USART_RX;
 	cpi mpr, $FF
 	brne p1 ;if equal this is p2 if not equal this is p1
@@ -213,7 +215,7 @@ p1:
 	sbr UCSR1A, RXC1
 	;wait for reccived signal of FF
 	rcall USART_RX
-	cpi mpr, $FF */
+	cpi mpr, $FF
 	rcall GAMESTART
 	
 	
@@ -229,12 +231,18 @@ p1:
 ;***********************************************************
 
 
-USART_TX:
+USART_TX: ; transmit
 	;sbis USCR1A, UDRE1	;loops as long as there are bits in the 
 						;USART register.
 	;rjmp USART_TX
 	;load data into usart ouptut buffer
-	sts	UDR1, mpr
+	;sts	UDR1, mpr\
+	lds mpr, UCSR1A
+	sbrs mpr, 5
+	rjmp USART_TX
+	
+	sts UDR1, mpr
+
 	ret
 
 USART_RX:
@@ -298,7 +306,7 @@ GAMELOOP:
 		clr oldbut
 	rjmp GAMELOOP
 GAMELOOP2:
-
+/*
 GSL1: ;gamestart loop 1
 	;check if user presses pd4 
 	;if yes increment choice reg
@@ -314,9 +322,7 @@ next:
 	add olcnt, userChoice
 	rcall WRITESCREEN
 	;check for timer
-
-	inc tmrcnt 
-	cpi tmrcnt, 4
+	*/
 
 
 
