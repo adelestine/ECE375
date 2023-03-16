@@ -243,10 +243,34 @@ USART_RX:
 
 
 GAMESTART:
+	//rcall LCDclear
+	ldi ilcnt, $FF
+	ldi olcnt, 4
+	rcall WRITESCREEN
 	;clear data in USART reg
 
 	;clear flags for USART
+	
 	;start clock for timer
+
+
+GSL1: 
+	;check if user presses pd4 
+	;if yes increment choice reg
+	SBIC PIND, 4
+	inc userChoice
+	
+	CPI userChoice, 3
+	brne next
+	clr userChoice
+next: 
+	;if choice reg is 3 set choice to 0
+
+	;disp choice
+	ldi ilcnt, 4
+	add ilcnt, userChoice
+	rcall WRITESCREEN
+
 
 
 
