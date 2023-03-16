@@ -14,7 +14,7 @@
 ;*
 ;***********************************************************
 
-.include "m32U4def.inc"         ; Include definition file
+.include "m128def.inc"         ; Include definition file
 
 ;***********************************************************
 ;*  Internal Register Definitions and Constants
@@ -69,10 +69,10 @@ INIT:
 		out		PORTD, mpr		; so all Port D inputs are Tri-State
 
 	;init the LCD
-		rcall LCDInit
+/*		rcall LCDInit
 		rcall LCDBacklightOn
 		rcall LCDClr
-
+		*/
 
 /*	I/O Ports
 	;USART1
@@ -183,7 +183,7 @@ LOADLOOP:
 MAIN:
 	ldi ilcnt, 0
 	ldi olcnt, 1
-	rcall WRITESCREEN
+;	rcall WRITESCREEN
 	sbic PIND, 7
 	rjmp MAIN
 	;TODO: ???
@@ -206,9 +206,7 @@ MAIN:
 ;*	to the words in the order shown at the bottom of the program
 ;*	
 ;***********************************************************
-WRITESCREEN:
-	push XH
-	push XL
+/*WRITESCREEN:
 	push YH
 	push YL
 	push ZH
@@ -220,9 +218,6 @@ WRITESCREEN:
 	push ilcnt
 	push olcnt
 
-	ldi XH, $03
-	ldi XL, $00
-
 	rcall LCDClr
 
 	pop  mpr		; mpr has lower byte (olcnt)
@@ -233,8 +228,7 @@ WRITESCREEN:
 		ldi ilcnt, 16
 		mul mpr, ilcnt
 		mov ZH, r1
-		mov ZL, r0	; Z loaded with offset from $0300 of data
-		add ZH, XH	; offset ZH by 3
+		mov ZL, r0	; Z loaded with location of data
 WRITELOOP1:	; moves one letter from data mem to screen data mem
 		ld mpr, Z+	; does this until 16 are moved
 		st Y+, mpr
@@ -252,8 +246,7 @@ SKIPWRITE1:
 		ldi ilcnt, 16
 		mul mpr, ilcnt
 		mov ZH, r1
-		mov ZL, r0	; Z loaded with offset from $0300 of data
-		add ZH, XH	; offset ZH by 3
+		mov ZL, r0	; Z loaded with location of data
 WRITELOOP2:	; moves one letter from data mem to screen data mem
 		ld mpr, Z+	; does this until 16 are moved
 		st Y+, mpr
@@ -270,10 +263,8 @@ SKIPWRITE2:
 	pop ZH
 	pop YL
 	pop YH
-	pop XL
-	pop XH
 	ret
-
+*/
 ;***********************************************************
 ;*		Start Timer
 ;*	Starts the timer for 1.5 seconds and clears the
@@ -333,5 +324,5 @@ draw:		.byte 16
 ;***********************************************************
 ;*	Additional Program Includes
 ;***********************************************************
-.include "LCDDriver.asm"		; Include the LCD Driver
+;.include "LCDDriver.asm"		; Include the LCD Driver
 
