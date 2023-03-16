@@ -204,7 +204,7 @@ MAIN2:
 	rcall WRITESCREEN
 	rcall USART_RX ; Wait until receive, placed in mpr
 	cpi mpr, $FF
-	breq MAIN
+	brne MAIN
 	rcall GAMESTART
 
 
@@ -216,9 +216,11 @@ MAIN2:
 
 
 USART_TX: ; transmits mpr
+	push mpr
 	lds mpr, UCSR1A
 	sbrs mpr,UDRE1
 	rjmp USART_TX
+	pop mpr
 	sts UDR1, mpr
 	ret
 
@@ -228,8 +230,6 @@ USART_RX:
 	rjmp USART_RX
 	;get data from usart into mpr
 	lds	mpr, UDR1
-	ldi mpr, (1<<RXC1)
-	sts UCSR1A, mpr
 	ret
 
 
