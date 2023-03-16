@@ -25,6 +25,7 @@
 .def	olcnt = r19
 .def	zero = r2
 .def	userChoice = r17
+.def	tmrcnt = r15
 ; Use this signal code between two boards for their game ready
 .equ    SendReady = 0b11111111
 .equ	lcd1L = 0x00			; Make LCD Data Memory locations constants
@@ -244,8 +245,8 @@ USART_RX:
 
 GAMESTART:
 	//rcall LCDclear
-	ldi ilcnt, $FF
-	ldi olcnt, 4
+	ldi olcnt, $FF
+	ldi ilcnt, 4
 	rcall WRITESCREEN
 	;clear data in USART reg
 
@@ -254,7 +255,7 @@ GAMESTART:
 	;start clock for timer
 
 
-GSL1: 
+GSL1: ;gamestart loop 1
 	;check if user presses pd4 
 	;if yes increment choice reg
 	SBIC PIND, 4
@@ -264,12 +265,13 @@ GSL1:
 	brne next
 	clr userChoice ;if choice reg is 3 set choice to 0
 next: 
-	
-
 	;disp choice
-	ldi ilcnt, 4
-	add ilcnt, userChoice
+	ldi olcnt, 4
+	add olcnt, userChoice
 	rcall WRITESCREEN
+	;
+
+
 
 
 
