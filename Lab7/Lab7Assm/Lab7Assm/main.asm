@@ -19,10 +19,12 @@
 ;***********************************************************
 ;*  Internal Register Definitions and Constants
 ;***********************************************************
+;DO NOT USE 20-22
 .def    mpr = r16               ; Multi-Purpose Register
 .def	ilcnt = r18				
 .def	olcnt = r19
 .def	zero = r2
+.def	userChoice = r17
 ; Use this signal code between two boards for their game ready
 .equ    SendReady = 0b11111111
 .equ	lcd1L = 0x00			; Make LCD Data Memory locations constants
@@ -49,6 +51,7 @@
 INIT:
 	; Most important thing possible!!!!!
 		clr		zero
+		clr		userChoice
 			;)
     ; Initialize the Stack Pointer (VERY IMPORTANT!!!!)
 		ldi		mpr, low(RAMEND)
@@ -184,17 +187,69 @@ MAIN:
 	
 	sbic PIND, 7
 	rjmp MAIN
-	;TODO: refrence flow chart
+	clr mpr
+	;check to see if buffer is empty
+	sbic USCR1A, UDRE1 ; skips next instuctuon if no data in USART
+	rcall USART_RX;
+	cpi mpr, $FF
+	brne p1 ;if equal this is p2 if not equal this is p1
+p2: 
+	ldi mpr, $FF
+	rcall USART_TX ; send confirmation
+	rcall GAMESTART
+	rjmp main
+p1:
+	;send USART FF
+	ldi mpr, $FF
+	rcall USART_TX
+	;clear rxc1
+	sbr UCSR1A, 0b1000_0000
+	;wait for reccived signal of FF
+	rcall USART_RX
+	cpi mpr, $FF
+	breq p2
+
+	
 
 
 
 	
 
-		rjmp	MAIN
+	rjmp	MAIN
 
 ;***********************************************************
 ;*	Functions and Subroutines
 ;***********************************************************
+
+
+USART_TX:
+	;sbis USCR1A, UDRE1	;loops as long as there are bits in the 
+						;USART register.
+	;rjmp USART_TX
+	;load data into usart ouptut buffer
+	out	UDR1, mpr
+	ret
+
+USART_RX:
+	sbis USCR1A, RXC1
+	rjmp USART_RX
+	;get data from usart into mpr
+	in	mpr, UDR1
+	ret
+
+
+
+
+GAMESTART:
+	;clear data in USART reg
+
+	;clear flags for USART
+	;start clock for timer
+
+
+
+
+
 
 ;***********************************************************
 ;*		Write Screen
