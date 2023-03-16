@@ -264,8 +264,8 @@ GAMELOOP:
 		lsl tmrcnt
 		mov mpr, tmrcnt
 		out PORTB, mpr
-		;cpi mpr, 0
-		;breq GAMELOOP2	; if all 4 done next
+		cpi mpr, 0
+		breq GAMELOOP2	; if all 4 done next
 		rcall STARTTIMER ; start a new timer
 	NOTIMER:
 	mov mpr, oldbut
@@ -314,7 +314,7 @@ next:
 
 
 
-	rjmp MAIN
+	ret
 
 
 
