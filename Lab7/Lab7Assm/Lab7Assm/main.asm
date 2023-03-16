@@ -255,7 +255,7 @@ GAMESTART:
 	clr userChoice
 	ldi mpr, 0b11110000
 	mov tmrcnt, mpr
-	out PINB, mpr
+	out PORTB, mpr
 	clr oldbut	; button has never had value checked!
 GAMELOOP:
 	;check if timer is over
@@ -263,7 +263,7 @@ GAMELOOP:
 	rjmp NOTIMER
 		lsl tmrcnt
 		mov mpr, tmrcnt
-		out PINB, mpr
+		out PORTB, mpr
 		;cpi mpr, 0
 		;breq GAMELOOP2	; if all 4 done next
 		rcall STARTTIMER ; start a new timer
