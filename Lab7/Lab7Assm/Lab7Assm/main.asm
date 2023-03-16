@@ -339,7 +339,19 @@ SKIPWRITE2:
 ;*	overflow flag
 ;***********************************************************
 STARTTIMER:
-	
+	;TIFR1 bit 0 has overflow flag
+	/* Timer Value:
+	High: 0b01001000
+	Low:  0b11100100*/
+	ldi mpr, 0b01001000	; Must write H first
+	out TCNT1H, mpr
+	ldi mpr, 0b11100100 ; If reading, L first
+	out TCNT2L, mpr	; timer reset
+	out TIFR1, zero	; clear overflow flag
+	; Timer is running for 1.5 sec now,
+	; just wait for bit 0 of TIFR1 to be set for the
+	; timer to be done
+	ret
 
 ;***********************************************************
 ;*	Stored Program Data
