@@ -363,6 +363,7 @@ SKIPWRITE2:
 ;*	overflow flag
 ;***********************************************************
 STARTTIMER:
+	push mpr
 	;TIFR1 bit 0 has overflow flag
 	/* Timer Value:
 	High: 0b01001000
@@ -375,6 +376,7 @@ STARTTIMER:
 	; Timer is running for 1.5 sec now,
 	; just wait for bit 0 of TIFR1 to be set for the
 	; timer to be done
+	pop mpr
 	ret
 
 ;***********************************************************
