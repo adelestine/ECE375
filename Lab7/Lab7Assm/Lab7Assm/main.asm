@@ -26,6 +26,8 @@
 .def	zero = r2
 .def	userChoice = r17
 .def	tmrcnt = r15
+.def	button = r13
+.def	oldbut = r14
 ; Use this signal code between two boards for their game ready
 .equ    SendReady = 0b11111111
 .equ	lcd1L = 0x00			; Make LCD Data Memory locations constants
@@ -255,11 +257,36 @@ GAMESTART:
 	;start clock for timer
 	rcall STARTTIMER ; start 1.5sec timer
 	clr userChoice
+	ldi tmrcnt, 0b00001111
+	out 
+	clr oldbut	; button has never had value checked!
 GAMELOOP:
 	;check if timer is over
-	sbic TIFR1, 0
-	rjmp GAMELOOP2
-
+	sbis TIFR1, 0	; if timer over:
+	rjmp NOTIMER
+		lsr, tmrcnt
+		rjmp GAMELOOP2	; if all 4 done next
+		rcall STARTTIMER ; start a new timer
+	NOTIMER:
+	cpi oldbut, zero ; if we weren't pressing the button already
+	brne ALREADYPRESSED
+		sbis PIND, 4 ; if button pressed
+		rjmp ALREADYPRESSED
+			ldi oldbut, 1 ; mark down for next loop that its pressed
+			inc userChoice ; cycle to next choice
+			cpi userChoice, 3
+			brne, BUTSKIP ; if we rolled over
+				clr userChoice ; reset to rock
+			BUTSKIP:
+			; Now we need to write the screen
+			ldi ilcnt, 4
+			ldi olcnt, 5
+			add olcnt, userChoice
+			rcall WRITESCREEN
+	ALREADYPRESSED: ; button not pressed or was already pressed landing spot
+	rcall SMALLWAIT
+	sbic PIND, 4 ; if button 4 not pressed
+		clr oldbut
 GAMELOOP2:
 
 GSL1: ;gamestart loop 1
@@ -387,7 +414,25 @@ STARTTIMER:
 	; timer to be done
 	pop mpr
 	ret
-
+;***********************************************************
+;*		Small Wait
+;*	Waits for some amount of time. How much? Only god knows.
+;*	
+;*	Useful for debouncing
+;*
+;***********************************************************
+SMALLWAIT:
+	push ilcnt
+	ldi ilcnt, $FF
+SMALLWAITLOOP:
+	dec ilcnt
+	nop		; if the switch is bouncing add more nops
+	nop
+	nop
+	cpi ilcnt, zero
+	brne SMALLWAITLOOP
+	pop ilcnt
+	ret
 ;***********************************************************
 ;*	Stored Program Data
 ;***********************************************************
