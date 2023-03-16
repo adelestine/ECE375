@@ -286,6 +286,7 @@ GAMESTART2:
 	mov mpr, userChoice
 	rcall USART_TX
 	rcall USART_RX
+	push mpr
 	ldi olcnt, 5
 	add olcnt, userChoice
 	ldi ilcnt, 5
@@ -308,9 +309,43 @@ GAMELOOP2:
 		rcall STARTTIMER ; start a new timer
 	NOTIMER2:
 	rjmp GAMELOOP2
-	ret
 GAMEEND:
+    pop mpr ;load mpr with p2 val
+	cp userChoice, mpr
+	breq draw
 
+	lsl mpr ; effective mul 2
+	add userChoice, mpr
+	cpi userChoice, 1
+	breq uWin
+	cpi userChoice, 2
+	breq theyWin
+	cpi userChoice, 4
+	breq uWin
+	cpi userChoice, 5 
+	breq theyWin
+
+	rjmp GAMEEND; THIS HSOULD NO THPPEN
+
+
+
+uWin:
+	ldi ilcnt, 8
+	rcall WRITESCREEN
+	rjmp ENDEND
+	
+theyWin:
+	ldi ilcnt, 9
+	rcall WRITESCREEN
+	rjmp ENDEND
+
+draw:
+	ldi ilcnt, 10
+	rcall WRITESCREEN
+	rjmp ENDEND
+	
+ENDEND:
+	
 
 
 
