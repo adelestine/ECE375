@@ -206,15 +206,7 @@ MAIN2:
 	cpi mpr, $FF
 	breq MAIN
 	rcall GAMESTART
-	
-p1:
-	;send USART FF
-	ldi mpr, $FF
-	rcall USART_TX
-	;wait for reccived signal of FF
-	rcall USART_RX
-	cpi mpr, $FF
-	rcall GAMESTART
+
 
 	rjmp	MAIN
 
@@ -242,14 +234,9 @@ USART_RX:
 
 
 GAMESTART:
-	//rcall LCDclear
-	ldi olcnt, $FF
+	ldi olcnt, $FF	; start screen
 	ldi ilcnt, 4
 	rcall WRITESCREEN
-	;clear data in USART reg
-
-	;clear flags for USART
-	
 	;start clock for timer
 	rcall STARTTIMER ; start 1.5sec timer
 	clr userChoice
