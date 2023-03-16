@@ -264,8 +264,8 @@ GAMELOOP:
 		lsl tmrcnt
 		mov mpr, tmrcnt
 		out PINB, mpr
-		cpi mpr, 0
-		breq GAMELOOP2	; if all 4 done next
+		;cpi mpr, 0
+		;breq GAMELOOP2	; if all 4 done next
 		rcall STARTTIMER ; start a new timer
 	NOTIMER:
 	mov mpr, oldbut
@@ -290,6 +290,7 @@ GAMELOOP:
 	sbic PIND, 4 ; if button 4 not pressed
 		clr oldbut
 	rjmp GAMELOOP
+
 GAMELOOP2:
 /*
 GSL1: ;gamestart loop 1
