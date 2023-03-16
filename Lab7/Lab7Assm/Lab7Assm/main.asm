@@ -204,7 +204,7 @@ MAIN2:
 	rcall WRITESCREEN
 	rcall USART_RX ; Wait until receive, placed in mpr
 	cpi mpr, $FF
-	brne MAIN2
+	brne MAIN
 	rcall GAMESTART
 	
 p1:
@@ -215,12 +215,6 @@ p1:
 	rcall USART_RX
 	cpi mpr, $FF
 	rcall GAMESTART
-	
-	
-
-
-
-	
 
 	rjmp	MAIN
 
