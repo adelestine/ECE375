@@ -253,7 +253,14 @@ GAMESTART:
 	;clear flags for USART
 	
 	;start clock for timer
+	rcall STARTTIMER ; start 1.5sec timer
+	clr userChoice
+GAMELOOP:
+	;check if timer is over
+	sbic TIFR1, 0
+	rjmp GAMELOOP2
 
+GAMELOOP2:
 
 GSL1: ;gamestart loop 1
 	;check if user presses pd4 
