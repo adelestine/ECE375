@@ -252,7 +252,7 @@ GAMELOOP:
 		mov mpr, tmrcnt
 		out PORTB, mpr
 		cpi mpr, 0
-		breq GAMELOOP2	; if all 4 done next
+		breq GAMESTART2	; if all 4 done next
 		rcall STARTTIMER ; start a new timer
 	NOTIMER:
 	mov mpr, oldbut
@@ -278,32 +278,34 @@ GAMELOOP:
 		clr oldbut
 	rjmp GAMELOOP
 
-GAMELOOP2:
-/*
-GSL1: ;gamestart loop 1
-	;check if user presses pd4 
-	;if yes increment choice reg
-	SBIC PIND, 4
-	inc userChoice
-	
-	CPI userChoice, 3
-	brne next
-	clr userChoice ;if choice reg is 3 set choice to 0
-next: 
-	;disp choice
-	ldi olcnt, 4
+GAMESTART2:
+	mov mpr, userChoice
+	rcall USART_TX
+	rcall USART_RX
+	ldi olcnt, 5
 	add olcnt, userChoice
+	ldi ilcnt, 5
+	add ilcnt, mpr
 	rcall WRITESCREEN
-	;check for timer
-	*/
 
-
-
-
-
+	rcall STARTTIMER ; start 1.5sec timer
+	ldi mpr, 0b11110000
+	mov tmrcnt, mpr
+	out PORTB, mpr
+GAMELOOP2:
+	;check if timer is over
+	sbis TIFR1, TOV1	; if timer overflowed
+	rjmp NOTIMER2
+		lsl tmrcnt
+		mov mpr, tmrcnt
+		out PORTB, mpr
+		cpi mpr, 0
+		breq GAMEEND	; if all 4 done next
+		rcall STARTTIMER ; start a new timer
+	NOTIMER2:
+	rjmp GAMELOOP2
 	ret
-
-
+GAMEEND:
 
 
 
