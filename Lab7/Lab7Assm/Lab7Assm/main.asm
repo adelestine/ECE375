@@ -63,7 +63,7 @@ INIT:
 		out		SPH, mpr		; Load SPH with high byte of RAMEND
 
     ; Initialize Port B for output
-		ldi		mpr, $FF		; Set Port B Data Direction Register
+		ldi		mpr, $F0		; Set Port B Data Direction Register
 		out		DDRB, mpr		; for output
 		ldi		mpr, $00		; Initialize Port B Data Register
 		out		PORTB, mpr		; so all Port B outputs are low
@@ -143,7 +143,7 @@ TIMER MATH
 	correct amount of time
 	
 	In two 8-bit numbers, that value is
-	High: 0b01001000
+	High: 0b01001000 
 	Low:  0b11100100
 */
 	; Configure 16-bit Timer/Counter 1A and 1B
@@ -190,9 +190,10 @@ MAIN:
 	ldi ilcnt, 0
 	ldi olcnt, 1
 	rcall WRITESCREEN
+MAIN2:
 	sbic PIND, 7
-	rjmp MAIN
-	clr mpr
+	rjmp MAIN2
+	clr mpr /*
 	;check to see if buffer is empty
 	sbic USCR1A, UDRE1 ; skips next instuctuon if no data in USART
 	rcall USART_RX;
@@ -211,9 +212,9 @@ p1:
 	sbr UCSR1A, RXC1
 	;wait for reccived signal of FF
 	rcall USART_RX
-	cpi mpr, $FF
+	cpi mpr, $FF */
 	rcall GAMESTART
-
+	
 	
 
 
@@ -232,14 +233,15 @@ USART_TX:
 						;USART register.
 	;rjmp USART_TX
 	;load data into usart ouptut buffer
-	out	UDR1, mpr
+	sts	UDR1, mpr
 	ret
 
 USART_RX:
-	sbis USCR1A, RXC1
+	lds mpr, UCSR1A
+	sbrs mpr, RXC1 ; received = skip
 	rjmp USART_RX
 	;get data from usart into mpr
-	in	mpr, UDR1
+	lds	mpr, UDR1
 	ret
 
 
@@ -257,25 +259,31 @@ GAMESTART:
 	;start clock for timer
 	rcall STARTTIMER ; start 1.5sec timer
 	clr userChoice
-	ldi tmrcnt, 0b00001111
-	out 
+	ldi mpr, 0b11110000
+	mov tmrcnt, mpr
+	out PINB, mpr
 	clr oldbut	; button has never had value checked!
 GAMELOOP:
 	;check if timer is over
-	sbis TIFR1, 0	; if timer over:
+	sbis TIFR1, TOV1	; if timer overflowed
 	rjmp NOTIMER
-		lsr, tmrcnt
-		rjmp GAMELOOP2	; if all 4 done next
+		lsl tmrcnt
+		mov mpr, tmrcnt
+		out PINB, mpr
+		cpi mpr, 0
+		breq GAMELOOP2	; if all 4 done next
 		rcall STARTTIMER ; start a new timer
 	NOTIMER:
-	cpi oldbut, zero ; if we weren't pressing the button already
+	mov mpr, oldbut
+	cpi mpr, 0 ; if we weren't pressing the button already
 	brne ALREADYPRESSED
 		sbis PIND, 4 ; if button pressed
 		rjmp ALREADYPRESSED
-			ldi oldbut, 1 ; mark down for next loop that its pressed
+			ldi mpr, 1
+			mov oldbut, mpr ; mark down for next loop that its pressed
 			inc userChoice ; cycle to next choice
 			cpi userChoice, 3
-			brne, BUTSKIP ; if we rolled over
+			brne BUTSKIP ; if we rolled over
 				clr userChoice ; reset to rock
 			BUTSKIP:
 			; Now we need to write the screen
@@ -287,6 +295,7 @@ GAMELOOP:
 	rcall SMALLWAIT
 	sbic PIND, 4 ; if button 4 not pressed
 		clr oldbut
+	rjmp GAMELOOP
 GAMELOOP2:
 
 GSL1: ;gamestart loop 1
@@ -303,9 +312,7 @@ next:
 	ldi olcnt, 4
 	add olcnt, userChoice
 	rcall WRITESCREEN
-	;
-
-
+	rjmp MAIN
 
 
 
@@ -405,10 +412,11 @@ STARTTIMER:
 	High: 0b01001000
 	Low:  0b11100100*/
 	ldi mpr, 0b01001000	; Must write H first
-	out TCNT1H, mpr
+	sts TCNT1H, mpr
 	ldi mpr, 0b11100100 ; If reading, L first
-	out TCNT2L, mpr	; timer reset
-	out TIFR1, zero	; clear overflow flag
+	sts TCNT1L, mpr	; timer reset
+	ldi mpr, $01
+	out TIFR1, mpr	; clear overflow flag
 	; Timer is running for 1.5 sec now,
 	; just wait for bit 0 of TIFR1 to be set for the
 	; timer to be done
@@ -429,7 +437,7 @@ SMALLWAITLOOP:
 	nop		; if the switch is bouncing add more nops
 	nop
 	nop
-	cpi ilcnt, zero
+	cpi ilcnt, 0
 	brne SMALLWAITLOOP
 	pop ilcnt
 	ret
