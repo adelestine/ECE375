@@ -262,9 +262,9 @@ GSL1:
 	
 	CPI userChoice, 3
 	brne next
-	clr userChoice
+	clr userChoice ;if choice reg is 3 set choice to 0
 next: 
-	;if choice reg is 3 set choice to 0
+	
 
 	;disp choice
 	ldi ilcnt, 4
