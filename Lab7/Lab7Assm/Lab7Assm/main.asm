@@ -205,11 +205,11 @@ p1:
 	ldi mpr, $FF
 	rcall USART_TX
 	;clear rxc1
-	sbr UCSR1A, 0b1000_0000
+	sbr UCSR1A, RXC1
 	;wait for reccived signal of FF
 	rcall USART_RX
 	cpi mpr, $FF
-	breq p2
+	rcall GAMESTART
 
 	
 
