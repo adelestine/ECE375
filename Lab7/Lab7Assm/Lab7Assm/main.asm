@@ -22,13 +22,13 @@
 .def    mpr = r16               ; Multi-Purpose Register
 .def	ilcnt = r18				
 .def	olcnt = r19
-
+.def	zero = r2
 ; Use this signal code between two boards for their game ready
 .equ    SendReady = 0b11111111
-.equ	lcdL1 = 0x00			; Make LCD Data Memory locations constants
-.equ	lcdH1 = 0x01
-.equ	lcdL2 = 0x10			; lcdL1 means the low part of line 1's location
-.equ	lcdH2 = 0x01			; lcdH2 means the high part of line 2's location
+.equ	lcd1L = 0x00			; Make LCD Data Memory locations constants
+.equ	lcd1H = 0x01
+.equ	lcd2L = 0x10			; lcdL1 means the low part of line 1's location
+.equ	lcd2H = 0x01			; lcdH2 means the high part of line 2's location
 ;***********************************************************
 ;*  Start of Code Segment
 ;***********************************************************
@@ -47,7 +47,9 @@
 ;*  Program Initialization
 ;***********************************************************
 INIT:
-
+	; Most important thing possible!!!!!
+		clr		zero
+			;)
     ; Initialize the Stack Pointer (VERY IMPORTANT!!!!)
 		ldi		mpr, low(RAMEND)
 		out		SPL, mpr		; Load SPL with low byte of RAMEND
@@ -105,14 +107,14 @@ INIT:
 	about 417 or 0b1_10100001
 */
 			ldi mpr, 0b00000001
-			out UBRRH1, mpr
+			sts UBRR1H, mpr
 			ldi mpr, 0b10100001
-			out UBRRL1, mpr
+			sts UBRR1L, mpr
 
 			ldi mpr, 0b0_00_1_1_0_00
-			out UCSR1B, mpr
+			sts UCSR1B, mpr
 			ldi mpr, 0b00_00_1_11_0
-			out UCSR1C, mpr	
+			sts UCSR1C, mpr	
 				
 	;TIMER/COUNTER1
 		;Set Normal mode, WGM13:0 = 0b000
@@ -154,23 +156,34 @@ TIMER MATH
 			sts TCCR1B, mpr
 
 	; Load text data from program mem to data mem for easy access
-	ldi YH, high(STRING1)
-	ldi YL, low(STRING1)
-	lsl YH		; shift for program mem access
-	lsl YL
-	clr mpr
-	adc YH, mpr ; shift carry from lower byte to upper byte
-	ldi ZH, high(DATAMEMBEG)
-	ldi ZL, low(DATAMEMBEG)
+	ldi ZH, high(STRING1)
+	ldi ZL, low(STRING1)
+	lsl ZH		; shift for program mem access
+	lsl ZL
+	adc ZH, zero ; shift carry from lower byte to upper byte
+	ldi YH, high(DATAMEMBEG)
+	ldi YL, low(DATAMEMBEG)
+		; Z has the loading address, Y the offloading address
+		; Need to load 16*number of phrases letters
+		;	16*11 = 176
+	ldi ilcnt, 176
+LOADLOOP:
+		lpm mpr, Z+	; load letter into mpr
+		st Y+, mpr	; store letter into data meme
+		dec ilcnt	; count 1 more done
+		cp ilcnt, zero	; are we done yet
+		brne LOADLOOP
 	
-	ldi ilcnt, 
-
+	
+	
 
 ;***********************************************************
 ;*  Main Program
 ;***********************************************************
 MAIN:
-
+	
+	sbic PIND, 7
+	rjmp MAIN
 	;TODO: ???
 
 		rjmp	MAIN
@@ -178,6 +191,34 @@ MAIN:
 ;***********************************************************
 ;*	Functions and Subroutines
 ;***********************************************************
+
+;***********************************************************
+;*		Write Screen
+;*	Writes two words to the screen, assuming that they are
+;*	stored in data memory (done by INIT) and that the low
+;*	bytes of their addresses are stored in the stack.
+;*	
+;*	The first push/second pop is the top line phrase, and
+;*	the second push/first pop is the bottom line phrase.
+;*
+;*	If the value popped from the stack is $FF, that line
+;*	will not be written.
+;*
+;*		EXTREMELY destructive of register contents...
+;*			Use with caution.
+;***********************************************************
+WRITESCREEN:
+	rcall LCDClr
+	ldi ZH, $01	; load ZH with upper byte of phrase address
+	pop mpr		; mpr has lower byte
+	cpi mpr, $FF	; if mpr != FF
+	breq SKIPWRITE1	
+		ldi YH, lcd2H	; load Y with line 2 location
+		ldi YL, lcd2L
+
+SKIPWRITE1:
+	ldi YH, lcd2H	; load Y with line 2 location
+	ldi YL, lcd2L
 
 ;***********************************************************
 ;*	Stored Program Data
@@ -222,7 +263,7 @@ ready:		.byte 2
 for:		.byte 2
 start:		.byte 2
 rock:		.byte 2
-paper		.byte 2
+paper:		.byte 2
 scissor:	.byte 2
 win:		.byte 2
 lose:		.byte 2
