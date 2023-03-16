@@ -271,7 +271,7 @@ GAMELOOP:
 	mov mpr, oldbut
 	cpi mpr, 0 ; if we weren't pressing the button already
 	brne ALREADYPRESSED
-		sbis PIND, 4 ; if button pressed
+		sbic PIND, 4 ; if button pressed
 		rjmp ALREADYPRESSED
 			ldi mpr, 1
 			mov oldbut, mpr ; mark down for next loop that its pressed
