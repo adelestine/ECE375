@@ -240,6 +240,8 @@ GAMESTART:
 	;start clock for timer
 	rcall STARTTIMER ; start 1.5sec timer
 	clr userChoice
+	inc userChoice
+	inc userChoice
 	ldi mpr, 0b11110000
 	mov tmrcnt, mpr
 	out PORTB, mpr
