@@ -279,23 +279,15 @@ GAMELOOP:
 	rjmp GAMELOOP
 
 GAMELOOP2:
-/*
-GSL1: ;gamestart loop 1
-	;check if user presses pd4 
-	;if yes increment choice reg
-	SBIC PIND, 4
-	inc userChoice
-	
-	CPI userChoice, 3
-	brne next
-	clr userChoice ;if choice reg is 3 set choice to 0
-next: 
-	;disp choice
-	ldi olcnt, 4
+	mov mpr, userChoice
+	rcall USART_TX
+	rcall USART_RX
+	ldi olcnt 5
 	add olcnt, userChoice
+	ldi ilcnt, 5
+	add ilcnt, mpr
 	rcall WRITESCREEN
-	;check for timer
-	*/
+
 
 
 
