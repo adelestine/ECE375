@@ -186,7 +186,11 @@ MAIN:
 	rcall WRITESCREEN
 	sbic PIND, 7
 	rjmp MAIN
-	;TODO: ???
+	;TODO: refrence flow chart
+
+
+
+	
 
 		rjmp	MAIN
 
