@@ -312,7 +312,7 @@ GAMELOOP2:
 GAMEEND:
     pop mpr ;load mpr with p2 val
 	cp userChoice, mpr
-	breq draw
+	breq uDraw
 
 	lsl mpr ; effective mul 2
 	add userChoice, mpr
@@ -339,13 +339,30 @@ theyWin:
 	rcall WRITESCREEN
 	rjmp ENDEND
 
-draw:
+uDraw:
 	ldi ilcnt, 10
 	rcall WRITESCREEN
 	rjmp ENDEND
 	
 ENDEND:
-	
+	rcall STARTTIMER ; start 1.5sec timer
+	ldi mpr, 0b11110000
+	mov tmrcnt, mpr
+	out PORTB, mpr
+ENDLOOP:
+	;check if timer is over
+	sbis TIFR1, TOV1	; if timer overflowed
+	rjmp NOTIMER3
+		lsl tmrcnt
+		mov mpr, tmrcnt
+		out PORTB, mpr
+		cpi mpr, 0
+		breq ENDENDEND	; if all 4 done next
+		rcall STARTTIMER ; start a new timer
+	NOTIMER3:
+	rjmp ENDLOOP
+ENDENDEND:
+	ret
 
 
 
