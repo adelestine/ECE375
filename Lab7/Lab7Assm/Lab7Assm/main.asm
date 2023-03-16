@@ -53,6 +53,7 @@ INIT:
 	; Most important thing possible!!!!!
 		clr		zero
 		clr		userChoice
+		clr tmrcnt
 			;)
     ; Initialize the Stack Pointer (VERY IMPORTANT!!!!)
 		ldi		mpr, low(RAMEND)
@@ -269,7 +270,13 @@ next:
 	ldi olcnt, 4
 	add olcnt, userChoice
 	rcall WRITESCREEN
-	;
+	;check for timer
+
+	inc tmrcnt 
+	cpi tmrcnt, 4
+
+
+
 
 
 
