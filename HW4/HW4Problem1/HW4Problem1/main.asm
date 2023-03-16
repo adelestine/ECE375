@@ -58,7 +58,6 @@ INIT:
 ;*	Main Program
 ;***********************************************************
 MAIN:
-
 		sbis	PIND, 7		;1 clock if not skipped, 2 if skipped
 		rcall	D7PUSHED	;4 clocks, one word instruction
 		;Button 7 Pressed: 15 clocks; Not Pressed: 6 clocks
@@ -74,6 +73,16 @@ MAIN:
 		sbis	PIND, 4		;1 clock if not skipped, 2 if skipped
 		rcall	D4PUSHED	;4 clocks
 		;Button 4 Pressed: 10 clocks; Not Pressed: 6 clocks
+
+/*
+*		Totals for questions:
+*			a. No buttons pushed : 6*4+5 = 29 clocks
+*			b. Only D4 pushed : 6*3+10+5 = 33 clocks
+*			c. Only D5 pushed : 6*3+11+5 = 34 clocks
+*			d. All buttons pushed : 15+13+11+10+5 = 54 clocks
+*
+*
+*/
 DONECHECK:
 		in		mpr, PINB		; read current values for PORTB
 							;1 clock
