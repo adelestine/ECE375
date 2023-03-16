@@ -199,6 +199,9 @@ MAIN2:
 
 	ldi mpr, $FF
 	rcall USART_TX ; send confirmation
+	ldi ilcnt, 2
+	ldi olcnt, 3
+	rcall WRITESCREEN
 	rcall USART_RX ; Wait until receive, placed in mpr
 	cpi mpr, $FF
 	brne MAIN2
@@ -226,18 +229,11 @@ p1:
 ;***********************************************************
 
 
-USART_TX: ; transmit
-	;sbis USCR1A, UDRE1	;loops as long as there are bits in the 
-						;USART register.
-	;rjmp USART_TX
-	;load data into usart ouptut buffer
-	;sts	UDR1, mpr\
+USART_TX: ; transmits mpr
 	lds mpr, UCSR1A
-	sbrs mpr, 5
+	sbrs mpr,UDRE1
 	rjmp USART_TX
-	
 	sts UDR1, mpr
-
 	ret
 
 USART_RX:
