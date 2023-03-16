@@ -228,6 +228,8 @@ USART_RX:
 	rjmp USART_RX
 	;get data from usart into mpr
 	lds	mpr, UDR1
+	ldi mpr, (1<<RXC1)
+	sts UCSR1A, mpr
 	ret
 
 
