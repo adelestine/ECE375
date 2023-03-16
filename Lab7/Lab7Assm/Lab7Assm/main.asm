@@ -192,27 +192,22 @@ MAIN:
 	ldi olcnt, 1
 	rcall WRITESCREEN
 MAIN2:
-	sbic PIND, 7
+	sbic PIND, 7 ;wait for 7 button
 	rjmp MAIN2
 	clr mpr
 	clr olcnt
-	lds olcnt, UCSR1A
-	;check to see if buffer is empty
-	sbic olcnt, 5 ; skips next instuctuon if no data in USART
-	rcall USART_RX;
-	cpi mpr, $FF
-	brne p1 ;if equal this is p2 if not equal this is p1
-p2: 
+
 	ldi mpr, $FF
 	rcall USART_TX ; send confirmation
+	rcall USART_RX ; Wait until receive, placed in mpr
+	cpi mpr, $FF
+	brne MAIN2
 	rcall GAMESTART
-	rjmp main
+	
 p1:
 	;send USART FF
 	ldi mpr, $FF
 	rcall USART_TX
-	;clear rxc1
-	sbr UCSR1A, RXC1
 	;wait for reccived signal of FF
 	rcall USART_RX
 	cpi mpr, $FF
