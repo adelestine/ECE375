@@ -71,7 +71,6 @@ MAIN:							; The Main program
 		; Call function to load ADD16 operands
 		rcall LOADADD16
 		; Operands stored in $0110 and $0112
-		rcall FLIP
 		rcall ADD16
 		; Call ADD16 function to display its results 
 		;(calculate FCBA + FFFF)
@@ -82,7 +81,6 @@ MAIN:							; The Main program
 		; Call function to load SUB16 operands
 		rcall LOADSUB16
 		; Operands stored in $0114 and $0116
-		rcall FLIP
 
 		; Call SUB16 function to display its results 
 		;(calculate FCB9 - E420)
@@ -94,7 +92,6 @@ MAIN:							; The Main program
 		; Call function to load MUL24 operands
 		rcall LOADMUL24
 		; Operands stored in $0118 and $011B
-		rcall FLIP
 
 		; Call MUL24 function to display its results 
 		;(calculate FFFFFF * FFFFFF)
@@ -108,7 +105,6 @@ MAIN:							; The Main program
 		;$0114 (G = $FCBA), 
 		;$0116 (H = $2022), and 
 		;$0112 (I = $21BB)
-		rcall FLIP
 
 		; Call the COMPOUND function, ((G-H)+I)^2
 		rcall COMPOUND
